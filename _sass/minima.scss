@@ -47,6 +47,7 @@ $on-large:         $on-laptop !default;
 @mixin relative-font-size($ratio) {
   font-size: $base-font-size * $ratio;
 }
+
 .image-caption {
   text-align: center;
   font-size: .8rem;
