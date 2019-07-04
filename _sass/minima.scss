@@ -1,5 +1,4 @@
-@charset "utf-8";
-
+@charset "utf-8"; 
 // Define defaults for each variable.
 
 $base-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
@@ -50,10 +49,20 @@ $on-large:         $on-laptop !default;
 
 .image-caption {
   text-align: center;
-  font-size: .8rem;
-  color: light-grey;
+  font-size: .9rem;
+  color: $grey-color-dark ;
 }
 
+div {
+  padding-top: 5px;
+  padding-bottom: 15px;
+}
+
+img {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+}
 
 // Import partials.
 @import

@@ -1,7 +1,16 @@
 .image-caption {
   text-align: center;
-  font-size: .8rem;
-  color: light-grey; }
+  font-size: .9rem;
+  color: #424242; }
+
+div {
+  padding-top: 5px;
+  padding-bottom: 15px; }
+
+img {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px; }
 
 /**
  * Reset some basic elements
