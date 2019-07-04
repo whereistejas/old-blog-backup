@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>How to do IRC the right way (Part 3) | whereistejas</title>
+<meta name="generator" content="Jekyll v3.7.4" />
+<meta property="og:title" content="How to do IRC the right way (Part 3)" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="What is ZNC (and, BNC)? ZNC, is an advanced IRC bouncer that is left connected so an IRC client can disconnect/reconnect without losing the chat session. A BNC (short for Bounced Network Connection) is a piece of software that is used to relay traffic and connections in computer networks, much like a proxy. Basically, ZNC will act as a bridge between our client and the IRC server." />
+<meta property="og:description" content="What is ZNC (and, BNC)? ZNC, is an advanced IRC bouncer that is left connected so an IRC client can disconnect/reconnect without losing the chat session. A BNC (short for Bounced Network Connection) is a piece of software that is used to relay traffic and connections in computer networks, much like a proxy. Basically, ZNC will act as a bridge between our client and the IRC server." />
+<link rel="canonical" href="/2019/07/04/IRC.part3.html" />
+<meta property="og:url" content="/2019/07/04/IRC.part3.html" />
+<meta property="og:site_name" content="whereistejas" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-07-04T00:00:00+05:30" />
+<script type="application/ld+json">
+{"datePublished":"2019-07-04T00:00:00+05:30","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/2019/07/04/IRC.part3.html"},"url":"/2019/07/04/IRC.part3.html","headline":"How to do IRC the right way (Part 3)","description":"What is ZNC (and, BNC)? ZNC, is an advanced IRC bouncer that is left connected so an IRC client can disconnect/reconnect without losing the chat session. A BNC (short for Bounced Network Connection) is a piece of software that is used to relay traffic and connections in computer networks, much like a proxy. Basically, ZNC will act as a bridge between our client and the IRC server.","dateModified":"2019-07-04T00:00:00+05:30","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="whereistejas" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">whereistejas</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">How to do IRC the right way (Part 3)</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2019-07-04T00:00:00+05:30" itemprop="datePublished">Jul 4, 2019
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="what-is-znc-and-bnc">What is ZNC (and, BNC)?</h2>
+<p>ZNC, is an advanced IRC bouncer that is left connected so an IRC client can disconnect/reconnect without losing the chat session. A BNC (short for Bounced Network Connection) is a piece of software that is used to relay traffic and connections in computer networks, much like a proxy. Basically, ZNC will act as a bridge between our client and the IRC server.</p>
+
+<p>ZNC offers some strong features, listed below:</p>
+<ol>
+  <li><strong>Modules</strong> - Modules are used to extend and modify the way ZNC functions. Modules can be <code class="highlighter-rouge">perl</code>, <code class="highlighter-rouge">C++</code> or <code class="highlighter-rouge">python</code> scripts. They can be added on global, per-network or per-user basis.</li>
+  <li><strong>Multiple Users, Networks and Clients</strong> - That’s pretty self-explanatory. Interestingly, an <code class="highlighter-rouge">admin</code> can limit the max no. of networks that an user can connect to.</li>
+  <li><strong>Playback Buffers</strong> - When you attach to ZNC, ZNC playbacks all the conversations that took place while your client was detached. Not only this, it also remembers which channels you joined and left, all of this is also reflected in other clients.</li>
+  <li><strong>SSL Support</strong> - Always needed.</li>
+</ol>
+
+<h2 id="how-do-we-setup-znc">How do we setup ZNC?</h2>
+<p>This needs to occur in four steps:</p>
+<ol>
+  <li>Install <code class="highlighter-rouge">znc</code> on your server. The word ‘server’ is very important here. ZNC needs to be installed on a machine that is always running and always connected to the internet. Once the ZNC service is started, you never have to worry about it again, except when your server shuts down.</li>
+  <li>Generate an initial config file using <code class="highlighter-rouge">znc --makeconf</code>.</li>
+  <li>Configure your ZNC setup using the <code class="highlighter-rouge">znc webadmin</code>.</li>
+  <li>Configure your IRC client to connect to ZNC.</li>
+</ol>
+
+<h2 id="step-1-install-znc-on-your-server">Step 1: Install ZNC on your server.</h2>
+<p>In my own setup, I use a VM (Compute Engie) running on Google Cloud Platform. This particular costs me absolutely nothing. I suggest everyone who is a student to join the GitHub developer program. They provide you with GCP or Digital Ocean credits.</p>
+
+<p>It is advised that you run ZNC over a seperate port, in which case you will be required to modify the firewall settings.</p>
+
+<figure class="image-caption">
+<p><img src="/assets/images/irc-setup-part3/GCP-firewall-1.png" alt="" /></p>
+  <figcaption>The firewall settings can be in the VPC network menu</figcaption>
+</figure>
+<figure class="image-caption">
+<p><img src="/assets/images/irc-setup-part3/GCP-firewall-2.png" alt="" /></p>
+  <figcaption>In my setup, I have used port 5999</figcaption>
+</figure>
+
+<p>GCP will need you to create a new firewall rule. Also, you will need to enable both <code class="highlighter-rouge">HTTP</code> and <code class="highlighter-rouge">HTTPS</code> protocols on your VM.</p>
+
+
+  </div><a class="u-url" href="/2019/07/04/IRC.part3.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">whereistejas</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">whereistejas</li><li><a class="u-email" href="mailto:sanap.tejas@gmail.com">sanap.tejas@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/whereistejas"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">whereistejas</span></a></li><li><a href="https://www.twitter.com/whereistejas"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">whereistejas</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Hey! This is my personal blog. I am still looking for myself.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

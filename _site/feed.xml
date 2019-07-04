@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-07-04T14:23:47+05:30</updated><id>/feed.xml</id><title type="html">whereistejas</title><subtitle>Hey! This is my personal blog. I am still looking for myself.</subtitle><entry><title type="html">How to do IRC the right way (Part 3)</title><link href="/2019/07/04/IRC.part3.html" rel="alternate" type="text/html" title="How to do IRC the right way (Part 3)" /><published>2019-07-04T00:00:00+05:30</published><updated>2019-07-04T00:00:00+05:30</updated><id>/2019/07/04/IRC.part3</id><content type="html" xml:base="/2019/07/04/IRC.part3.html">&lt;h2 id=&quot;what-is-znc-and-bnc&quot;&gt;What is ZNC (and, BNC)?&lt;/h2&gt;
+&lt;p&gt;ZNC, is an advanced IRC bouncer that is left connected so an IRC client can disconnect/reconnect without losing the chat session. A BNC (short for Bounced Network Connection) is a piece of software that is used to relay traffic and connections in computer networks, much like a proxy. Basically, ZNC will act as a bridge between our client and the IRC server.&lt;/p&gt;
+
+&lt;p&gt;ZNC offers some strong features, listed below:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;Modules&lt;/strong&gt; - Modules are used to extend and modify the way ZNC functions. Modules can be &lt;code class=&quot;highlighter-rouge&quot;&gt;perl&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;C++&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;python&lt;/code&gt; scripts. They can be added on global, per-network or per-user basis.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Multiple Users, Networks and Clients&lt;/strong&gt; - That’s pretty self-explanatory. Interestingly, an &lt;code class=&quot;highlighter-rouge&quot;&gt;admin&lt;/code&gt; can limit the max no. of networks that an user can connect to.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Playback Buffers&lt;/strong&gt; - When you attach to ZNC, ZNC playbacks all the conversations that took place while your client was detached. Not only this, it also remembers which channels you joined and left, all of this is also reflected in other clients.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;SSL Support&lt;/strong&gt; - Always needed.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;how-do-we-setup-znc&quot;&gt;How do we setup ZNC?&lt;/h2&gt;
+&lt;p&gt;This needs to occur in four steps:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Install &lt;code class=&quot;highlighter-rouge&quot;&gt;znc&lt;/code&gt; on your server. The word ‘server’ is very important here. ZNC needs to be installed on a machine that is always running and always connected to the internet. Once the ZNC service is started, you never have to worry about it again, except when your server shuts down.&lt;/li&gt;
+  &lt;li&gt;Generate an initial config file using &lt;code class=&quot;highlighter-rouge&quot;&gt;znc --makeconf&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;Configure your ZNC setup using the &lt;code class=&quot;highlighter-rouge&quot;&gt;znc webadmin&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;Configure your IRC client to connect to ZNC.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;step-1-install-znc-on-your-server&quot;&gt;Step 1: Install ZNC on your server.&lt;/h2&gt;
+&lt;p&gt;In my own setup, I use a VM (Compute Engie) running on Google Cloud Platform. This particular costs me absolutely nothing. I suggest everyone who is a student to join the GitHub developer program. They provide you with GCP or Digital Ocean credits.&lt;/p&gt;
+
+&lt;p&gt;It is advised that you run ZNC over a seperate port, in which case you will be required to modify the firewall settings.&lt;/p&gt;
+
+&lt;figure class=&quot;image-caption&quot;&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/irc-setup-part3/GCP-firewall-1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+  &lt;figcaption&gt;The firewall settings can be in the VPC network menu&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;figure class=&quot;image-caption&quot;&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/irc-setup-part3/GCP-firewall-2.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+  &lt;figcaption&gt;In my setup, I have used port 5999&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;GCP will need you to create a new firewall rule. Also, you will need to enable both &lt;code class=&quot;highlighter-rouge&quot;&gt;HTTP&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;HTTPS&lt;/code&gt; protocols on your VM.&lt;/p&gt;</content><author><name></name></author><summary type="html">What is ZNC (and, BNC)? ZNC, is an advanced IRC bouncer that is left connected so an IRC client can disconnect/reconnect without losing the chat session. A BNC (short for Bounced Network Connection) is a piece of software that is used to relay traffic and connections in computer networks, much like a proxy. Basically, ZNC will act as a bridge between our client and the IRC server.</summary></entry><entry><title type="html">How to do IRC the right way (Part 2)</title><link href="/2019/06/13/IRC-part2.html" rel="alternate" type="text/html" title="How to do IRC the right way (Part 2)" /><published>2019-06-13T00:00:00+05:30</published><updated>2019-06-13T00:00:00+05:30</updated><id>/2019/06/13/IRC-part2</id><content type="html" xml:base="/2019/06/13/IRC-part2.html">&lt;h2 id=&quot;whats-the-problem&quot;&gt;What’s the problem?&lt;/h2&gt;
+&lt;p&gt;One of the most annoying things about IRC is how it is not &lt;strong&gt;persistent&lt;/strong&gt;. There are two halves of this &lt;strong&gt;persistence&lt;/strong&gt; thing:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;IRC doesn’t save the messages we have receive, the chats in which we are mentioned, etc., when &lt;em&gt;we are offline&lt;/em&gt;.&lt;/li&gt;
+  &lt;li&gt;IRC doesn’t save our messages, logs and chats, when &lt;em&gt;we go offline&lt;/em&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;That’s the problem we are going to solve in this article.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-solutions-are-available&quot;&gt;What solutions are available?&lt;/h2&gt;
+&lt;h3 id=&quot;the-easy-but-incomplete-solution---tmux-and-a-server&quot;&gt;The easy but incomplete solution - &lt;code class=&quot;highlighter-rouge&quot;&gt;tmux&lt;/code&gt; and a server&lt;/h3&gt;
+&lt;p&gt;The most simple solution to this problem is to connect to IRC using a machine that is always running and connected to the internet. Yes, that means a server. And, then whenever we want to check what’s going on our favourite channels, we simply SSH/connect to the server. From this point onwards, we will be using the term &lt;code class=&quot;highlighter-rouge&quot;&gt;server&lt;/code&gt; to denote the machine that we have logged into to stay connected to IRC all the time. This is a practical solution, that a large number of people use. However, this solution comes with a few caveats:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;The most obvious one is that we need access to a terminal. In order to ensure that the IRC-client is always running on the server most people will use &lt;code class=&quot;highlighter-rouge&quot;&gt;tmux&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;screen&lt;/code&gt;, which they will attach-to or detach-to to use IRC. We may not always have access to a terminal or the right SSH credentials on the computer to SSH into our server.&lt;/li&gt;
+  &lt;li&gt;Thus, we run into a major problem of this approach, which is it’s &lt;em&gt;lack of ability&lt;/em&gt; to connect with other IRC clients on seperate machines.&lt;/li&gt;
+  &lt;li&gt;Most people don’t have access to a computer all the time. So, a large section of IRC users, actually use their phones to chat on IRC. Having to use SSH on our phones to connect to an TUI-based IRC client, may not be very difficult, but it definitely isn’t pleasant. An IRC user like me, who uses a phone 80% of the time to chat on IRC, needs to have a proper IRC client made to be used on phones. Having a clean UI on a small screen can make a ton of difference. This, I think, should be one of the main reasons why people should avoid this approach.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p float=&quot;center&quot;&gt;
+  &lt;img src=&quot;/assets/images/irc-setup-part2/revolution-irc1.png&quot; width=&quot;200&quot; /&gt;
+  &lt;img src=&quot;/assets/images/irc-setup-part2/revolution-irc2.png&quot; width=&quot;200&quot; /&gt;
+  &lt;img src=&quot;/assets/images/irc-setup-part2/revolution-irc3.png&quot; width=&quot;200&quot; /&gt;
+&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;This method doesn’t allow us to maintain seperate buffers for seperate clients. Not having this may not be a deal breaker, but it’s definitely makes things easier. It also, doesn’t allow us to maintain a seperate list of channels on different clients/devices.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;the-average-but-incomplete-solution---weechat&quot;&gt;The average but incomplete solution - &lt;code class=&quot;highlighter-rouge&quot;&gt;weechat&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;I am, probably, going to get a lot of hate for this. Unlike the &lt;code class=&quot;highlighter-rouge&quot;&gt;tmux&lt;/code&gt;+server approach, &lt;code class=&quot;highlighter-rouge&quot;&gt;weechat&lt;/code&gt; will provide us with seperate UI’s for seperate devices. But, all of those clients are still &lt;code class=&quot;highlighter-rouge&quot;&gt;weechat&lt;/code&gt;, meaning we become tied to it’s ecosystem. It still provides a great number of features, that a lot of people love. This solution has the following caveats:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Lack of portability meaning if we decide to shift to another IRC-client, we can’t easily transfer all of our channel-lists, preferences and chat logs&lt;/li&gt;
+  &lt;li&gt;We connect to the same instance of &lt;code class=&quot;highlighter-rouge&quot;&gt;weechat&lt;/code&gt;, so it doesn’t allow us to provide different configurations for different devices.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;the-difficult-but-complete-solution---znc&quot;&gt;The difficult but complete solution - &lt;code class=&quot;highlighter-rouge&quot;&gt;ZNC&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ZNC&lt;/code&gt; isn’t an IRC client. Both of the solutions mentioned above used one particular client or one particular session. &lt;code class=&quot;highlighter-rouge&quot;&gt;ZNC&lt;/code&gt; is an IRC bouncer. In very simple terms, it keeps us connected to the network from a remote machine and acts as a bridge between the IRC network and us. &lt;code class=&quot;highlighter-rouge&quot;&gt;ZNC&lt;/code&gt; is capable of properly logging all the chats, maintaining different channel-lists for different clients and much more. The functionality of &lt;code class=&quot;highlighter-rouge&quot;&gt;ZNC&lt;/code&gt; can be extended with the help of modules. Most importantly, ZNC gives us the freedom to use as many clients and as many different types of clients as we want. In addition it gives us fine control over what is sent to which client, and how much of it can be synced between two or more clients.&lt;/p&gt;
+
+&lt;h2 id=&quot;now-what&quot;&gt;Now, what?&lt;/h2&gt;
+&lt;p&gt;IMHO, ZNC is the right way to do IRC. In the next article, we will discuss how to set up ZNC and connect to IRC.&lt;/p&gt;</content><author><name></name></author><summary type="html">What’s the problem? One of the most annoying things about IRC is how it is not persistent. There are two halves of this persistence thing: IRC doesn’t save the messages we have receive, the chats in which we are mentioned, etc., when we are offline. IRC doesn’t save our messages, logs and chats, when we go offline.</summary></entry><entry><title type="html">How to do IRC the right way (Part 1)</title><link href="/2019/06/12/IRC-part1.html" rel="alternate" type="text/html" title="How to do IRC the right way (Part 1)" /><published>2019-06-12T00:00:00+05:30</published><updated>2019-06-12T00:00:00+05:30</updated><id>/2019/06/12/IRC-part1</id><content type="html" xml:base="/2019/06/12/IRC-part1.html">&lt;p&gt;IRC which stands for Internet Relay Chat is one of the oldest methods of chatting across the internet. This piece of technology is as old as the internet, itself. Like, all great things about the internet it started with a Swede writing a program.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-is-irc-and-why-should-you-bother-with-it&quot;&gt;What is IRC and why should you bother with it?&lt;/h2&gt;
+
+&lt;p&gt;IRC is a text-based communication protocol. In very simple terms, it allows users to create #channels (or as we call them, chat rooms) where a group of people can chat together. It also offers numerous features like file transfers and SSL encryption.&lt;/p&gt;
+
+&lt;p&gt;IRC networks are a great learning place. Numerous FOSS projects have their own IRC channels, where newbie users can go for help. One such channel is &lt;code class=&quot;highlighter-rouge&quot;&gt;#irssi&lt;/code&gt;. It is also a great place to meet new people, with tons of experience.&lt;/p&gt;
+
+&lt;p&gt;IRC is an old-school technology. It is dying. In it’s hayday IRC was the next dominant form of communication over the internet after email. Thus, it can be said, that using IRC is a way of saving a cultural symbol, from turning to ruin.&lt;/p&gt;
+
+&lt;p&gt;IRC is free and open. Contrary to what many may have you believe, it has a very simplistic design. However, it is not new-user friendly. For all it’s ease, it has a few major issues.&lt;/p&gt;
+
+&lt;h2 id=&quot;how-does-irc-work&quot;&gt;How does IRC work?&lt;/h2&gt;
+
+&lt;p&gt;Like any communication protocol, it involves a client and server. The server, an IRC server, may be public or private.&lt;/p&gt;
+
+&lt;p&gt;One IRC network will have numerous IRC servers under it’s wings. To connect to the IRC, you need both the network and server address.&lt;/p&gt;
+
+&lt;p&gt;There are numerous IRC clients just as we have numerous email clients. While, the choice of a client is very subjective, for the purpose of demonstration we will be using &lt;code class=&quot;highlighter-rouge&quot;&gt;irssi&lt;/code&gt;. While, the choice of a client is very subjective, for the purpose of demonstration we will be using &lt;code class=&quot;highlighter-rouge&quot;&gt;irssi&lt;/code&gt;. Every Linux distribution offers &lt;code class=&quot;highlighter-rouge&quot;&gt;irssi&lt;/code&gt; as a binary in it’s package repos. You can install it on Fedora like this: &lt;code class=&quot;highlighter-rouge&quot;&gt;sudo dnf install irssi -y&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/irc-setup-part1/irssi-ui.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;lets-get-started&quot;&gt;Let’s get started.&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Launch &lt;code class=&quot;highlighter-rouge&quot;&gt;irssi&lt;/code&gt; in your terminal. You will be greeted by a weird-looking TUI. At the bottom, you will find a prompt. It will have the word &lt;code class=&quot;highlighter-rouge&quot;&gt;status&lt;/code&gt; on it’s left corner. This is like a window indicator. Currently you are in the &lt;code class=&quot;highlighter-rouge&quot;&gt;status&lt;/code&gt; window which shows you all the information you are receiving from the network and server.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Type &lt;code class=&quot;highlighter-rouge&quot;&gt;/network&lt;/code&gt; and press &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;Enter&amp;gt;&lt;/code&gt;. &lt;code class=&quot;highlighter-rouge&quot;&gt;irssi&lt;/code&gt; will show you a list of networks that are stored in &lt;code class=&quot;highlighter-rouge&quot;&gt;irssi&lt;/code&gt; by default. We wish to connect to the &lt;code class=&quot;highlighter-rouge&quot;&gt;Freenode&lt;/code&gt; network.
+&lt;img src=&quot;/assets/images/irc-setup-part1/irssi-network-list.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Type &lt;code class=&quot;highlighter-rouge&quot;&gt;/connect Freenode&lt;/code&gt; and press &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;Enter&amp;gt;&lt;/code&gt;. You will notice that you have connected to the &lt;code class=&quot;highlighter-rouge&quot;&gt;Freenode&lt;/code&gt; network. Your &lt;code class=&quot;highlighter-rouge&quot;&gt;nick&lt;/code&gt; is the name of the &lt;code class=&quot;highlighter-rouge&quot;&gt;$USER&lt;/code&gt; you are logged in as. Your &lt;code class=&quot;highlighter-rouge&quot;&gt;nick&lt;/code&gt; is like your User ID. Most people will reserve an unique &lt;code class=&quot;highlighter-rouge&quot;&gt;nick&lt;/code&gt;, in order to prevent other people from impersonating them. &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;Pg-Up&amp;gt;&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;Pg-Down&amp;gt;&lt;/code&gt; will help you scroll in the window. You will see a bunch of other stuff saying that you are not registered. For the purpose of this demonstration, you can safely ignore it.
+&lt;img src=&quot;/assets/images/irc-setup-part1/irssi-connect.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;The next task is to join a channel. Type &lt;code class=&quot;highlighter-rouge&quot;&gt;/join #tejas&lt;/code&gt; and press &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;Enter&amp;gt;&lt;/code&gt;. You will probably see a new window pop up and notice that the prompt title has changed from &lt;code class=&quot;highlighter-rouge&quot;&gt;status&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;#tejas&lt;/code&gt;.
+&lt;img src=&quot;/assets/images/irc-setup-part1/irssi-join.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Say Hi!&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Type &lt;code class=&quot;highlighter-rouge&quot;&gt;/msg whereistejas Hey! I made it here!&lt;/code&gt; and press &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;Enter&amp;gt;&lt;/code&gt;. This will send a personal message to me. If, I’m online, we can have a nice chat. (P.S. I’m always online).&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Let’s try joining another channel called &lt;code class=&quot;highlighter-rouge&quot;&gt;#irssi&lt;/code&gt;. To switch between different channels in &lt;code class=&quot;highlighter-rouge&quot;&gt;irssi&lt;/code&gt; use &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;Alt&amp;gt; + &amp;lt;No. Key&amp;gt;&lt;/code&gt;. For example, &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;Alt&amp;gt;+2&lt;/code&gt; will take you back to the &lt;code class=&quot;highlighter-rouge&quot;&gt;#tejas&lt;/code&gt; channel.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;In case you need help, type &lt;code class=&quot;highlighter-rouge&quot;&gt;/help&lt;/code&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Figure out how to quit on your own.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;That wasn’t difficult at all, was it?&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;Now that you know how to connect to an IRC network and join a channel, you are ready to meet tons of new people. This is also the point, where we can start talking about the drawbacks of IRC:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;There is no way to save or log messages that are sent to you when you are offline, i.e., not connected to an IRC network.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;There is no way of recovering messages from a previous session in the current session, i.e., you lose everything once you &lt;code class=&quot;highlighter-rouge&quot;&gt;/quit&lt;/code&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;You can connect only one client to a network with one &lt;code class=&quot;highlighter-rouge&quot;&gt;nick&lt;/code&gt;, i.e., you can only connect from one place at a time.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;However, there are ways of overcoming the above mentioned issues, which will be part of the next article. We can see at once, how the above metioned issues are connected with one another.&lt;/p&gt;</content><author><name></name></author><summary type="html">IRC which stands for Internet Relay Chat is one of the oldest methods of chatting across the internet. This piece of technology is as old as the internet, itself. Like, all great things about the internet it started with a Swede writing a program.</summary></entry></feed>
