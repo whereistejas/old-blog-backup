@@ -1,4 +1,5 @@
-@charset "utf-8"; 
+@charset "utf-8";
+
 // Define defaults for each variable.
 
 $base-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
@@ -47,35 +48,9 @@ $on-large:         $on-laptop !default;
   font-size: $base-font-size * $ratio;
 }
 
-.image-caption {
-  text-align: center;
-  font-size: .9rem;
-  color: $grey-color-dark ;
-}
-
-.ul-circles {
-	list-style-type: "⭘ " ;
-}
-.li b {
-}
-
-div {
-  padding-top: 5px;
-  padding-bottom: 15px;
-}
-
-img {
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 5px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
 // Import partials.
 @import
-   "minima/base",
-   "minima/layout"
-   //"minima/syntax-highlighting"
+  "minima/base",
+  "minima/layout",
+  "minima/syntax-highlighting"
 ;
