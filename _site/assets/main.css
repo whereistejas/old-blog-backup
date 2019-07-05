@@ -213,8 +213,8 @@ table {
   border-top: 5px solid #424242;
   border-bottom: 1px solid #e8e8e8;
   min-height: 30px;
-  line-height: 24px;
-  position: relative; }
+  position: relative;
+  display: inline-block; }
 
 .site-title {
   font-size: 26px;
@@ -222,6 +222,11 @@ table {
   letter-spacing: -1px;
   margin-bottom: 0;
   float: left; }
+  .site-title .logo {
+    display: inline-block;
+    margin-right: 10px;
+    height: 64px;
+    width: 64px; }
   @media screen and (max-width: 600px) {
     .site-title {
       padding-right: 45px; } }

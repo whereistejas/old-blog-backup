@@ -5,10 +5,11 @@
   border-top: 5px solid $grey-color-dark;
   border-bottom: 1px solid $grey-color-light;
   min-height: $spacing-unit ;
-  line-height: $base-line-height * $base-font-size ;
+  //  line-height: $base-line-height * $base-font-size ;
 
   // Positioning context for the mobile navigation icon
   position: relative;
+  display: inline-block;
 }
 
 .site-title {
@@ -17,6 +18,14 @@
   letter-spacing: -1px;
   margin-bottom: 0;
   float: left;
+
+  .logo {
+	display: inline-block;
+	margin-right: 10px;
+  	@include media-query($on-palm) {
+		height: 64px;
+		width:  64px;
+  }
 
   @include media-query($on-palm) {
     padding-right: 45px;
