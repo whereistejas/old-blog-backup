@@ -1,27 +1,32 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-07-04T15:46:36+05:30</updated><id>/feed.xml</id><title type="html">whereistejas</title><subtitle>Hey! This is my personal blog. I am still looking for myself.</subtitle><entry><title type="html">How to do IRC the right way (Part 3)</title><link href="/2019/07/04/IRC.part3.html" rel="alternate" type="text/html" title="How to do IRC the right way (Part 3)" /><published>2019-07-04T00:00:00+05:30</published><updated>2019-07-04T00:00:00+05:30</updated><id>/2019/07/04/IRC.part3</id><content type="html" xml:base="/2019/07/04/IRC.part3.html">&lt;h2 id=&quot;what-is-znc-and-bnc&quot;&gt;What is ZNC (and, BNC)?&lt;/h2&gt;
-&lt;p&gt;ZNC, is an advanced IRC bouncer that is left connected so an IRC client can disconnect/reconnect without losing the chat session. A BNC (short for Bounced Network Connection) is a piece of software that is used to relay traffic and connections in computer networks, much like a proxy. Basically, ZNC will act as a bridge between our client and the IRC server.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-07-05T16:32:20+05:30</updated><id>http://localhost:4000/feed.xml</id><title type="html">whereistejas</title><subtitle>Hey! This is my personal blog. I am still looking for myself.</subtitle><entry><title type="html">How to do IRC the right way (Part 3)</title><link href="http://localhost:4000/2019/07/04/IRC.part3.html" rel="alternate" type="text/html" title="How to do IRC the right way (Part 3)" /><published>2019-07-04T00:00:00+05:30</published><updated>2019-07-04T00:00:00+05:30</updated><id>http://localhost:4000/2019/07/04/IRC.part3</id><content type="html" xml:base="http://localhost:4000/2019/07/04/IRC.part3.html">&lt;h2 id=&quot;what-is-znc-and-bnc&quot;&gt;What is ZNC (and, BNC)?&lt;/h2&gt;
+&lt;p&gt;ZNC, is an advanced IRC bouncer that is left connected so an IRC client can disconnect/reconnect without losing the chat session. A BNC (short for Bounced Network Connection) is a piece of software that is used to relay traffic and connections in computer networks, much like a proxy. Basically, ZNC will act as a bridge between a client and the IRC server.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/irc-setup-part3/ZNC-network1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;div class=&quot;image-caption&quot;&gt;
+This is how ZNC works
+&lt;/div&gt;
 
 &lt;p&gt;ZNC offers some strong features, listed below:&lt;/p&gt;
 &lt;ol&gt;
   &lt;li&gt;&lt;strong&gt;Modules&lt;/strong&gt; - Modules are used to extend and modify the way ZNC functions. Modules can be &lt;code class=&quot;highlighter-rouge&quot;&gt;perl&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;C++&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;python&lt;/code&gt; scripts. They can be added on global, per-network or per-user basis.&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Multiple Users, Networks and Clients&lt;/strong&gt; - That’s pretty self-explanatory. Interestingly, an &lt;code class=&quot;highlighter-rouge&quot;&gt;admin&lt;/code&gt; can limit the max no. of networks that an user can connect to.&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Playback Buffers&lt;/strong&gt; - When you attach to ZNC, ZNC playbacks all the conversations that took place while your client was detached. Not only this, it also remembers which channels you joined and left, all of this is also reflected in other clients.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Multiple Users, Networks and Clients&lt;/strong&gt; - That’s pretty self-explanatory. Interestingly, an &lt;code class=&quot;highlighter-rouge&quot;&gt;admin&lt;/code&gt; can limit the max no. of networks that an user can connects with.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Playback Buffers&lt;/strong&gt; - When a client attaches to ZNC, ZNC playbacks all the conversations that took place while the client was detached. It also remembers which channels the user joined and left, all of this is also reflected in other clients.&lt;/li&gt;
   &lt;li&gt;&lt;strong&gt;SSL Support&lt;/strong&gt; - Always needed.&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;h2 id=&quot;how-do-we-setup-znc&quot;&gt;How do we setup ZNC?&lt;/h2&gt;
 &lt;p&gt;This needs to occur in four steps:&lt;/p&gt;
 &lt;ol&gt;
-  &lt;li&gt;Install &lt;code class=&quot;highlighter-rouge&quot;&gt;znc&lt;/code&gt; on your server. The word ‘server’ is very important here. ZNC needs to be installed on a machine that is always running and always connected to the internet. Once the ZNC service is started, you never have to worry about it again, except when your server shuts down.&lt;/li&gt;
-  &lt;li&gt;Generate an initial config file using &lt;code class=&quot;highlighter-rouge&quot;&gt;znc --makeconf&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Configure your ZNC setup using the &lt;code class=&quot;highlighter-rouge&quot;&gt;znc webadmin&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Configure your IRC client to connect to ZNC.&lt;/li&gt;
+  &lt;li&gt;Install &lt;code class=&quot;highlighter-rouge&quot;&gt;znc&lt;/code&gt; on a server. The word ‘server’ is very important here. ZNC needs to be installed on a machine that is always running and always connected to the internet. Once the ZNC service has started, no changes should be made in &lt;code class=&quot;highlighter-rouge&quot;&gt;znc.conf&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;Generate an initial config file using &lt;code class=&quot;highlighter-rouge&quot;&gt;znc --makeconf&lt;/code&gt; and configure it.&lt;/li&gt;
+  &lt;li&gt;Configure which networks and channels to connect to using the &lt;code class=&quot;highlighter-rouge&quot;&gt;znc webadmin&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;Configure the IRC client to connect to ZNC.&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;h2 id=&quot;step-1-install-znc-on-your-server&quot;&gt;Step 1: Install ZNC on your server.&lt;/h2&gt;
-&lt;p&gt;In my own setup, I use a VM (Compute Engie) running on Google Cloud Platform. This particular costs me absolutely nothing. I suggest everyone who is a student to join the &lt;a href=&quot;https://education.github.com/pack&quot;&gt;GitHub Student Developer Pack&lt;/a&gt;. They provide you with AWS and Digital Ocean credits.&lt;/p&gt;
+&lt;p&gt;In my own setup, I use a VM (Compute Engie) running on Google Cloud Platform. Free credits can be obtained by applying for the &lt;a href=&quot;https://education.github.com/pack&quot;&gt;GitHub Student Developer Pack&lt;/a&gt;. They provide AWS credits, Digital Ocean credits and much more.&lt;/p&gt;
 
-&lt;p&gt;It is advised that you run ZNC over a seperate port, in which case you will be required to modify the firewall settings.&lt;/p&gt;
+&lt;p&gt;Usually, it is advised that ZNC should operate over a seperate port, in which case a new firewall rule will has to be created in the network settings.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/assets/images/irc-setup-part3/GCP-firewall-1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 &lt;div class=&quot;image-caption&quot;&gt;
@@ -35,7 +40,130 @@ In my setup, I use port 5999
 &lt;p&gt;To do so in GCP you will need to create a new firewall rule. Also, you will need to enable both &lt;code class=&quot;highlighter-rouge&quot;&gt;HTTP&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;HTTPS&lt;/code&gt; protocols on your VM. After, enabling the port, we will have to install &lt;code class=&quot;highlighter-rouge&quot;&gt;znc&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;znc-dev&lt;/code&gt;. We need &lt;code class=&quot;highlighter-rouge&quot;&gt;znc-dev&lt;/code&gt; in order to install and build modules.&lt;/p&gt;
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get update
 &lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get install znc znc-dev
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><summary type="html">What is ZNC (and, BNC)? ZNC, is an advanced IRC bouncer that is left connected so an IRC client can disconnect/reconnect without losing the chat session. A BNC (short for Bounced Network Connection) is a piece of software that is used to relay traffic and connections in computer networks, much like a proxy. Basically, ZNC will act as a bridge between our client and the IRC server.</summary></entry><entry><title type="html">How to do IRC the right way (Part 2)</title><link href="/2019/06/13/IRC-part2.html" rel="alternate" type="text/html" title="How to do IRC the right way (Part 2)" /><published>2019-06-13T00:00:00+05:30</published><updated>2019-06-13T00:00:00+05:30</updated><id>/2019/06/13/IRC-part2</id><content type="html" xml:base="/2019/06/13/IRC-part2.html">&lt;h2 id=&quot;whats-the-problem&quot;&gt;What’s the problem?&lt;/h2&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;step-2-setup-the-initial-znc-config&quot;&gt;Step 2: Setup the initial ZNC config.&lt;/h2&gt;
+&lt;p&gt;ZNC can be configured in two ways, using the &lt;code class=&quot;highlighter-rouge&quot;&gt;znc.conf&lt;/code&gt; or using the &lt;code class=&quot;highlighter-rouge&quot;&gt;webadmin&lt;/code&gt; interface. However, to perform the initial configuration ZNC has the &lt;code class=&quot;highlighter-rouge&quot;&gt;--makeconf&lt;/code&gt; option. It will ask you to create a ZNC username and password, which will enable you to access the &lt;code class=&quot;highlighter-rouge&quot;&gt;webadmin&lt;/code&gt; interface. The intial configuration process generates global, user, network and channel settings.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; ~ &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; znc &lt;span class=&quot;nt&quot;&gt;--makeconf&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; .. &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Checking &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;list of available modules...
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; » &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; ok
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt; Global settings &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; ?? &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Listen on port &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1025 to 65534&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: 5999
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; ?? &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Listen using SSL &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;yes/no&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;no]: yes
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; ?? &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Listen using both IPv4 and IPv6 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;yes/no&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;yes]: yes
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; .. &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Verifying the listener...
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; » &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; ok
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Unable to locate pem file: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;/home/xxxxx/.znc/znc.pem], creating it
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; .. &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Writing Pem file &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;/home/xxxxx/.znc/znc.pem]...
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; » &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; ok
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Enabled global modules &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;webadmin]
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt; Admin user settings &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; ?? &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Username &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;alphanumeric&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: tejas
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; ?? &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Enter password:
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; ?? &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Confirm password:
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; ?? &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Nick &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;whereistejas]:
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; ?? &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Alternate nick &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;whereistejas_]:
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; ?? &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Ident &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;tejassanap]:
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; ?? &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Real name &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Got ZNC?]: Tejas Sanap
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; ?? &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Bind host &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;optional&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Enabled user modules &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;chansaver, controlpanel]
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Next, you will be asked to set up an IRC network. You don’t have to say &lt;em&gt;yes&lt;/em&gt; since, this can also be done through the &lt;code class=&quot;highlighter-rouge&quot;&gt;webadmin&lt;/code&gt; interface.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; ?? &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Set up a network? &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;yes/no&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;yes]: yes
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt; Network settings &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; ?? &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Name &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;freenode]:
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; ?? &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Server host &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;chat.freenode.net]:
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; ?? &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Server uses SSL? &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;yes/no&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;yes]: yes
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; ?? &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Server port &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1 to 65535&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;6697]:
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; ?? &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Server password &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;probably empty&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; ?? &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Initial channels: &lt;span class=&quot;c&quot;&gt;#freenode&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Enabled network modules &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;simple_away]
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; .. &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Writing config &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;/home/xxxxx/.znc/configs/znc.conf]...
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; » &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; ok
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; To connect to this ZNC you need to connect to it as your IRC server
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; using the port that you supplied.  You have to supply your login info
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; as the IRC server password like this: user/network:pass.
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Try something like this &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;your IRC client...
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; /server &amp;lt;znc_server_ip&amp;gt; +5099 tejassanap:&amp;lt;pass&amp;gt;
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; To manage settings, users and networks, point your web browser to
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; https://&amp;lt;znc_server_ip&amp;gt;:5099/
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; ?? &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Launch ZNC now? &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;yes/no&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;yes]: yes
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; .. &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Opening config &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;/home/xxxxx/.znc/configs/znc.conf]...
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; » &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; ok
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; .. &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Loading global module &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;webadmin]...
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; » &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;/usr/lib/znc/webadmin.so]
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; .. &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Binding to port &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+5099]...
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; » &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; ok
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Loading user &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;tejassanap]
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Loading network &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;freenode]
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; .. &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Loading network module &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;simple_away]...
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; » &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;/usr/lib/znc/simple_away.so]
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; .. &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Adding server &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;chat.freenode.net +6697 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;...
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; » &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; ok
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; .. &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Loading user module &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;chansaver]...
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; » &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; ok
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; .. &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Loading user module &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;controlpanel]...
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; » &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; ok
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; .. &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Forking into the background...
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; » &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;pid: 27630]
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; ZNC 1.6.6+deb1ubuntu0.2 - http://znc.in
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;After this process, we have a running ZNC process. To confirm that the process is running you can run &lt;code class=&quot;highlighter-rouge&quot;&gt;znc&lt;/code&gt; command in the terminal. It should produce the following output&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; ~ &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; znc
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; .. &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Checking &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;list of available modules...
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; » &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; ok
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; .. &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Opening config &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;/home/xxxxx/.znc/configs/znc.conf]...
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!!&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; ZNC is already running on this config.
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Unrecoverable config error.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;step-3-configure-your-znc-setup-using-the-webadmin-ui&quot;&gt;Step 3: Configure your ZNC setup using the webadmin UI.&lt;/h2&gt;
+&lt;p&gt;With a running ZNC process, the best way to make changes is through the &lt;code class=&quot;highlighter-rouge&quot;&gt;webadmin&lt;/code&gt; UI. To open the &lt;code class=&quot;highlighter-rouge&quot;&gt;webadmin&lt;/code&gt; UI, open up an internet browser and type in &lt;code class=&quot;highlighter-rouge&quot;&gt;https://&amp;lt;server-IP-address&amp;gt;:&amp;lt;port&amp;gt;&lt;/code&gt;. In my case it is, &lt;code class=&quot;highlighter-rouge&quot;&gt;https://35.244.43.39:5999/&lt;/code&gt;. This opens up the login screen.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/irc-setup-part3/ZNC-webadmin-login-page.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;div class=&quot;image-caption&quot;&gt;
+We need to use username and password created in the previous step.
+&lt;/div&gt;
+
+&lt;p&gt;This brings us to the landing page. ZNC configuration is divided into two sections:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;Global Module settings&lt;/strong&gt; - These settings are &lt;strong&gt;only visible&lt;/strong&gt; to users with admin privileges.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;User Module settings&lt;/strong&gt; - These are user-specific settings. In a multi-user setting, an admin would see different settings for different users.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;This particular article will focus on a very simple setup. We will connect to the Freenode network on the &lt;code class=&quot;highlighter-rouge&quot;&gt;chat.freenode.net&lt;/code&gt; server and join &lt;code class=&quot;highlighter-rouge&quot;&gt;#freenode&lt;/code&gt; channel. Click on the &lt;em&gt;Your settings&lt;/em&gt; option under &lt;em&gt;User Modules&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/irc-setup-part3/ZNC-webadmin-landing-page.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;div class=&quot;image-caption&quot;&gt;
+The landing page contains links to various global and user settings.
+&lt;/div&gt;
+
+&lt;p&gt;On the &lt;em&gt;Your Settings&lt;/em&gt; page we can see that the first three sections are the same as the first three sections in &lt;code class=&quot;highlighter-rouge&quot;&gt;znc --makeconf&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/irc-setup-part3/ZNC-webadmin-user-settings.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;div class=&quot;image-caption&quot;&gt;
+The various options that need to managed.
+&lt;/div&gt;
+
+&lt;p&gt;All the important changes are listed below (match the color of the &lt;em&gt;box&lt;/em&gt; with the color of the &lt;em&gt;bullet&lt;/em&gt;) :&lt;/p&gt;
+&lt;ul class=&quot;ul-circles&quot;&gt;
+	&lt;li style=&quot;color: rgb(255,0,0);&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Timezone&lt;/b&gt; - Set the appropriate timezone. &lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: rgb(0,255,0);&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Auto Clear Chan Buffer&lt;/b&gt; - This checks if channel buffers are automatically cleared after playback. When disabled, messages are buffered even while clients are attached, and already seen messages may be repeated each time clients connect. This is important when multiple clients are connected.&lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: rgb(0,255,0);&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Auto Clear Query Buffer&lt;/b&gt; -This checks if query buffers are automatically cleared after playback. When disabled, messages are buffered even while clients are attached, and already seen messages may be repeated each time clients connect. This is important when multiple clients are connected.&lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: rgb(0,0,255);&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Buffer size&lt;/b&gt; - Any arbitrary number is fine. &lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: rgb(186,0,255);&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Add network&lt;/b&gt;&lt;/span&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!--- New network color = RGB = 186, 0, 255 --&gt;</content><author><name></name></author><summary type="html">What is ZNC (and, BNC)? ZNC, is an advanced IRC bouncer that is left connected so an IRC client can disconnect/reconnect without losing the chat session. A BNC (short for Bounced Network Connection) is a piece of software that is used to relay traffic and connections in computer networks, much like a proxy. Basically, ZNC will act as a bridge between a client and the IRC server.</summary></entry><entry><title type="html">How to do IRC the right way (Part 2)</title><link href="http://localhost:4000/2019/06/13/IRC-part2.html" rel="alternate" type="text/html" title="How to do IRC the right way (Part 2)" /><published>2019-06-13T00:00:00+05:30</published><updated>2019-06-13T00:00:00+05:30</updated><id>http://localhost:4000/2019/06/13/IRC-part2</id><content type="html" xml:base="http://localhost:4000/2019/06/13/IRC-part2.html">&lt;h2 id=&quot;whats-the-problem&quot;&gt;What’s the problem?&lt;/h2&gt;
 &lt;p&gt;One of the most annoying things about IRC is how it is not &lt;strong&gt;persistent&lt;/strong&gt;. There are two halves of this &lt;strong&gt;persistence&lt;/strong&gt; thing:&lt;/p&gt;
 &lt;ol&gt;
   &lt;li&gt;IRC doesn’t save the messages we have receive, the chats in which we are mentioned, etc., when &lt;em&gt;we are offline&lt;/em&gt;.&lt;/li&gt;
@@ -73,7 +201,7 @@ In my setup, I use port 5999
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ZNC&lt;/code&gt; isn’t an IRC client. Both of the solutions mentioned above used one particular client or one particular session. &lt;code class=&quot;highlighter-rouge&quot;&gt;ZNC&lt;/code&gt; is an IRC bouncer. In very simple terms, it keeps us connected to the network from a remote machine and acts as a bridge between the IRC network and us. &lt;code class=&quot;highlighter-rouge&quot;&gt;ZNC&lt;/code&gt; is capable of properly logging all the chats, maintaining different channel-lists for different clients and much more. The functionality of &lt;code class=&quot;highlighter-rouge&quot;&gt;ZNC&lt;/code&gt; can be extended with the help of modules. Most importantly, ZNC gives us the freedom to use as many clients and as many different types of clients as we want. In addition it gives us fine control over what is sent to which client, and how much of it can be synced between two or more clients.&lt;/p&gt;
 
 &lt;h2 id=&quot;now-what&quot;&gt;Now, what?&lt;/h2&gt;
-&lt;p&gt;IMHO, ZNC is the right way to do IRC. In the next article, we will discuss how to set up ZNC and connect to IRC.&lt;/p&gt;</content><author><name></name></author><summary type="html">What’s the problem? One of the most annoying things about IRC is how it is not persistent. There are two halves of this persistence thing: IRC doesn’t save the messages we have receive, the chats in which we are mentioned, etc., when we are offline. IRC doesn’t save our messages, logs and chats, when we go offline.</summary></entry><entry><title type="html">How to do IRC the right way (Part 1)</title><link href="/2019/06/12/IRC-part1.html" rel="alternate" type="text/html" title="How to do IRC the right way (Part 1)" /><published>2019-06-12T00:00:00+05:30</published><updated>2019-06-12T00:00:00+05:30</updated><id>/2019/06/12/IRC-part1</id><content type="html" xml:base="/2019/06/12/IRC-part1.html">&lt;p&gt;IRC which stands for Internet Relay Chat is one of the oldest methods of chatting across the internet. This piece of technology is as old as the internet, itself. Like, all great things about the internet it started with a Swede writing a program.&lt;/p&gt;
+&lt;p&gt;IMHO, ZNC is the right way to do IRC. In the next article, we will discuss how to set up ZNC and connect to IRC.&lt;/p&gt;</content><author><name></name></author><summary type="html">What’s the problem? One of the most annoying things about IRC is how it is not persistent. There are two halves of this persistence thing: IRC doesn’t save the messages we have receive, the chats in which we are mentioned, etc., when we are offline. IRC doesn’t save our messages, logs and chats, when we go offline.</summary></entry><entry><title type="html">How to do IRC the right way (Part 1)</title><link href="http://localhost:4000/2019/06/12/IRC-part1.html" rel="alternate" type="text/html" title="How to do IRC the right way (Part 1)" /><published>2019-06-12T00:00:00+05:30</published><updated>2019-06-12T00:00:00+05:30</updated><id>http://localhost:4000/2019/06/12/IRC-part1</id><content type="html" xml:base="http://localhost:4000/2019/06/12/IRC-part1.html">&lt;p&gt;IRC which stands for Internet Relay Chat is one of the oldest methods of chatting across the internet. This piece of technology is as old as the internet, itself. Like, all great things about the internet it started with a Swede writing a program.&lt;/p&gt;
 
 &lt;h2 id=&quot;what-is-irc-and-why-should-you-bother-with-it&quot;&gt;What is IRC and why should you bother with it?&lt;/h2&gt;
 
@@ -148,4 +276,44 @@ In my setup, I use port 5999
   &lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;However, there are ways of overcoming the above mentioned issues, which will be part of the next article. We can see at once, how the above metioned issues are connected with one another.&lt;/p&gt;</content><author><name></name></author><summary type="html">IRC which stands for Internet Relay Chat is one of the oldest methods of chatting across the internet. This piece of technology is as old as the internet, itself. Like, all great things about the internet it started with a Swede writing a program.</summary></entry></feed>
+&lt;p&gt;However, there are ways of overcoming the above mentioned issues, which will be part of the next article. We can see at once, how the above metioned issues are connected with one another.&lt;/p&gt;</content><author><name></name></author><summary type="html">IRC which stands for Internet Relay Chat is one of the oldest methods of chatting across the internet. This piece of technology is as old as the internet, itself. Like, all great things about the internet it started with a Swede writing a program.</summary></entry><entry><title type="html">Linear Programming</title><link href="http://localhost:4000/2018/11/02/OR-LP.html" rel="alternate" type="text/html" title="Linear Programming" /><published>2018-11-02T00:00:00+05:30</published><updated>2018-11-02T00:00:00+05:30</updated><id>http://localhost:4000/2018/11/02/OR-LP</id><content type="html" xml:base="http://localhost:4000/2018/11/02/OR-LP.html">&lt;p&gt;LP deals with the optimization of a function of variables known as &lt;em&gt;objective function/ cost function&lt;/em&gt;, subject to a set of linear equations and/or inequalities called &lt;em&gt;constraints&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h4 id=&quot;assumptions-in-lp&quot;&gt;Assumptions in LP&lt;/h4&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Proportionality: some sort of proportionality exists between the objective function and constraints.&lt;/li&gt;
+  &lt;li&gt;Additivity:&lt;/li&gt;
+  &lt;li&gt;Continuity: decision variables can take any non-negative value that satisfies the constraints. However, some problems need integer values.&lt;/li&gt;
+  &lt;li&gt;Certainty: all LP problems are assumed to be &lt;em&gt;deterministic&lt;/em&gt;.&lt;/li&gt;
+  &lt;li&gt;Finite Choices: a limited number of choices are available to the decision maker.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&quot;formulation-of-lp-problem&quot;&gt;Formulation of LP problem.&lt;/h4&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 1&lt;/strong&gt;: find the &lt;em&gt;key-decision&lt;/em&gt; to be made by looking for variables.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 2&lt;/strong&gt;: assume symbols for the variables and find the &lt;em&gt;extents&lt;/em&gt; of variation.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 3&lt;/strong&gt;: find &lt;em&gt;feasible alternatives&lt;/em&gt; mathematically in terms of variables.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 4&lt;/strong&gt;: mention the objective function &lt;em&gt;quantitavely&lt;/em&gt;, as a linear function. Prepare a &lt;strong&gt;cost function&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 5&lt;/strong&gt;: represent the &lt;em&gt;influencing factors&lt;/em&gt; or &lt;strong&gt;constraints&lt;/strong&gt; in mathematical terms.&lt;/p&gt;
+
+&lt;h4 id=&quot;advantages-of-lp&quot;&gt;Advantages of LP&lt;/h4&gt;
+&lt;ol&gt;
+  &lt;li&gt;attain optimum use of productive factors&lt;/li&gt;
+  &lt;li&gt;improve quality of decisions&lt;/li&gt;
+  &lt;li&gt;can handle multiple constraints&lt;/li&gt;
+  &lt;li&gt;highlights the bottlenecks&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&quot;disadvantages-of-lp&quot;&gt;Disadvantages of LP&lt;/h4&gt;
+&lt;ol&gt;
+  &lt;li&gt;for large problems there are too many limitations and constraints, this makes the problem too difficult to solve even with computers&lt;/li&gt;
+  &lt;li&gt;the problems have to linearly approximated thus, the obtained results may be far from reality&lt;/li&gt;
+  &lt;li&gt;only &lt;em&gt;static&lt;/em&gt; situations can be dealt with&lt;/li&gt;
+  &lt;li&gt;assume all values are known a priori with full certainty&lt;/li&gt;
+  &lt;li&gt;sometimes, the objective function and constraints cant be expressed in linear form&lt;/li&gt;
+  &lt;li&gt;multi-objective tasks cant be dealt with&lt;/li&gt;
+&lt;/ol&gt;</content><author><name>Tejas Sanap</name></author><summary type="html">LP deals with the optimization of a function of variables known as objective function/ cost function, subject to a set of linear equations and/or inequalities called constraints.</summary></entry></feed>
