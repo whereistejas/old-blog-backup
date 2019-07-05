@@ -199,7 +199,7 @@ The landing page contains links to various global and user settings.
 
 <p><img src="/assets/images/irc-setup-part3/ZNC-webadmin-user-settings.png" alt="" /></p>
 <div class="image-caption">
-The various options that need to managed.
+The user settings page.
 </div>
 
 <p>All the important changes are listed below (match the color of the <em>box</em> with the color of the <em>bullet</em>) :</p>
@@ -210,7 +210,40 @@ The various options that need to managed.
 	<li style="color: rgb(0,0,255);"><span style="color: #000;"><b>Buffer size</b> - Any arbitrary number is fine. </span></li>
 	<li style="color: rgb(186,0,255);"><span style="color: #000;"><b>Add network</b></span></li>
 </ul>
-<!--- New network color = RGB = 186, 0, 255 -->
+
+<h3 id="add-network-and-channel">Add network and channel</h3>
+<p>In this section of the <code class="highlighter-rouge">webadmin</code> UI, we see the third type of modules, <em>network</em> modules. One of the many attractive features of ZNC is the network-wise configuration, it allows us to do.</p>
+
+<frame>
+<img src="/assets/images/irc-setup-part3/ZNC-webadmin-network-settings.png" />
+<div class="image-caption">
+The network settings page.
+</div>
+</frame>
+
+<p>The first few sections are pretty straight-forward. The only puzzling part of network settings is where to put in the password for <code class="highlighter-rouge">nickserv</code>. This needs to be done using the nickserv module.</p>
+
+<p><img src="/assets/images/irc-setup-part3/ZNC-webadmin-add-channel.png" alt="" /></p>
+<div class="image-caption">
+The channel settings page.
+</div>
+
+<p>Then we insert the name of the channel and save the configuration. We are finished with configuring ZNC.</p>
+
+<h2 id="connecting-the-client-with-znc">Connecting the client with ZNC.</h2>
+<p>The <code class="highlighter-rouge">irssi</code> client can be connected to znc using the following commands</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/network add freenode-znc
+/server add -net freenode-znc -auto -ssl 35.244.43.39:5999 6697 tejas/freenode:password
+/save
+/connect freenode-znc
+</code></pre></div></div>
+<p><img src="/assets/images/irc-setup-part3/irssi-freenode.png" alt="" /></p>
+<div class="image-caption">
+The irssi statusbar shows that I have connected to my ZNC server.
+</div>
+
+<h1 id="conclusions">Conclusions</h1>
+<p>There are still a lot of empty spaces, that will deal with various “modules”, which will be covered in the next blog post.</p>
 
   </div><a class="u-url" href="/2019/07/04/IRC.part3.html" hidden></a>
 </article>
@@ -233,7 +266,7 @@ The various options that need to managed.
 </div>
 
       <div class="footer-col footer-col-3">
-        <p>Hey! This is my personal blog. I am still looking for myself.</p>
+        <p>All good things take time to build.</p>
       </div>
     </div>
 
