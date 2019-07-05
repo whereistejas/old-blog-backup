@@ -22,9 +22,8 @@
   .logo {
 	display: inline-block;
 	margin-right: 10px;
-  	@include media-query($on-palm) {
-		height: 64px;
-		width:  64px;
+	height: 64px;
+  	width:  64px;
   }
 
   @include media-query($on-palm) {
