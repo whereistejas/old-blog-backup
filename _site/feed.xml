@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-07-05T19:06:35+05:30</updated><id>http://localhost:4000/feed.xml</id><title type="html">whereistejas</title><subtitle>All good things take time.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-07-05T19:47:26+05:30</updated><id>http://localhost:4000/feed.xml</id><title type="html">whereistejas</title><subtitle>All good things take time.
 </subtitle><author><name>Tejas Sanap</name></author><entry><title type="html">How to do IRC the right way (Part 3)</title><link href="http://localhost:4000/2019/07/04/IRC.part3.html" rel="alternate" type="text/html" title="How to do IRC the right way (Part 3)" /><published>2019-07-04T00:00:00+05:30</published><updated>2019-07-04T00:00:00+05:30</updated><id>http://localhost:4000/2019/07/04/IRC.part3</id><content type="html" xml:base="http://localhost:4000/2019/07/04/IRC.part3.html">&lt;h2 id=&quot;what-is-znc-and-bnc&quot;&gt;What is ZNC (and, BNC)?&lt;/h2&gt;
 &lt;p&gt;ZNC, is an advanced IRC bouncer that is left connected so an IRC client can disconnect/reconnect without losing the chat session. A BNC (short for Bounced Network Connection) is a piece of software that is used to relay traffic and connections in computer networks, much like a proxy. Basically, ZNC will act as a bridge between a client and the IRC server.&lt;/p&gt;
 
@@ -33,6 +33,7 @@ This is how ZNC works
 &lt;div class=&quot;image-caption&quot;&gt;
 You can find the firewall settings in the VCP Networks submenu.
 &lt;/div&gt;
+
 &lt;p&gt;&lt;img src=&quot;/assets/images/irc-setup-part3/GCP-firewall-2.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 &lt;div class=&quot;image-caption&quot;&gt;
 In my setup, I use port 5999
@@ -42,6 +43,7 @@ In my setup, I use port 5999
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get update
 &lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;znc znc-dev
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
 &lt;h2 id=&quot;step-2-setup-the-initial-znc-config&quot;&gt;Step 2: Setup the initial ZNC config.&lt;/h2&gt;
 &lt;p&gt;ZNC can be configured in two ways, using the &lt;code class=&quot;highlighter-rouge&quot;&gt;znc.conf&lt;/code&gt; or using the &lt;code class=&quot;highlighter-rouge&quot;&gt;webadmin&lt;/code&gt; interface. However, to perform the initial configuration ZNC has the &lt;code class=&quot;highlighter-rouge&quot;&gt;--makeconf&lt;/code&gt; option. It will ask you to create a ZNC username and password, which will enable you to access the &lt;code class=&quot;highlighter-rouge&quot;&gt;webadmin&lt;/code&gt; interface. The intial configuration process generates global, user, network and channel settings.&lt;/p&gt;
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; ~ &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; znc &lt;span class=&quot;nt&quot;&gt;--makeconf&lt;/span&gt;
@@ -191,6 +193,7 @@ The channel settings page.
 /save
 /connect freenode-znc
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
 &lt;p&gt;&lt;img src=&quot;/assets/images/irc-setup-part3/irssi-freenode.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 &lt;div class=&quot;image-caption&quot;&gt;
 The irssi statusbar shows that I have connected to my ZNC server.

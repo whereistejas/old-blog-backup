@@ -16,7 +16,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-07-04T00:00:00+05:30" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2019/07/04/IRC.part3.html"},"@type":"BlogPosting","url":"http://localhost:4000/2019/07/04/IRC.part3.html","author":{"@type":"Person","name":"Tejas Sanap"},"headline":"How to do IRC the right way (Part 3)","dateModified":"2019-07-04T00:00:00+05:30","datePublished":"2019-07-04T00:00:00+05:30","description":"What is ZNC (and, BNC)? ZNC, is an advanced IRC bouncer that is left connected so an IRC client can disconnect/reconnect without losing the chat session. A BNC (short for Bounced Network Connection) is a piece of software that is used to relay traffic and connections in computer networks, much like a proxy. Basically, ZNC will act as a bridge between a client and the IRC server.","@context":"https://schema.org"}</script>
+{"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2019/07/04/IRC.part3.html"},"@type":"BlogPosting","url":"http://localhost:4000/2019/07/04/IRC.part3.html","headline":"How to do IRC the right way (Part 3)","dateModified":"2019-07-04T00:00:00+05:30","datePublished":"2019-07-04T00:00:00+05:30","author":{"@type":"Person","name":"Tejas Sanap"},"description":"What is ZNC (and, BNC)? ZNC, is an advanced IRC bouncer that is left connected so an IRC client can disconnect/reconnect without losing the chat session. A BNC (short for Bounced Network Connection) is a piece of software that is used to relay traffic and connections in computer networks, much like a proxy. Basically, ZNC will act as a bridge between a client and the IRC server.","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="whereistejas" /></head>
 <body><header class="site-header">
@@ -80,6 +80,7 @@ This is how ZNC works
 <div class="image-caption">
 You can find the firewall settings in the VCP Networks submenu.
 </div>
+
 <p><img src="/assets/images/irc-setup-part3/GCP-firewall-2.png" alt="" /></p>
 <div class="image-caption">
 In my setup, I use port 5999
@@ -89,6 +90,7 @@ In my setup, I use port 5999
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get update
 <span class="nb">sudo </span>apt-get <span class="nb">install </span>znc znc-dev
 </code></pre></div></div>
+
 <h2 id="step-2-setup-the-initial-znc-config">Step 2: Setup the initial ZNC config.</h2>
 <p>ZNC can be configured in two ways, using the <code class="highlighter-rouge">znc.conf</code> or using the <code class="highlighter-rouge">webadmin</code> interface. However, to perform the initial configuration ZNC has the <code class="highlighter-rouge">--makeconf</code> option. It will ask you to create a ZNC username and password, which will enable you to access the <code class="highlighter-rouge">webadmin</code> interface. The intial configuration process generates global, user, network and channel settings.</p>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ~ <span class="o">&gt;</span> znc <span class="nt">--makeconf</span>
@@ -238,6 +240,7 @@ The channel settings page.
 /save
 /connect freenode-znc
 </code></pre></div></div>
+
 <p><img src="/assets/images/irc-setup-part3/irssi-freenode.png" alt="" /></p>
 <div class="image-caption">
 The irssi statusbar shows that I have connected to my ZNC server.

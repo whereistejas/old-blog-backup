@@ -38,6 +38,31 @@ $on-large:         $on-laptop !default;
 // }
 // Notice the following mixin uses max-width, in a deprecated, desktop-first
 // approach, whereas media queries used elsewhere now use min-width.
+
+.ul-circles {
+  list-style-type: "⭘ " ;
+}
+
+
+div {
+  padding-top: 5px;
+  padding-bottom: 15px;
+}
+
+img {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+  display: block;
+  margin-right: auto;
+}
+
+.image-caption {
+  text-align: center;
+  font-size: .9rem;
+  color: light-grey;
+}
+
 @mixin media-query($device) {
   @media screen and (max-width: $device) {
     @content;
