@@ -4,7 +4,7 @@
 .site-header {
   border-top: 5px solid $grey-color-dark;
   border-bottom: 1px solid $grey-color-light;
-  min-height: $spacing-unit ;
+  //min-height: $spacing-unit ;
   //  line-height: $base-line-height * $base-font-size ;
 
   // Positioning context for the mobile navigation icon
@@ -22,8 +22,12 @@
   .logo {
 	display: inline-block;
 	margin-right: 10px;
-	height: 64px;
-  	width:  64px;
+	height: 32px;
+  	width:  32px;
+	@media screen and (min-width: $on-medium) {
+		height: 64px;
+  		width:  64px;
+	}
   }
 
   @include media-query($on-palm) {
@@ -99,6 +103,7 @@
     float: right;
     border: none;
     background-color: inherit;
+	font-size: 20px;
 
     label[for="nav-trigger"] {
       display: none;

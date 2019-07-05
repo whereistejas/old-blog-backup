@@ -212,7 +212,6 @@ table {
 .site-header {
   border-top: 5px solid #424242;
   border-bottom: 1px solid #e8e8e8;
-  min-height: 30px;
   position: relative;
   display: inline-block; }
 
@@ -225,8 +224,12 @@ table {
   .site-title .logo {
     display: inline-block;
     margin-right: 10px;
-    height: 64px;
-    width: 64px; }
+    height: 32px;
+    width: 32px; }
+    @media screen and (min-width: 600px) {
+      .site-title .logo {
+        height: 64px;
+        width: 64px; } }
   @media screen and (max-width: 600px) {
     .site-title {
       padding-right: 45px; } }
@@ -278,7 +281,8 @@ table {
       position: static;
       float: right;
       border: none;
-      background-color: inherit; }
+      background-color: inherit;
+      font-size: 20px; }
       .site-nav label[for="nav-trigger"] {
         display: none; }
       .site-nav .menu-icon {
