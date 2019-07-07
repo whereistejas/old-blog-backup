@@ -82,7 +82,7 @@ You can find the firewall settings in the VCP Networks submenu.
 
 <p><img src="/assets/images/irc-setup-part3/GCP-firewall-2.png" alt="" /></p>
 <div class="image-caption">
-In my setup, I use port 5999
+In my setup, I use port 5999.
 </div>
 
 <p>To do so in GCP you will need to create a new firewall rule. Also, you will need to enable both <code class="highlighter-rouge">HTTP</code> and <code class="highlighter-rouge">HTTPS</code> protocols on your VM. After, enabling the port, we will have to install <code class="highlighter-rouge">znc</code> and <code class="highlighter-rouge">znc-dev</code>. We need <code class="highlighter-rouge">znc-dev</code> in order to install and build modules.</p>
@@ -206,24 +206,37 @@ The user settings page.
 
 <p>All the important changes are listed below (match the color of the <em>box</em> with the color of the <em>bullet</em>) :</p>
 <ul class="ul-circles">
-	<li style="color: rgb(255,0,0);"><span style="color: #000;"><b>Timezone</b> - Set the appropriate timezone. </span></li>
-	<li style="color: rgb(0,255,0);"><span style="color: #000;"><b>Auto Clear Chan Buffer</b> - This checks if channel buffers are automatically cleared after playback. When disabled, messages are buffered even while clients are attached, and already seen messages may be repeated each time clients connect. This is important when multiple clients are connected.</span></li>
-	<li style="color: rgb(0,255,0);"><span style="color: #000;"><b>Auto Clear Query Buffer</b> -This checks if query buffers are automatically cleared after playback. When disabled, messages are buffered even while clients are attached, and already seen messages may be repeated each time clients connect. This is important when multiple clients are connected.</span></li>
-	<li style="color: rgb(0,0,255);"><span style="color: #000;"><b>Buffer size</b> - Any arbitrary number is fine. </span></li>
-	<li style="color: rgb(186,0,255);"><span style="color: #000;"><b>Add network</b></span></li>
+	<li style="color: #00a300;"><span style="color: #000;"><b>Add network</b> - Look in the next section.</span></li>
+	<li style="color: #ff0097;"><span style="color: #000;"><b>Buffer size</b> - Any arbitrary number is fine. </span></li>
+	<li style="color: #2d89ef;"><span style="color: #000;"><b>Auto Clear Chan Buffer</b> - This checks if channel buffers are automatically cleared after playback. When disabled, messages are buffered even while clients are attached, and already seen messages may be repeated each time clients connect. This is important when multiple clients are connected.</span></li>
+	<li style="color: #7e3878;"><span style="color: #000;"><b>Auto Clear Query Buffer</b> -This checks if query buffers are automatically cleared after playback. When disabled, messages are buffered even while clients are attached, and already seen messages may be repeated each time clients connect. This is important when multiple clients are connected.</span></li>
+	<li style="color: #ffc40d;"><span style="color: #000;"><b>Timezone</b> - Set the appropriate timezone. </span></li>
+	<li style="color: #ee1111;"><span style="color: #000;"><b>Client Encoding</b> - Try to use UTF-8 encoding, wherever possible. </span></li>
 </ul>
 
 <h3 id="add-network-and-channel">Add network and channel</h3>
 <p>In this section of the <code class="highlighter-rouge">webadmin</code> UI, we see the third type of modules, <em>network</em> modules. One of the many attractive features of ZNC is the network-wise configuration, it allows us to do.</p>
 
-<frame>
-<img src="/assets/images/irc-setup-part3/ZNC-webadmin-network-settings.png" />
+<p><img src="/assets/images/irc-setup-part3/ZNC-webadmin-network-settings.png" alt="" /></p>
 <div class="image-caption">
 The network settings page.
 </div>
-</frame>
 
-<p>The first few sections are pretty straight-forward. The only puzzling part of network settings is where to put in the password for <code class="highlighter-rouge">nickserv</code>. This needs to be done using the nickserv module.</p>
+<ul class="ul-circles">
+	<li style="color: #00a300;"><span style="color: #000;"><b>Enable flood protection</b> - Flooding is when a lot of messages are sent in quick succession. Normally, bots and servers are configured to kick users that spam a channel.</span></li>
+	<li style="color: #ff0097;"><span style="color: #000;"><b>Flood protection rate</b> - The number seconds per line before the flood rate kick in.</span></li>
+	<li style="color: #7e3878;"><span style="color: #000;"><b>Flood protection burst</b> - The number of lines that can be sent instantly.</span></li>
+	<li style="color: #2d89ef;"><span style="color: #000;"><b>Add channel</b> - Look in the next paragraph.</span></li>
+	<li style="color: #ffc40d;"><span style="color: #000;"><b><i>route_replies</i> module</b> - When using multiple clients, connecting to ZNC can sometimes send a lot of <span class="pre">/who</span>'s. This module prevents that from happening.</span></li>
+	<li style="color: #ee1111;"><span style="color: #000;"><b><i>sasl</i> module</b> - Enable SASL authentication instead of using the <i>nickserv</i> module.</span></li>
+	<li style="color: #000000;"><span style="color: #000;"><b><i>simple_away</i> module</b> - Turns you "away" when you are disconnected from the IRC.</span></li>
+</ul>
+<p>The only puzzling part of network settings is where to put in the password for <code class="highlighter-rouge">nickserv</code>. This needs to be done using the <em>nickserv</em> module. On networks supporting SASL, ZNC can also use SASL. The process of enabling SASL requires us to configure the client first. <strong>Thus, use the following only after you have connected the client to ZNC</strong>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/msg *sasl Mechanism PLAIN
+/msg *sasl RequireAuth yes
+/msg *sasl Set &lt;username&gt; [&lt;password&gt;]
+</code></pre></div></div>
 
 <p><img src="/assets/images/irc-setup-part3/ZNC-webadmin-add-channel.png" alt="" /></p>
 <div class="image-caption">
@@ -233,7 +246,7 @@ The channel settings page.
 <p>Then we insert the name of the channel and save the configuration. We are finished with configuring ZNC.</p>
 
 <h2 id="connecting-the-client-with-znc">Connecting the client with ZNC.</h2>
-<p>The <code class="highlighter-rouge">irssi</code> client can be connected to znc using the following commands</p>
+<p>The <code class="highlighter-rouge">irssi</code> client can be connected to znc using the following commands:</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/network add freenode-znc
 /server add -net freenode-znc -auto -ssl 35.244.43.39 5999 tejas/freenode:password
 /save
@@ -245,8 +258,8 @@ The channel settings page.
 The irssi statusbar shows that I have connected to my ZNC server.
 </div>
 
-<h1 id="conclusions">Conclusions</h1>
-<p>There are still a lot of empty spaces, that will deal with various “modules”, which will be covered in the next blog post.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>There are still a lot of empty spaces. Knowing how to how to install third-party modules, is important. We will cover that in the next blog.</p>
 
   </div><a class="u-url" href="/2019/07/04/IRC.part3.html" hidden></a>
 </article>

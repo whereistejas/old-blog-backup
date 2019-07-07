@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-07-06T09:40:50+05:30</updated><id>http://localhost:4000/feed.xml</id><title type="html">whereistejas</title><subtitle>All good things take time.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-07-07T18:12:29+05:30</updated><id>http://localhost:4000/feed.xml</id><title type="html">whereistejas</title><subtitle>All good things take time.
 </subtitle><author><name>Tejas Sanap</name></author><entry><title type="html">How to do IRC the right way (Part 3)</title><link href="http://localhost:4000/2019/07/04/IRC.part3.html" rel="alternate" type="text/html" title="How to do IRC the right way (Part 3)" /><published>2019-07-04T00:00:00+05:30</published><updated>2019-07-04T00:00:00+05:30</updated><id>http://localhost:4000/2019/07/04/IRC.part3</id><content type="html" xml:base="http://localhost:4000/2019/07/04/IRC.part3.html">&lt;h2 id=&quot;what-is-znc-and-bnc&quot;&gt;What is ZNC (and, BNC)?&lt;/h2&gt;
 &lt;p&gt;ZNC, is an advanced IRC bouncer that is left connected so an IRC client can disconnect/reconnect without losing the chat session. A BNC (short for Bounced Network Connection) is a piece of software that is used to relay traffic and connections in computer networks, much like a proxy. Basically, ZNC will act as a bridge between a client and the IRC server.&lt;/p&gt;
 
@@ -36,7 +36,7 @@ You can find the firewall settings in the VCP Networks submenu.
 
 &lt;p&gt;&lt;img src=&quot;/assets/images/irc-setup-part3/GCP-firewall-2.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 &lt;div class=&quot;image-caption&quot;&gt;
-In my setup, I use port 5999
+In my setup, I use port 5999.
 &lt;/div&gt;
 
 &lt;p&gt;To do so in GCP you will need to create a new firewall rule. Also, you will need to enable both &lt;code class=&quot;highlighter-rouge&quot;&gt;HTTP&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;HTTPS&lt;/code&gt; protocols on your VM. After, enabling the port, we will have to install &lt;code class=&quot;highlighter-rouge&quot;&gt;znc&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;znc-dev&lt;/code&gt;. We need &lt;code class=&quot;highlighter-rouge&quot;&gt;znc-dev&lt;/code&gt; in order to install and build modules.&lt;/p&gt;
@@ -160,24 +160,37 @@ The user settings page.
 
 &lt;p&gt;All the important changes are listed below (match the color of the &lt;em&gt;box&lt;/em&gt; with the color of the &lt;em&gt;bullet&lt;/em&gt;) :&lt;/p&gt;
 &lt;ul class=&quot;ul-circles&quot;&gt;
-	&lt;li style=&quot;color: rgb(255,0,0);&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Timezone&lt;/b&gt; - Set the appropriate timezone. &lt;/span&gt;&lt;/li&gt;
-	&lt;li style=&quot;color: rgb(0,255,0);&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Auto Clear Chan Buffer&lt;/b&gt; - This checks if channel buffers are automatically cleared after playback. When disabled, messages are buffered even while clients are attached, and already seen messages may be repeated each time clients connect. This is important when multiple clients are connected.&lt;/span&gt;&lt;/li&gt;
-	&lt;li style=&quot;color: rgb(0,255,0);&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Auto Clear Query Buffer&lt;/b&gt; -This checks if query buffers are automatically cleared after playback. When disabled, messages are buffered even while clients are attached, and already seen messages may be repeated each time clients connect. This is important when multiple clients are connected.&lt;/span&gt;&lt;/li&gt;
-	&lt;li style=&quot;color: rgb(0,0,255);&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Buffer size&lt;/b&gt; - Any arbitrary number is fine. &lt;/span&gt;&lt;/li&gt;
-	&lt;li style=&quot;color: rgb(186,0,255);&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Add network&lt;/b&gt;&lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: #00a300;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Add network&lt;/b&gt; - Look in the next section.&lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: #ff0097;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Buffer size&lt;/b&gt; - Any arbitrary number is fine. &lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: #2d89ef;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Auto Clear Chan Buffer&lt;/b&gt; - This checks if channel buffers are automatically cleared after playback. When disabled, messages are buffered even while clients are attached, and already seen messages may be repeated each time clients connect. This is important when multiple clients are connected.&lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: #7e3878;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Auto Clear Query Buffer&lt;/b&gt; -This checks if query buffers are automatically cleared after playback. When disabled, messages are buffered even while clients are attached, and already seen messages may be repeated each time clients connect. This is important when multiple clients are connected.&lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: #ffc40d;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Timezone&lt;/b&gt; - Set the appropriate timezone. &lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: #ee1111;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Client Encoding&lt;/b&gt; - Try to use UTF-8 encoding, wherever possible. &lt;/span&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&quot;add-network-and-channel&quot;&gt;Add network and channel&lt;/h3&gt;
 &lt;p&gt;In this section of the &lt;code class=&quot;highlighter-rouge&quot;&gt;webadmin&lt;/code&gt; UI, we see the third type of modules, &lt;em&gt;network&lt;/em&gt; modules. One of the many attractive features of ZNC is the network-wise configuration, it allows us to do.&lt;/p&gt;
 
-&lt;frame&gt;
-&lt;img src=&quot;/assets/images/irc-setup-part3/ZNC-webadmin-network-settings.png&quot; /&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/irc-setup-part3/ZNC-webadmin-network-settings.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 &lt;div class=&quot;image-caption&quot;&gt;
 The network settings page.
 &lt;/div&gt;
-&lt;/frame&gt;
 
-&lt;p&gt;The first few sections are pretty straight-forward. The only puzzling part of network settings is where to put in the password for &lt;code class=&quot;highlighter-rouge&quot;&gt;nickserv&lt;/code&gt;. This needs to be done using the nickserv module.&lt;/p&gt;
+&lt;ul class=&quot;ul-circles&quot;&gt;
+	&lt;li style=&quot;color: #00a300;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Enable flood protection&lt;/b&gt; - Flooding is when a lot of messages are sent in quick succession. Normally, bots and servers are configured to kick users that spam a channel.&lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: #ff0097;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Flood protection rate&lt;/b&gt; - The number seconds per line before the flood rate kick in.&lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: #7e3878;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Flood protection burst&lt;/b&gt; - The number of lines that can be sent instantly.&lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: #2d89ef;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Add channel&lt;/b&gt; - Look in the next paragraph.&lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: #ffc40d;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;&lt;i&gt;route_replies&lt;/i&gt; module&lt;/b&gt; - When using multiple clients, connecting to ZNC can sometimes send a lot of &lt;span class=&quot;pre&quot;&gt;/who&lt;/span&gt;'s. This module prevents that from happening.&lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: #ee1111;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;&lt;i&gt;sasl&lt;/i&gt; module&lt;/b&gt; - Enable SASL authentication instead of using the &lt;i&gt;nickserv&lt;/i&gt; module.&lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: #000000;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;&lt;i&gt;simple_away&lt;/i&gt; module&lt;/b&gt; - Turns you &quot;away&quot; when you are disconnected from the IRC.&lt;/span&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The only puzzling part of network settings is where to put in the password for &lt;code class=&quot;highlighter-rouge&quot;&gt;nickserv&lt;/code&gt;. This needs to be done using the &lt;em&gt;nickserv&lt;/em&gt; module. On networks supporting SASL, ZNC can also use SASL. The process of enabling SASL requires us to configure the client first. &lt;strong&gt;Thus, use the following only after you have connected the client to ZNC&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/msg *sasl Mechanism PLAIN
+/msg *sasl RequireAuth yes
+/msg *sasl Set &amp;lt;username&amp;gt; [&amp;lt;password&amp;gt;]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;&lt;img src=&quot;/assets/images/irc-setup-part3/ZNC-webadmin-add-channel.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 &lt;div class=&quot;image-caption&quot;&gt;
@@ -187,7 +200,7 @@ The channel settings page.
 &lt;p&gt;Then we insert the name of the channel and save the configuration. We are finished with configuring ZNC.&lt;/p&gt;
 
 &lt;h2 id=&quot;connecting-the-client-with-znc&quot;&gt;Connecting the client with ZNC.&lt;/h2&gt;
-&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;irssi&lt;/code&gt; client can be connected to znc using the following commands&lt;/p&gt;
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;irssi&lt;/code&gt; client can be connected to znc using the following commands:&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/network add freenode-znc
 /server add -net freenode-znc -auto -ssl 35.244.43.39 5999 tejas/freenode:password
 /save
@@ -199,8 +212,8 @@ The channel settings page.
 The irssi statusbar shows that I have connected to my ZNC server.
 &lt;/div&gt;
 
-&lt;h1 id=&quot;conclusions&quot;&gt;Conclusions&lt;/h1&gt;
-&lt;p&gt;There are still a lot of empty spaces, that will deal with various “modules”, which will be covered in the next blog post.&lt;/p&gt;</content><author><name>Tejas Sanap</name></author><summary type="html">What is ZNC (and, BNC)? ZNC, is an advanced IRC bouncer that is left connected so an IRC client can disconnect/reconnect without losing the chat session. A BNC (short for Bounced Network Connection) is a piece of software that is used to relay traffic and connections in computer networks, much like a proxy. Basically, ZNC will act as a bridge between a client and the IRC server.</summary></entry><entry><title type="html">How to do IRC the right way (Part 2)</title><link href="http://localhost:4000/2019/06/13/IRC-part2.html" rel="alternate" type="text/html" title="How to do IRC the right way (Part 2)" /><published>2019-06-13T00:00:00+05:30</published><updated>2019-06-13T00:00:00+05:30</updated><id>http://localhost:4000/2019/06/13/IRC-part2</id><content type="html" xml:base="http://localhost:4000/2019/06/13/IRC-part2.html">&lt;h2 id=&quot;whats-the-problem&quot;&gt;What’s the problem?&lt;/h2&gt;
+&lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;There are still a lot of empty spaces. Knowing how to how to install third-party modules, is important. We will cover that in the next blog.&lt;/p&gt;</content><author><name>Tejas Sanap</name></author><summary type="html">What is ZNC (and, BNC)? ZNC, is an advanced IRC bouncer that is left connected so an IRC client can disconnect/reconnect without losing the chat session. A BNC (short for Bounced Network Connection) is a piece of software that is used to relay traffic and connections in computer networks, much like a proxy. Basically, ZNC will act as a bridge between a client and the IRC server.</summary></entry><entry><title type="html">How to do IRC the right way (Part 2)</title><link href="http://localhost:4000/2019/06/13/IRC-part2.html" rel="alternate" type="text/html" title="How to do IRC the right way (Part 2)" /><published>2019-06-13T00:00:00+05:30</published><updated>2019-06-13T00:00:00+05:30</updated><id>http://localhost:4000/2019/06/13/IRC-part2</id><content type="html" xml:base="http://localhost:4000/2019/06/13/IRC-part2.html">&lt;h2 id=&quot;whats-the-problem&quot;&gt;What’s the problem?&lt;/h2&gt;
 &lt;p&gt;One of the most annoying things about IRC is how it is not &lt;strong&gt;persistent&lt;/strong&gt;. There are two halves of this &lt;strong&gt;persistence&lt;/strong&gt; thing:&lt;/p&gt;
 &lt;ol&gt;
   &lt;li&gt;IRC doesn’t save the messages we have receive, the chats in which we are mentioned, etc., when &lt;em&gt;we are offline&lt;/em&gt;.&lt;/li&gt;
