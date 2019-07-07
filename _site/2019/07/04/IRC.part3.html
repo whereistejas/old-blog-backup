@@ -64,14 +64,14 @@ This is how ZNC works
 <h2 id="how-do-we-setup-znc">How do we setup ZNC?</h2>
 <p>This needs to occur in four steps:</p>
 <ol>
-  <li>Install <code class="highlighter-rouge">znc</code> on a server. The word ‘server’ is very important here. ZNC needs to be installed on a machine that is always running and always connected to the internet. Once the ZNC service has started, no changes should be made in <code class="highlighter-rouge">znc.conf</code>.</li>
+  <li>Install <code class="highlighter-rouge">znc</code> on a server. The word ‘server’ is very important here. ZNC needs to be installed on a machine that is always running and always connected to the internet. Once the ZNC service has started, no changes should be made in <code class="highlighter-rouge">znc.conf</code>, manually.</li>
   <li>Generate an initial config file using <code class="highlighter-rouge">znc --makeconf</code> and configure it.</li>
   <li>Configure which networks and channels to connect to using the <code class="highlighter-rouge">znc webadmin</code>.</li>
   <li>Configure the IRC client to connect to ZNC.</li>
 </ol>
 
 <h2 id="step-1-install-znc-on-your-server">Step 1: Install ZNC on your server.</h2>
-<p>In my own setup, I use a VM (Compute Engie) running on Google Cloud Platform. Free credits can be obtained by applying for the <a href="https://education.github.com/pack">GitHub Student Developer Pack</a>. They provide AWS credits, Digital Ocean credits and much more.</p>
+<p>In my own setup, I use a VM (Compute Engine) running on Google Cloud Platform. Free credits can be obtained by applying for the <a href="https://education.github.com/pack">GitHub Student Developer Pack</a>. They provide AWS credits, Digital Ocean credits and much more.</p>
 
 <p>Usually, it is advised that ZNC should operate over a seperate port, in which case a new firewall rule will has to be created in the network settings.</p>
 
@@ -92,7 +92,7 @@ sudo apt-get install znc znc-dev
 </code></pre></div></div>
 
 <h2 id="step-2-setup-the-initial-znc-config">Step 2: Setup the initial ZNC config.</h2>
-<p>ZNC can be configured in two ways, using the <code class="highlighter-rouge">znc.conf</code> or using the <code class="highlighter-rouge">webadmin</code> interface. However, to perform the initial configuration ZNC has the <code class="highlighter-rouge">--makeconf</code> option. It will ask you to create a ZNC username and password, which will enable you to access the <code class="highlighter-rouge">webadmin</code> interface. The intial configuration process generates global, user, network and channel settings.</p>
+<p>ZNC can be configured in two ways, using the <code class="highlighter-rouge">znc.conf</code> or using the <code class="highlighter-rouge">webadmin</code> interface. However, to perform the initial configuration ZNC has the <code class="highlighter-rouge">--makeconf</code> option. It will ask you to create a ZNC username and password, which will enable you to access the <code class="highlighter-rouge">webadmin</code> interface. The initial configuration process generates global, user, network and channel settings.</p>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ~ <span class="o">&gt;</span> znc <span class="nt">--makeconf</span>
  <span class="o">[</span> .. <span class="o">]</span> Checking <span class="k">for </span>list of available modules...
  <span class="o">[</span> » <span class="o">]</span> ok
@@ -260,7 +260,7 @@ The irssi statusbar shows that I have connected to my ZNC server.
 </div>
 
 <h1 id="conclusion">Conclusion</h1>
-<p>There are still a lot of empty spaces. Knowing how to how to install third-party modules, is important. We will cover that in the next blog.</p>
+<p>There are still a lot of empty spaces. Knowing how to how to install third-party modules, is important. We will cover that in the next blog. In the making of this blog, I heavily relied on <code class="highlighter-rouge">#znc</code> on Freenode and <a href="www.wiki.znc.in">ZNC</a>. I highly recommend both the resources to anyone who uses ZNC.</p>
 
   </div><a class="u-url" href="/2019/07/04/IRC.part3.html" hidden></a>
 </article>
