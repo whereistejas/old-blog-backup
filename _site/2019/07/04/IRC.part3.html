@@ -86,8 +86,9 @@ In my setup, I use port 5999.
 </div>
 
 <p>To do so in GCP you will need to create a new firewall rule. Also, you will need to enable both <code class="highlighter-rouge">HTTP</code> and <code class="highlighter-rouge">HTTPS</code> protocols on your VM. After, enabling the port, we will have to install <code class="highlighter-rouge">znc</code> and <code class="highlighter-rouge">znc-dev</code>. We need <code class="highlighter-rouge">znc-dev</code> in order to install and build modules.</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get update
-<span class="nb">sudo </span>apt-get <span class="nb">install </span>znc znc-dev
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get update
+sudo apt-get install znc znc-dev
 </code></pre></div></div>
 
 <h2 id="step-2-setup-the-initial-znc-config">Step 2: Setup the initial ZNC config.</h2>
