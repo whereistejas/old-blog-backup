@@ -48,9 +48,9 @@
     <h2 id="what-is-znc-and-bnc">What is ZNC (and, BNC)?</h2>
 <p>ZNC, is an advanced IRC bouncer that is left connected so an IRC client can disconnect/reconnect without losing the chat session. A BNC (short for Bounced Network Connection) is a piece of software that is used to relay traffic and connections in computer networks, much like a proxy. Basically, ZNC will act as a bridge between a client and the IRC server.</p>
 
-<p><img src="/assets/images/irc-setup-part3/ZNC-network1.png" alt="" /></p>
+<p><a href="https://wiki.znc.in/ZNC"><img src="/assets/images/irc-setup-part3/ZNC-network1.png" alt="" /></a></p>
 <div class="image-caption">
-This is how ZNC works
+This is how ZNC works.
 </div>
 
 <p>ZNC offers some strong features, listed below:</p>
@@ -73,7 +73,7 @@ This is how ZNC works
 <h2 id="step-1-install-znc-on-your-server">Step 1: Install ZNC on your server.</h2>
 <p>In my own setup, I use a VM (Compute Engine) running on Google Cloud Platform. Free credits can be obtained by applying for the <a href="https://education.github.com/pack">GitHub Student Developer Pack</a>. They provide AWS credits, Digital Ocean credits and much more.</p>
 
-<p>Usually, it is advised that ZNC should operate over a seperate port, in which case a new firewall rule will has to be created in the network settings.</p>
+<p>ZNC should be operated on a seperate port. A new firewall rule has to be created to enable that port.</p>
 
 <p><img src="/assets/images/irc-setup-part3/GCP-firewall-1.png" alt="" /></p>
 <div class="image-caption">
@@ -87,7 +87,8 @@ In my setup, I use port 5999.
 
 <p>To do so in GCP you will need to create a new firewall rule. Also, you will need to enable both <code class="highlighter-rouge">HTTP</code> and <code class="highlighter-rouge">HTTPS</code> protocols on your VM. After, enabling the port, we will have to install <code class="highlighter-rouge">znc</code> and <code class="highlighter-rouge">znc-dev</code>. We need <code class="highlighter-rouge">znc-dev</code> in order to install and build modules.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get update
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo add-apt-repository ppa:teward/znc
+sudo apt-get update
 sudo apt-get install znc znc-dev
 </code></pre></div></div>
 
@@ -260,7 +261,7 @@ The irssi statusbar shows that I have connected to my ZNC server.
 </div>
 
 <h1 id="conclusion">Conclusion</h1>
-<p>There are still a lot of empty spaces. Knowing how to how to install third-party modules, is important. We will cover that in the next blog. In the making of this blog, I heavily relied on <code class="highlighter-rouge">#znc</code> on Freenode and <a href="www.wiki.znc.in">ZNC</a>. I highly recommend both the resources to anyone who uses ZNC.</p>
+<p>There are still a lot of empty spaces. Knowing how to how to install third-party modules, is important. We will cover that in the next post. In the making of this blog, I heavily relied on <code class="highlighter-rouge">#znc</code> on Freenode and <a href="https://wiki.znc.in/ZNC">ZNC</a>. I highly recommend both the resources to anyone who uses ZNC.</p>
 
   </div><a class="u-url" href="/2019/07/04/IRC.part3.html" hidden></a>
 </article>
