@@ -43,10 +43,16 @@ $on-large:         $on-laptop !default;
   list-style-type: "⭘ " ;
 }
 
-
-div {
+.image-caption {
+  display: block;
+  text-align: center;
+  font-size: .9rem;
+  color: light-grey;
   padding-top: 5px;
   padding-bottom: 15px;
+}
+
+div {
 }
 
 img {
@@ -62,12 +68,6 @@ code {
 	display: inline;
 }
 
-.image-caption {
-  display: block;
-  text-align: center;
-  font-size: .9rem;
-  color: light-grey;
-}
 
 @mixin media-query($device) {
   @media screen and (max-width: $device) {

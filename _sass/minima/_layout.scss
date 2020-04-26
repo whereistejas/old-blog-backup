@@ -28,6 +28,7 @@
 		height: 64px;
   		width:  64px;
 	}
+	border: 0px;
   }
 
   @include media-query($on-palm) {
@@ -42,7 +43,7 @@
 
 .site-nav {
   position: absolute;
-  top: 9px;
+  // top: 9px;
   right: $spacing-unit / 2;
   background-color: $background-color;
   border: 1px solid $grey-color-light;
@@ -77,6 +78,7 @@
 
   input ~ .trigger {
     clear: both;
+	margin: 20px;
     display: none;
   }
 
@@ -89,13 +91,12 @@
     color: $text-color;
     line-height: $base-line-height;
     display: block;
-    padding: 5px 10px;
 
     // Gaps between nav items, but not on the last one
     &:not(:last-child) {
       margin-right: 0;
+	  padding: 10px 10px;
     }
-    margin-left: 20px;
   }
 
   @media screen and (min-width: $on-medium) {
@@ -103,7 +104,8 @@
     float: right;
     border: none;
     background-color: inherit;
-	font-size: 20px;
+	font-size: 22px;
+	font-weight: 300;
 
     label[for="nav-trigger"] {
       display: none;
