@@ -16,25 +16,7 @@ minima:
   social_links:
     twitter: whereistejas
     github:  whereistejas
-    # dribbble: jekyll
-    # facebook: jekyll
-    # flickr:   jekyll
     instagram: whereistejas
-    # linkedin: jekyll
-    # pinterest: jekyll
-    # youtube: jekyll
-    # youtube_channel: UC8CXR0-3I70i1tfPg1PAE1g
-    # youtube_channel_name: CloudCannon
-    # telegram: jekyll
-    # googleplus: +jekyll
-    # microdotblog: jekyll
-
-    # Mastodon instances
-    # mastodon:
-    # - username: jekyll
-    #   instance: example.com
-    # - username: jekyll2
-    #   instance: example.com
 
 # If you want to link only specific pages in your header, uncomment
 # this and add the path to the pages in order as they should show up
@@ -43,6 +25,7 @@ minima:
 
 # Build settings
 theme: minima
+highlighter: rouge
 
 plugins:
  - jekyll-feed
