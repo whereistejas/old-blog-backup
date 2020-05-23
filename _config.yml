@@ -6,16 +6,13 @@ description: > # this means to ignore newlines until "show_excerpts:"
 
 show_excerpts: true # set to true to show excerpts on the homepage
 
-google_analytics: UA-143286868-1
-# Minima date format
-# refer to https://shopify.github.io/liquid/filters/date/ if you want to customize this
 minima:
   date_format: "%b %-d, %Y"
 
   # generate social links in footer
   social_links:
     twitter: whereistejas
-    github:  whereistejas
+    github: whereistejas
     instagram: whereistejas
 
 # If you want to link only specific pages in your header, uncomment
@@ -25,7 +22,6 @@ minima:
 
 # Build settings
 theme: minima
-highlighter: rouge
 
 plugins:
  - jekyll-feed
