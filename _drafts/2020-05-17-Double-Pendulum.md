@@ -1,17 +1,11 @@
 ---
 layout: post
-author:
-- Tejas Sanap
-title: Let's talk about double pendulums.
+author: Tejas Sanap
+title: "Double Pendulums (Part 1)"
 ---
 
-This post is basically going to be about how to animate stuff using python's `matplotlib` library.
-Some disclaimers, before we get started:
-1. I'm not an expert at any of this.
-2. I don't use python on a daily basis.
-3. My code is meant to be easy to understand not efficient to run.
+This series is basically going to be about how to animate stuff using python's `matplotlib` library. `matplotlib` has an excellent [documentation](https://matplotlib.org/3.2.1/contents.html) where you can find a detailed documentation on each of the methods I have used in this blog post. Also, I will be publishing each part of this series in the form of a jupyter notebook, which can be found [here]().
 
-You can find each section in the form of a jupyter notebook at the following [link]().
 
 ## 1. let's start with some basic plotting.
 
@@ -19,7 +13,7 @@ The module used most often to make plots is called `matplotlib.pyplot`. Thankful
 
 To get acquainted with the basics, let's try plotting how much distance an object under free-fall travels with respect to time and also, it's velocity at each time step.
 
-If, you have ever studied physics, you can tell that is a classic case of Newton's equations of motion.
+If, you have ever studied physics, you can tell that is a classic case of Newton's equations of motion, where...
 
 $$ v = a \times t $$
 
@@ -102,6 +96,68 @@ plt.grid(True)
 Here, we run into some obvious and serious issues. We can see that since both the quantities share the same scale, but have very different magnitudes, the graph looks disproportionate. What we need to do is seperate the two quantities on two different axes. This is where the second approach to making plot comes into play.
 
 ### 1.2 Object Oriented Approach
+When dealing with the object-oriented approach, it is important to understand how `matplotlib` makes plots. Every plot is made up of two objects, a `Figure` object and an `Axes` object. EAch `Axes` object refers to one plot. One can have as many of them as one wants. All of these various objects are brought together in the `Figure` object.
+
+This will prove immensely helpful in solving our problem. We can have two different `Axes` objects for distance and velocity and show it in a single `Figure`.
+
+```python
+fig, ax1 = plt.subplots()
+
+ax1.set_ylabel("distance (m)")
+ax1.set_xlabel("time")
+ax1.plot(time, distance, "blue")
+
+ax2 = ax1.twinx() # create another y-axis sharing a common x-axis
+
+ax2.set_ylabel("velocity (m/s)")
+ax2.set_xlabel("time")
+ax2.plot(time, velocity, "green")
+
+fig.set_size_inches(7,5)
+fig.set_dpi(100)
+
+plt.show()
+```
+
+![png](/assets/images/double-pendulum/section-1-basics-of-plotting/distance-and-velocity-different-axes-unfinished.png)
+
+Let's break down the code that we have written. The `plt.subplots()` method returns to us a `Figure` and `Axes` object. Each `Axes` object is in itself an entire plot, with it's own labels, ticks, legends and everything else. This gives us a very fine level of control. It is worth noting that all methods used to set the various properties start with `set_`. So, when in doubt one can just look through the methods list starting with `set_`.
+
+However, we can still add some finishing touches to the plot we have created. This is where we start seeing the power that can be derived from the flexibility of the Object Oriented Approach.
+
+```python
+fig, ax1 = plt.subplots()
+
+ax1.set_ylabel("distance (m)", color="blue")
+ax1.set_xlabel("time")
+ax1.plot(time, distance, "blue")
+ax1.set_yticks(np.linspace(*ax1.get_ybound(), 10))
+ax1.tick_params(axis="y", labelcolor="blue")
+ax1.xaxis.grid()
+ax1.yaxis.grid()
+
+ax2 = ax1.twinx() # create another y-axis sharing a common x-axis
+
+ax2.set_ylabel("velocity (m/s)", color="green")
+ax2.set_xlabel("time")
+
+ax2.tick_params(axis="y", labelcolor="green")
+ax2.plot(time, velocity, "green")
+ax2.set_yticks(np.linspace(*ax2.get_ybound(), 10))
+
+fig.set_size_inches(7,5)
+fig.set_dpi(100)
+fig.legend(["Distance", "Velocity"])
+plt.show()
+```
+
+![png](/assets/images/double-pendulum/section-1-basics-of-plotting/distance-and-velocity-different-axes-finished.png)
+
+At this point you don't have to worry about the advanced methods I have used such as `tick_params`.
+
+## Conclusion
+
+In this part, we covered some basics of `matplotlib` plotting, covering the basic two approaches of how to make plots. In the next part, we will cover how to make simple animations.
 
 ## references
 
