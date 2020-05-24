@@ -6,12 +6,13 @@ title: "Double Pendulums (Part 1)"
 
 This series is basically going to be about how to animate stuff using python's `matplotlib` library. `matplotlib` has an excellent [documentation](https://matplotlib.org/3.2.1/contents.html) where you can find a detailed documentation on each of the methods I have used in this blog post. Also, I will be publishing each part of this series in the form of a jupyter notebook, which can be found [here]().
 
+I would like to say a few words about the methodology of these series:
+1. Each part, will have a list of references at the end of the post, mostly leading to appropriate pages of the documentation and helpful blogs written by other people. **THIS IS THE MOST IMPORTANT PART**. The sooner you get used to reading the documentation, the better.
+2. The code written here, is meant to show you how you can piece everything together. I will try my best to describe the nuances of my implementations and the tiny lessons I learned.
 
-## 1. let's start with some basic plotting.
+## Generating the data points.
 
-The module used most often to make plots is called `matplotlib.pyplot`. Thankfully, you will find that most syntax in `matplotlib` is such that it makes sense to a layman (like you and me).
-
-To get acquainted with the basics, let's try plotting how much distance an object under free-fall travels with respect to time and also, it's velocity at each time step.
+To get acquainted with the basics of plotting with `matplotlib`, let's try plotting how much distance an object under free-fall travels with respect to time and also, it's velocity at each time step.
 
 If, you have ever studied physics, you can tell that is a classic case of Newton's equations of motion, where...
 
@@ -39,10 +40,22 @@ for index, vel in enumerate(velocity):
 for index, dis in enumerate(distance):
     # distance = 0.5 * acceleration (g) * time^2
     distance[index] = 0.5 * g * time[index]**2 
-    
 ```
 
-When using `matplotlib` it is important to know, that there are two different approaches to making plots in `matplotlib` [lifecycle-of-a-plot](). The two approaches are:
+The above code gives us two `numpy` arrays populated with the distance and velocity data points. You will notice that when looping over the arrays, I have used the `enumerate` method. We can often see people using the `list.index()` method or using the `len()` to generate the index. Both of these approaches, are wasteful. Using the `enumerate` method offers two advantages:
+
+1. The `enumerate` method is internally implemented as a python generator. This means that the index and values are generated on the fly and just in time. This can prove immensely helpful when you are iterating over an array with a 100,000 floating data points. This makes our code faster and prevents unnecessary memory consumption.
+2. It makes the code more *pythonic*.
+
+## Functional vs. Object-Oriented interface
+
+`matplotlib` on the surface is made to imitate the MATLAB's state-machine like interface called `pyplot`. This interface allows us to quickly and easily generate plots. Because of the state-based nature of this interface, it keeps track of the pyplot object and changes we make to it, this helps us to add elements and/or modify the plot as we need. But, this approach doesn't really scale when we are required to make multiple plots or when we have to make intricate plots that require a lot of customisation.
+
+However, internally `matplotlib` has an Object-Oriented interface that can be accessed just as easily.
+
+The module used most often to make plots is called `matplotlib.pyplot`. Thankfully, you will find that most syntax in `matplotlib` is such that it makes sense to a layman (like you and me).
+
+When using `matplotlib` it is important to know, that there are two different approaches to making plots in `matplotlib`. The two approaches are:
 1. Functional approach
 2. Object oriented approach
 
@@ -153,15 +166,12 @@ plt.show()
 
 ![png](/assets/images/double-pendulum/section-1-basics-of-plotting/distance-and-velocity-different-axes-finished.png)
 
-At this point you don't have to worry about the advanced methods I have used such as `tick_params`.
-
 ## Conclusion
 
 In this part, we covered some basics of `matplotlib` plotting, covering the basic two approaches of how to make plots. In the next part, we will cover how to make simple animations.
 
-## references
+## References
 
-* **Section 0**
-	1. [matplotlib an introduction to its object-oriented interface](https://medium.com/@kapil.mathur1987/matplotlib-an-introduction-to-its-object-oriented-interface-a318b1530aed)
-* **Section 1**
-	1. [lifecycle-of-a-plot](https://matplotlib.org/3.2.1/tutorials/introductory/lifecycle.html)
+1. [Matplotlib: An Introduction to its Object-Oriented Interface](https://medium.com/@kapil.mathur1987/matplotlib-an-introduction-to-its-object-oriented-interface-a318b1530aed)
+2. [Lifecycle of a Plot](https://matplotlib.org/3.2.1/tutorials/introductory/lifecycle.html)
+3. [Basic Concepts](https://matplotlib.org/faq/usage_faq.html)
