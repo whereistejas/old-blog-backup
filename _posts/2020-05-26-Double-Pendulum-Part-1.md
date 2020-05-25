@@ -20,6 +20,8 @@ $$ v = a \times t $$
 
 $$ S = 0.5 \times a \times t^{2} $$
 
+We will assume an initial velocity of zero.
+
 ```python
 import numpy as np
 
@@ -33,19 +35,11 @@ We know that under free-fall, all objects move with the constant acceleration of
 ```python
 g = 9.8 	# m/s^2
 
-for index, vel in enumerate(velocity):
-    # velocity = acceleration (g) * time
-    velocity[index] = g * time[index] 
-
-for index, dis in enumerate(distance):
-    # distance = 0.5 * acceleration (g) * time^2
-    distance[index] = 0.5 * g * time[index]**2 
+velocity = g * time
+distance = 0.5 * g * np.power(time, 2)
 ```
 
-The above code gives us two `numpy` arrays populated with the distance and velocity data points. You will notice that when looping over the arrays, I have used the `enumerate` method. We can often see people using the `list.index()` method or using the `len()` to generate the index. Both of these approaches, are wasteful. Using the `enumerate` method offers two advantages:
-
-1. The `enumerate` method is internally implemented as a python generator. This means that the index and values are generated on the fly and just in time. This can prove immensely helpful when you are iterating over an array with a 100,000 floating data points. This makes our code faster and prevents unnecessary memory consumption.
-2. It makes the code more *pythonic*.
+The above code gives us two `numpy` arrays populated with the distance and velocity data points. 
 
 ## Pyplot vs. Object-Oriented interface
 
@@ -60,6 +54,8 @@ When using `matplotlib` we have two approaches:
 This interface shares a lot of similarities in syntax and methodology with MATLAB. For example, if we want to plot a blue line where each data point is marked with a circle, we can use the string `'bo-'`.
 
 ```python
+import matplotlib.pyplot as plt
+
 plt.figure(figsize=(9,7), dpi=100)
 plt.plot(distance,'bo-')
 plt.xlabel("Time")
