@@ -110,7 +110,7 @@ Also, the `pyplot` approach doesn't really scale when we are required to make mu
 
 ### Object-Oriented Interface
 
-When using the OO interface, it helps to know how the `matplotlib` structures it's plots. The final plot that we see as the output is a 'Figure' object. The `Figure` object is the top level container for all the other elements that make up the graphic image. These "other" elements called `artists`. The `Figure` object can be thought of as a canvas, upon which different artists act to create the final graphic image. This `Figure` can contain any number of various artists.
+When using the OO interface, it helps to know how the `matplotlib` structures it's plots. The final plot that we see as the output is a 'Figure' object. The `Figure` object is the top level container for all the other elements that make up the graphic image. These "other" elements are called `Artists`. The `Figure` object can be thought of as a canvas, upon which different artists act to create the final graphic image. This `Figure` can contain any number of various artists.
 
 ![png](/assets/images/double-pendulum/section-1-basics-of-plotting/anatomy-of-a-figure.png)
 <div class="image-caption">
@@ -146,6 +146,10 @@ plt.show()
 ```
 
 ![png](/assets/images/double-pendulum/section-1-basics-of-plotting/distance-and-velocity-different-axes-unfinished.png)
+
+This plot as it is, is still not very intutitive. We should add a grid and a legend. Perhaps, we can also change the color of the axis labels and tick labels to the color of the lines.
+
+But, something very weird happens when we try to turn on the grid, which you can see [here](). The grid lines don't align with the tick labels on the both the Y-axes.
 
 However, we can still add some finishing touches to the plot we have created. This is where we start seeing the power that can be derived from the flexibility of the Object Oriented Approach.
 
