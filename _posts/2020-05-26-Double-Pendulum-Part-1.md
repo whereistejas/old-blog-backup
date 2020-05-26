@@ -4,7 +4,7 @@ author: Tejas Sanap
 title: "Double Pendulums (Part 1)"
 ---
 
-This series is basically going to be about how to animate stuff using python's `matplotlib` library. `matplotlib` has an excellent [documentation](https://matplotlib.org/3.2.1/contents.html) where you can find a detailed documentation on each of the methods I have used in this blog post. Also, I will be publishing each part of this series in the form of a jupyter notebook, which can be found [here](https://github.com/whereistejas/whereistejas.github.io/tree/master/assets/jupyter-nb).
+This series is basically going to be about how to animate stuff using python's `matplotlib` library. `matplotlib` has an excellent [documentation](https://matplotlib.org/3.2.1/contents.html) where you can find a detailed documentation on each of the methods I have used in this blog post. Also, I will be publishing each part of this series in the form of a jupyter notebook, which can be found [here](https://github.com/whereistejas/whereistejas.github.io/blob/master/assets/jupyter-nb/Part-1-basics-of-plotting.ipynb).
 
 I would like to say a few words about the methodology of these series:
 1. Each part, will have a list of references at the end of the post, mostly leading to appropriate pages of the documentation and helpful blogs written by other people. **THIS IS THE MOST IMPORTANT PART**. The sooner you get used to reading the documentation, the better.
@@ -149,9 +149,7 @@ plt.show()
 
 This plot as it is, is still not very intutitive. We should add a grid and a legend. Perhaps, we can also change the color of the axis labels and tick labels to the color of the lines.
 
-But, something very weird happens when we try to turn on the grid, which you can see [here](). The grid lines don't align with the tick labels on the both the Y-axes.
-
-However, we can still add some finishing touches to the plot we have created. This is where we start seeing the power that can be derived from the flexibility of the Object Oriented Approach.
+But, something very weird happens when we try to turn on the grid, which you can see [here](https://github.com/whereistejas/whereistejas.github.io/blob/master/assets/jupyter-nb/double-pendulum-part-1-basics-of-plotting.ipynb) at In Cell 8. The grid lines don't align with the tick labels on the both the Y-axes. We can see that tick values `matplotlib` is calculating on its own are not suitable to our needs, and thus, we will have to calculate them, ourselves.
 
 ```python
 fig, ax1 = plt.subplots()
@@ -178,6 +176,15 @@ fig.set_dpi(100)
 fig.legend(["Distance", "Velocity"])
 plt.show()
 ```
+
+The command `ax1.set_yticks(np.linspace(*ax1.get_ybound(), 10))` calculates the tick values for us. Let's break this down to see what is happening:
+1. The `np.linspace` command will create a set of `n` no. of partitions between a specified upper and lower limit.
+2. The method `ax1.get_ybound()` returns a list which contains the maximum and minimum limts for that particular axis (which in our case is the Y-axis). 
+3. In python, the operator `*` acts as an unpacking operator when prepended before a `list` or `tuple`.
+4. Thus, we are asking the `np.linspace` method to divide the interval between the maximum and minimum tick values into 10 equal parts.
+5. We provide this array to the `set_yticks` method.
+
+The same process is repeated for second axis.
 
 ![png](/assets/images/double-pendulum/section-1-basics-of-plotting/distance-and-velocity-different-axes-finished.png)
 
