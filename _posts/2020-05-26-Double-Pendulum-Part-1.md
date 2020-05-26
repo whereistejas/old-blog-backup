@@ -179,8 +179,8 @@ plt.show()
 
 The command `ax1.set_yticks(np.linspace(*ax1.get_ybound(), 10))` calculates the tick values for us. Let's break this down to see what is happening:
 1. The `np.linspace` command will create a set of `n` no. of partitions between a specified upper and lower limit.
-2. The method `ax1.get_ybound()` returns a list which contains the maximum and minimum limts for that particular axis (which in our case is the Y-axis). 
-3. In python, the operator `*` acts as an unpacking operator when prepended before a `list` or `tuple`.
+2. The method `ax1.get_ybound()` returns a list which contains the maximum and minimum limits for that particular axis (which in our case is the Y-axis). 
+3. In python, the operator `*` acts as an unpacking operator when prepended before a `list` or `tuple`. Thus, it will convert a list `[1, 2, 3, 4]` into seperate values `1, 2, 3, 4`. This is an immensely powerful feature.
 4. Thus, we are asking the `np.linspace` method to divide the interval between the maximum and minimum tick values into 10 equal parts.
 5. We provide this array to the `set_yticks` method.
 
