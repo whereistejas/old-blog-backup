@@ -6,6 +6,11 @@ title: "Double Pendulums (Part 1)"
 
 This series is basically going to be about how to animate stuff using python's `matplotlib` library. `matplotlib` has an excellent [documentation](https://matplotlib.org/3.2.1/contents.html) where you can find a detailed documentation on each of the methods I have used in this blog post. Also, I will be publishing each part of this series in the form of a jupyter notebook, which can be found [here](https://github.com/whereistejas/whereistejas.github.io/blob/master/assets/jupyter-nb/Part-1-basics-of-plotting.ipynb).
 
+The series will have three posts which will cover:
+1. Part 1 - How to make plots using `matplotlib`.
+2. Part 2 - Basic animation using `FuncAnimation`.
+3. Part 3 - Optimizations to make animations faster (blitting).
+
 I would like to say a few words about the methodology of these series:
 1. Each part, will have a list of references at the end of the post, mostly leading to appropriate pages of the documentation and helpful blogs written by other people. **THIS IS THE MOST IMPORTANT PART**. The sooner you get used to reading the documentation, the better.
 2. The code written here, is meant to show you how you can piece everything together. I will try my best to describe the nuances of my implementations and the tiny lessons I learned.
@@ -190,7 +195,7 @@ The same process is repeated for second axis.
 
 ## Conclusion
 
-In this part, we covered some basics of `matplotlib` plotting, covering the basic two approaches of how to make plots. In the next part, we will cover how to make simple animations.
+In this part, we covered some basics of `matplotlib` plotting, covering the basic two approaches of how to make plots. In the next part, we will cover how to make simple animations. If you like the content of this blog post, if you have any suggestions or comments, drop me an email or tweet at me or ping me on IRC. Nowadays, you will find me hanging arounfd #matplotlib on Freenode. Thanks! 
 
 ## References
 
