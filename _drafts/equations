@@ -1,0 +1,16 @@
+## structure and characteristics
+1. the double pendulum is a normal pendulum with another pendulum attached at it's end.
+2. the dynamics of the double pendulum depend on the following characteristics:
+	1. the length of the limbs
+	2. the mass of the limbs
+	3. the angle at which the limbs are suspended before being released into motion.
+
+## nitty-gritty
+we will get to the equations that describe of this system.
+
+the ultimate goal of this simulation is to predict the position of the limbs with respect to time.
+
+so, assuming that the fixed point of the limb is the origin of a cartesian coordinate system.
+
+
+# vim: ft=markdown:
