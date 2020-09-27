@@ -23,7 +23,7 @@ This article is about how to access database objects, that reside outside of you
 
 ## General layout of any HDI container
 
-Sending or receiving data across any HDI container requires three things: users, roles and synonyms, to be cofigured in a specific manner across both the source and target containers, for things to work out smoothly [1].
+Sending or receiving data across any HDI container requires three things: users, synonyms and roles; to be cofigured in a specific manner across both the source and target containers, for things to work out smoothly [[1]](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.05/en-US/a260b05631a24a759bba932aa6d81b64.html).
 
 Within any container there are three kind of users:
 1. Schema owner
@@ -32,9 +32,10 @@ Within any container there are three kind of users:
 
 Roles allow us to have a fine control over which users have access to which objects and what privileges they will have. We can assign each role seperately to each kind of user. These roles are granted to each kind of users at runtime.
 
-Any data that an application can be in three places: the ego container itself, another external HDI container or an external remote schema. Accessing data within one's ego container does not require any special efforts. However, for database objects outside one's ego container, we must create a link between the two containers, or the ego container and the external schema. 
+Any data that an application can need can be in three places: the ego container itself, another external HDI container or an external remote schema. Accessing data within one's ego container does not require any special efforts. However, for any database object outside the ego container, we must create a connection between the ego container and the external HDI container or schema.
 
-This link is created with the help of synonyms and grantor services. The representation of the external database object in the ego container, is called a synonym. A synonym is an alias to the external database object.
+This connection is created with the help of synonyms and grantor services. The representation of the external database object in the ego container, is called a **synonym**. A synonym is an alias to the external database object. A **grantor service** is an user-defined service that connects the ego container to the remote database hosting the external schema artifacts [[2]](https://help.sap.com/viewer/7952ef28a6914997abc01745fef1b607/2.0_SPS04/en-US/df2d69fe55e34406b1f8d54c43e6aee5.html).
 
 ## References
 1. [Users, Privileges, and Schemas](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.05/en-US/a260b05631a24a759bba932aa6d81b64.html)
+2. [Configure a Grantor for the HDI Container](https://help.sap.com/viewer/7952ef28a6914997abc01745fef1b607/2.0_SPS04/en-US/df2d69fe55e34406b1f8d54c43e6aee5.html)
