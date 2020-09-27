@@ -23,14 +23,14 @@ This article is about how to access database objects, that reside outside of you
 
 ## General layout of any HDI container
 
-Sending or receiving data across any HDI container requires three things: users, synonyms and roles; to be cofigured in a specific manner across both the source and target containers, for things to work out smoothly [[1]](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.05/en-US/a260b05631a24a759bba932aa6d81b64.html).
+Sending or receiving data across any HDI container requires three things: users with specific roles, synonyms and grantor services. They have to be cofigured in a specific manner across both the source and target containers, for things to work out smoothly [[1]](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.05/en-US/a260b05631a24a759bba932aa6d81b64.html).
 
 Within any container there are three kind of users:
-1. Schema owner
-2. Object owner
-3. Application user
+1. *Schema owner*, is the user who owns/creates the container itself.
+2. *Object owner*, is the user who owns all the database objects within the various schemas of the container.
+3. *Application user*, is the end user who uses the application and accesses the data within the container.
 
-Roles allow us to have a fine control over which users have access to which objects and what privileges they will have. We can assign each role seperately to each kind of user. These roles are granted to each kind of users at runtime.
+Roles allow us to have a fine control over which users have access to which objects and what privileges they will have over those objects.
 
 Any data that an application can need can be in three places: the ego container itself, another external HDI container or an external remote schema. Accessing data within one's ego container does not require any special efforts. However, for any database object outside the ego container, we must create a connection between the ego container and the external HDI container or schema.
 
