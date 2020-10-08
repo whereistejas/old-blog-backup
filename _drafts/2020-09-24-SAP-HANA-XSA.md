@@ -6,7 +6,7 @@ author: Tejas Sanap
 There are three ways of deploying applications in SAP HANA:
 1. **Integrated Application**: ABAP API + CDS + OData + Fiori
 2. **XS Classic**: This has been deprecated since HANA SPS 02
-3. **XS Advanced**: The latest and greatest
+3. **XS Advanced**: The latest and greatest, native HANA application
 
 The “integrated application” approach is one of the most convenient and simple ways of creating applications with SAP HANA. We can write backend APIs in ABAP that leverage CDS views to collect and process data. This data is, then, exposed as an OData service to a Fiori application that acts as UI. However, this approach as numerous drawbacks, as well:
 1. For firsts, these approach lacks the ability to use modern day application architectures that leverage **containers and microservices**, which form the foundation of any cloud-based application. “Cloud” is the future and it is inevitable that eventually all our applications will be running on some form of cloud platform.
@@ -45,12 +45,72 @@ In this blogpost, we will cover two cross-container data scenarios:
 1. Reading data from another HDI container.
 2. Reading data from an external remote schema/database.
 
-## From one container to another container
+## Basic Premise
+
+<img src="/assets/images/sap-hana-xsa-synonyms/project-view1.png">
+<div class="image-caption">
+<b>Fig 1.</b> Source and target applications
+</div>
+
+Let's take the example of a super-market chain. The supermarket company has different applications to analyse the sales of different categories of items. So, packed food gets its own application, fresh produce gets its own application. In our case, we have the application for the department that manages fresh produce, which covers all vegetables and fruits, we will call this the **department** application.
+
+The management uses a different application, where data from the all the departments is gathered and showed, so as to give them a birds eye view. We will call this application the **management** application.
+
+Some of the data, that the management application needs is stored in the department application's container and some of it is stored in a remote ERP database.
+
+Thus, the Department application is our source system and the management application is our target system.
+
+## How to connect to another HDI container?
 
 <img src="/assets/images/sap-hana-xsa-synonyms/cross-container-scenario.png" width="25%">
 <div class="image-caption">
-<b>Fig 1.</b> Process
+<b>Fig 2.</b> Process
 </div>
+
+To enable cross container access is create roles that give us access to the data we need. This is done using a HANA database artifact of `.hdbrole` type.
+
+I have created a new HANA database module in our source system with the following folder structure. There is no hard and fast requirement over the folder structure, but being organised always pays off.
+
+<img src="/assets/images/sap-hana-xsa-synonyms/source-project-structure.png">
+<div class="image-caption">
+<b>Fig 3.</b> Source application/Department application structure and data model.
+</div>
+
+We will be creating two `.hdbrole` artifacts. One for the schema owner and another for the application user:
+1. freshprod_sales_appuser.hdbrole <br>
+```json
+{
+	"role": {
+		"name": "freshprod_sales",
+		"object_privileges": [{
+			"name": "FRESHPRODUCE_SALES_FRUIT_DETAILS",
+			"type": "TABLE",
+			"privileges": ["SELECT"]
+		}, {
+			"name": "FRESHPRODUCE_SALES_FRUIT_SALES",
+			"type": "TABLE",
+			"privileges": ["SELECT"]
+		}]
+	}
+}
+```
+2. freshprod_sales_grantor.hdbrole <br>
+```json
+{
+	"role": {
+		"name": "freshprod_sales#",
+		"object_privileges": [{
+			"name": "FRESHPRODUCE_SALES_FRUIT_DETAILS",
+			"type": "TABLE",
+			"privileges_with_grant_option": ["SELECT"]
+		}, {
+			"name": "FRESHPRODUCE_SALES_FRUIT_SALES",
+			"type": "TABLE",
+			"privileges_with_grant_option": ["SELECT"]
+		}]
+	}
+}
+```
 
 ## References
 1. [Users, Privileges, and Schemas](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.05/en-US/a260b05631a24a759bba932aa6d81b64.html)
