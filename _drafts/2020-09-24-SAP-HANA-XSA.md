@@ -47,7 +47,7 @@ In this blogpost, we will cover two cross-container data scenarios:
 
 ## Basic Premise
 
-<img src="/assets/images/sap-hana-xsa-synonyms/project-view1.png">
+<img src="/assets/images/sap-hana-xsa-synonyms/01-project-view1.png">
 <div class="image-caption">
 <b>Fig 1.</b> Source and target applications
 </div>
@@ -62,7 +62,7 @@ Thus, the Department application is our source system and the management applica
 
 ## How to connect to another HDI container?
 
-<img src="/assets/images/sap-hana-xsa-synonyms/cross-container-scenario.png" width="25%">
+<img src="/assets/images/sap-hana-xsa-synonyms/02-cross-container-scenario.png" width="25%">
 <div class="image-caption">
 <b>Fig 2.</b> Process
 </div>
@@ -71,12 +71,12 @@ To enable cross container access is create roles that give us access to the data
 
 I have created a new HANA database module in our source system with the following folder structure. There is no hard and fast requirement over the folder structure, but being organised always pays off.
 
-<img src="/assets/images/sap-hana-xsa-synonyms/source-project-structure.png">
+<img src="/assets/images/sap-hana-xsa-synonyms/03-source-project-structure.png">
 <div class="image-caption">
 <b>Fig 3.</b> Source application/Department application structure and data model.
 </div>
 
-We will be creating two `.hdbrole` artifacts. One for the schema owner and another for the application user:
+We will be creating two `.hdbrole` artifacts<sup>[3](https://help.sap.com/viewer/3823b0f33420468ba5f1cf7f59bd6bd9/2.0.04/en-US/625d7733c30b4666b4a522d7fa68a550.html)</sup>. One for the schema owner and another for the application user:
 1. freshprod_sales_appuser.hdbrole <br>
 ```json
 {
@@ -112,6 +112,32 @@ We will be creating two `.hdbrole` artifacts. One for the schema owner and anoth
 }
 ```
 
+A careful glance will show us that the role name in both the `hdbrole` artifacts are the same if not for the difference of # in the grantor role. SAP HANA XSA identifies grantor roles with the use of #, think of it as a standard notation
+
+This is what our source project structure looks like after creating the roles:
+
+<img src="/assets/images/sap-hana-xsa-synonyms/04-roles-in-source-app.png">
+<div class="image-caption">
+<b>Fig 4.</b> The new roles are placed in <b>roles</b> folder under <b>src</b> folder
+</div>
+
+These are the only changes we have to make in the source application.
+
+The next step is to add the service to our target application. Since, we are connecting two HDI containers. The source HDI container itself serves as the data-provider service. SAP HANA XSA provides a wizard to add database services.
+
+<img src="/assets/images/sap-hana-xsa-synonyms/05-sap-hana-service-wizard.png">
+<div class="image-caption">
+<b>Fig 5.</b> We can add a service using the SAP HANA Service Connection wizard.
+</div>
+
+We can find the HDI container and select and add it. The effects of this action can be found in `mta.yaml` file.
+
+<img src="/assets/images/sap-hana-xsa-synonyms/06-find-hdi-container.png">
+<div class="image-caption">
+<b>Fig 6.</b> The HDI container that serves as our data source.
+</div>
+
 ## References
 1. [Users, Privileges, and Schemas](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.05/en-US/a260b05631a24a759bba932aa6d81b64.html)
 2. [Configure a Grantor for the HDI Container](https://help.sap.com/viewer/7952ef28a6914997abc01745fef1b607/2.0_SPS04/en-US/df2d69fe55e34406b1f8d54c43e6aee5.html)
+3. [.hdbrole: Syntax](https://help.sap.com/viewer/3823b0f33420468ba5f1cf7f59bd6bd9/2.0.04/en-US/625d7733c30b4666b4a522d7fa68a550.html)
