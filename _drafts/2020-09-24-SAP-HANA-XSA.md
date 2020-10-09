@@ -17,7 +17,7 @@ The ABAP runtime serves as a application server where business and procedural lo
 
 SAP HANA **XSA** stands for *XS Advanced* and though, it is the next iteration of XS Classic, significant changes have been made under the hood at the application server layer that introduce a new development model. All the above-mentioned drawbacks have been resolved in the SAP HANA XSA.
 
-One of the core concepts of HANA XSA, is that of an HDI container. HDI, stands for *HANA Deployment Infrastructure*. In HANA XSA, application are pushed from git reppositories, by building them from source, and deploying them to the target platform, in the form of containers.
+One of the core concepts of HANA XSA, is that of an HDI container. HDI, stands for *HANA Deployment Infrastructure*. In HANA XSA, application are pushed from git repositories, by building them from source, and deploying them to the target platform, in the form of containers.
 
 This article is about how to access database objects, that reside outside of your application-specific container, which I will call the ego container, here onwards.
 
@@ -28,7 +28,7 @@ Any form of cross-container or schema interaction requires three things:
 2. Aliases pointing towards the appropriate external database object.
 3. Services that help the two entities communicate, sending information back and forth.
 
-All of them have to be cofigured in a specific manner across both the source and target container/schema, for things to work out smoothly<sup>[1](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.05/en-US/a260b05631a24a759bba932aa6d81b64.html)</sup> when the containers are created post-deployment during runtime.
+All of them have to be configured in a specific manner across both the source and target container/schema, for things to work out smoothly<sup>[1](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.05/en-US/a260b05631a24a759bba932aa6d81b64.html)</sup> when the containers are created post-deployment during runtime.
 
 Within any container, there are three kind of users:
 1. *Schema owner*, is the user who owns/creates the ego container.
@@ -41,7 +41,7 @@ Any data that an application may need can be in three places: the ego container,
 
 This connection is created with the help of synonyms and grantor services. The representation of the external database object in the ego container, is called a **synonym**. A synonym is an alias to the external database object. A **grantor service** is an user-defined service that connects the ego container to the remote database hosting the external schema artifacts<sup>[2](https://help.sap.com/viewer/7952ef28a6914997abc01745fef1b607/2.0_SPS04/en-US/df2d69fe55e34406b1f8d54c43e6aee5.html)</sup>.
 
-In this blogpost, we will cover two cross-container data scenarios:
+In this blog post, we will cover two cross-container data scenarios:
 1. Reading data from another HDI container.
 2. Reading data from an external remote schema/database.
 
@@ -99,14 +99,8 @@ We will be creating two `.hdbrole` artifacts<sup>[3](https://help.sap.com/viewer
 {
 	"role": {
 		"name": "freshprod_sales#",
-		"object_privileges": [{
-			"name": "FRESHPRODUCE_SALES_FRUIT_DETAILS",
-			"type": "TABLE",
-			"privileges_with_grant_option": ["SELECT"]
-		}, {
-			"name": "FRESHPRODUCE_SALES_FRUIT_SALES",
-			"type": "TABLE",
-			"privileges_with_grant_option": ["SELECT"]
+		"schema_roles": [{
+			"names": ["freshprod_sales"]
 		}]
 	}
 }
