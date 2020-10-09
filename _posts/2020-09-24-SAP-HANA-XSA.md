@@ -49,7 +49,7 @@ In this blogpost, we will cover two cross-container data scenarios:
 
 <img src="/assets/images/sap-hana-xsa-synonyms/01-project-view1.png">
 <div class="image-caption">
-<b>Fig 1.</b> Source and target applications
+<b>Fig 1.</b> Source and target applications.
 </div>
 
 Let's take the example of a super-market chain. The supermarket company has different applications to analyse the sales of different categories of items. So, packed food gets its own application, fresh produce gets its own application. In our case, we have the application for the department that manages fresh produce, which covers all vegetables and fruits, we will call this the **department** application.
@@ -64,10 +64,10 @@ Thus, the Department application is our source system and the management applica
 
 <img src="/assets/images/sap-hana-xsa-synonyms/02-cross-container-scenario.png" width="25%">
 <div class="image-caption">
-<b>Fig 2.</b> Process
+<b>Fig 2.</b> Process.
 </div>
 
-To enable cross container access is create roles that give us access to the data we need. This is done using a HANA database artifact of `.hdbrole` type.
+To enable cross container access we need to create **roles** that give us access to the data we need. This is done using a HANA database artifact of `.hdbrole` type.
 
 I have created a new HANA database module in our source system with the following folder structure. There is no hard and fast requirement over the folder structure, but being organised always pays off.
 
@@ -112,13 +112,13 @@ We will be creating two `.hdbrole` artifacts<sup>[3](https://help.sap.com/viewer
 }
 ```
 
-A careful glance will show us that the role name in both the `hdbrole` artifacts are the same if not for the difference of # in the grantor role. SAP HANA XSA identifies grantor roles with the use of #, think of it as a standard notation
+A careful glance will show us that the role name in both the `hdbrole` artifacts are the same if not for the difference of # in the grantor role. SAP HANA XSA identifies grantor roles with the use of #, think of it as a standard notation.
 
 This is what our source project structure looks like after creating the roles:
 
 <img src="/assets/images/sap-hana-xsa-synonyms/04-roles-in-source-app.png">
 <div class="image-caption">
-<b>Fig 4.</b> The new roles are placed in <b>roles</b> folder under <b>src</b> folder
+<b>Fig 4.</b> The new roles are placed in <b>roles</b> folder under <b>src</b> folder.
 </div>
 
 These are the only changes we have to make in the source application.
@@ -137,7 +137,91 @@ We can find the HDI container and select and add it. The effects of this action 
 <b>Fig 6.</b> The HDI container that serves as our data source.
 </div>
 
+The wizard the HDI container as a new resource in our `mta.yaml` configuration.
+
+<img src="/assets/images/sap-hana-xsa-synonyms/07-mta-yaml-after-adding-service.png">
+<div class="image-caption">
+<b>Fig 7.</b> The HDI container service as a resource in <b>mta.yaml</b>.
+</div>
+
+The next task is to assign the roles we have previously created to the users of our **management** application in the **department** application through the service we just created. This assignment is done through a configuration file named `.hdbgrants`<sup>[4](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.04/en-US/f49c1f5c72ee453788bf79f113d83bf9.html)</sup>. We have already a created `cfg` folder to store our database configuration files.
+
+We will create `freshprod_cross_container.hdbgrants` in the `cfg` folder. Again, creating files under this specific folder structure is not mandatory but, staying organised always pays off. You will find that there are two ways to mention to the role category, `schema_roles` and `container_roles`, the latter is older notation and is supported only for backward compatibility reasons. I will advise to only use `schema_roles`. There are two ways to mention roles in the `hdbgrants` file, we can either use the `roles` or `roles_with_admin_option` keys to define them. In the case the of cross-container scenario, only the `roles` keyword can be used.
+
+```json
+{
+	"XXXXXXXXX-wg92pttrbvs7can7-FreshProduceDept-FreshProduceDept-hdi-container": {
+		"object_owner": {
+			"schema_roles": [{
+				"roles": ["freshprod_sales"]
+			}]
+		},
+
+		"application_user": {
+			"schema_roles": [{
+				"roles": ["freshprod_sales"]
+			}]
+		}
+	}
+}
+```
+<img src="/assets/images/sap-hana-xsa-synonyms/08-cross-container-hdbgrants.png">
+<div class="image-caption">
+<b>Fig 9.</b> The <b>hdbgrants</b> file is not a database artifact and is only a config file.
+</div>
+
+The next step is to create **synonyms**. While creating synonyms, we can split the synonyms into a `.hdbsynonym` and `.hdbsynonymconfig` file. The idea is use to different synonym files, to group different synonyms or target tables, but instead of configuring each of them separately, we configure them all at in one synonym config file.
+
+We will create a new sub-folder under the `src` folder called `synonyms` to save our `hdbsynonym` artifacts. In these files, we will only mention the name of the synonym, i.e., the alias we want to use for the target database artifact.
+
+1. `freshproduce_sales.hdbsynonym`
+```json
+{
+  "FRESHPRODUCE_SALES_FRUIT_SALES": {}
+}
+```
+2. `freshproduce_details.hdbsynonym`
+```json
+{
+	"FRESHPRODUCE_SALES_FRUIT_DETAILS": {}
+}
+```
+
+Now, we can finally create a hdbsynonymconfig file in the `cfg` folder.
+<img src="/assets/images/sap-hana-xsa-synonyms/10-synonym-config-cross-container.png">
+<div class="image-caption">
+<b>Fig 10.</b> By clicking on the object name button <b>...</b> we can access a screen that lets us select the service and table.
+</div>
+
+After adding all the tables the `freshproduce_dept.hdbsynonymconfig` file looks like this:
+```json
+{
+  "FRESHPRODUCE_SALES_FRUIT_SALES": {
+    "target": {
+      "object": "FRESHPRODUCE_SALES_FRUIT_SALES",
+      "schema": "FRESHPRODUCEDEPT_FRESHPRODUCEDEPT_HDI_CONTAINER",
+      "database": "SYSTEMDB"
+    }
+  },
+  "FRESHPRODUCE_SALES_FRUIT_DETAILS": {
+    "target": {
+      "object": "FRESHPRODUCE_SALES_FRUIT_DETAILS",
+      "schema": "FRESHPRODUCEDEPT_FRESHPRODUCEDEPT_HDI_CONTAINER",
+      "database": "SYSTEMDB"
+    }
+  }
+}
+```
+
+Now we have made all the necessary changes in the target as well as the source application. We can finally build our database module and see the results.
+
+<img src="/assets/images/sap-hana-xsa-synonyms/11-container-final-database-explorer.png">
+<div class="image-caption">
+<b>Fig 11.</b> The synonym is visible in the database explorer.
+</div>
+
 ## References
 1. [Users, Privileges, and Schemas](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.05/en-US/a260b05631a24a759bba932aa6d81b64.html)
 2. [Configure a Grantor for the HDI Container](https://help.sap.com/viewer/7952ef28a6914997abc01745fef1b607/2.0_SPS04/en-US/df2d69fe55e34406b1f8d54c43e6aee5.html)
 3. [.hdbrole: Syntax](https://help.sap.com/viewer/3823b0f33420468ba5f1cf7f59bd6bd9/2.0.04/en-US/625d7733c30b4666b4a522d7fa68a550.html)
+4. [.hdbgrants: Syntax](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.04/en-US/f49c1f5c72ee453788bf79f113d83bf9.html)
