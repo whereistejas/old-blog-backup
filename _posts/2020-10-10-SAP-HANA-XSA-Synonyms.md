@@ -4,9 +4,9 @@ title: Breaking out of your container
 author: Tejas Sanap
 ---
 
-Making applications for SAP customers, has always been rooted in **proprietary tools and frameworks**. However, with the onset of the "cloud" movement, SAP is providing its customers, a completely **new services-oriented application model**, that leverages containers and the latest open source standards, for cloud-based applications.
+Making applications for SAP, has always been rooted in **proprietary tools and frameworks**. However, with the onset of the "cloud" movement, SAP is providing its customers and developers, a completely **new services-oriented application model**, that leverages containers and the latest open source standards, for cloud-based applications.
 
-Developers have been able to provide web-based SAP applications, through the use of WebDynpro for a long time. However, that came with its own set of drawbacks. Newer alternatives now use *Fiori-based UI*, with an *OData service*, that transports data back and forth. This approach provides us ample amount of flexibility on the UI side, but for the backend, we are still dependent on *ABAP and the NetWeaver application server*, to execute the business and processing logic for us and the *database server, will perform queries* and send data to the Netweaver AS. We also know this as the SAP R3 architecture, where we divide things into the presentation layer, application layer and the database layer.
+Developers have been able to provide web-based SAP applications, through the use of WebDynpro for a long time. However, that came with its own set of drawbacks. Newer alternatives now use *Fiori-based UI*, with an *OData service*, that transports data back and forth. This approach provides us ample amount of flexibility on the UI side, but for the backend, we are still dependent on *ABAP and the NetWeaver application server*, to execute the business and processing logic for us and the *database server to perform queries* and send data to the Netweaver AS. We also know this as the SAP R3 architecture, where we divide things into the presentation layer, application layer and the database layer.
 
 All of this was fine, until the appearance of HANA database, which provided us with a performance that was an order of magnitude better than its competitors. All of a sudden, the **bottleneck** moved from the database-side to the **application-side**.
 
@@ -21,35 +21,33 @@ This newer model of making applications, is based on an open-source project call
 This is a huge benefit, as this makes porting applications between SAP cloud and other cloud providers, easy and convienient. SAP HANA XSA is a modded version of vanilla-Cloud Foundry, which comes with a lot of additions that tune it for HANA.
 
 The SAP HANA XSA model provides the following benefits:
-1. This application model, takes full advantage of cloud technologies like **microservices and containers**. This adds a new layer of of control, security and ease of operations for the applications we develop. All applications in SAP HANA XSA are deployed as containers, that are built from scratch, each time.
+1. This application model, takes full advantage of cloud technologies like **microservices and containers**. This adds a new layer of of control, security and ease of operations for the applications we develop. All applications in SAP HANA XSA are deployed as containers, that are built from scratch, each time. These containers are called HDI containers, which stands for, HANA Deployment Infrastructure.
 2. This model finally brings in the **BYOL (bring your own language) model** to SAP applications. Developers can finally use any language they wish to develop applications and leave ABAP behind. SAP by default, provides support for Java, Node.js and Python runtimes. We can even use R to write SQLScripts.
 3. Security and access, take on a much more integrated approach in SAP HANA XSA, where **security objects like roles and priveleges become part of the database itself as HANA artifacts**.
 
-## How does a container work?
+## How does a HDI container interact?
 
-Any form of cross-container or schema interaction requires three things: 
-1. A mechanism that grants users with specific roles.
-2. Aliases pointing towards the appropriate external database object.
-3. Services that help the two entities communicate, sending information back and forth.
+Our application may interact with a remote schema on an external database or another external HDI container. To do this, it will need the following:
+1. A mechanism that grants users access to database objects based on their roles. These database objects maybe within the application's own schema or they maybe stored in some external source.
+2. If the database objects are stored in a remote schema or an external HDI container, we need aliases pointing towards the appropriate database objects.
+3. Services that facilitate sending information back and forth, between our application and the remote schema or HDI container
 
-All of them have to be configured in a specific manner across both the source and target container/schema, for things to work out smoothly<sup>[1](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.05/en-US/a260b05631a24a759bba932aa6d81b64.html)</sup> when the containers are created post-deployment during runtime.
+In this transaction, our application which itself is also an HDI container, plays the part of the target system. The remote schema or external HDI container, where the data we want to bring over is stored, plays the part of the source system. We can also call our application HDI container the ego container.
 
-Within any container, there are three kind of users:
-1. *Schema owner*, is the user who owns/creates the ego container.
-2. *Object owner*, is the user who owns all the database objects within the various schemas of the container.
-3. *Application user*, is the end user who uses the application and accesses the data within the container.
+To get a better understanding of how provisioning happens for users based on their roles to schemas, you can refer to [this](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.05/en-US/a260b05631a24a759bba932aa6d81b64.html) document[<sup>1</sup>](#references).
 
-Roles allow us to have a fine control over which users have access to which objects and what privileges they will have over those objects. These roles are granted to various users during runtime, whenever they use the application.
+Within any container, there are two kind of technical users:
+1. **Object owner**: This user owns all the database objects within the various schemas of the container.
+2. **Application user**: This is the end user, who will query for different databse objects, through our application.
 
-Any data that an application may need can be in three places: the ego container, another external HDI container or an external remote schema. Accessing data within the ego container does not require any special efforts. However, for any database object outside the ego container, we must create a connection between the ego container and the external HDI container or remote schema.
+Roles and privileges allow us to have a fine control over which users have access to which objects and what actions they can perfrom over those objects. Since, we cannot know before-hand which users might use our applications, these roles and priveleges can be granted to users dynamically during runtime, based on their metadata or credentials.
 
-This connection is created with the help of synonyms and grantor services. The representation of the external database object in the ego container, is called a **synonym**. A synonym is an alias to the external database object. A **grantor service** is an user-defined service that connects the ego container to the remote database hosting the external schema artifacts<sup>[2](https://help.sap.com/viewer/7952ef28a6914997abc01745fef1b607/2.0_SPS04/en-US/df2d69fe55e34406b1f8d54c43e6aee5.html)</sup>.
+To access external databse objects we need to link the remote schema or external container, to our application. However, just this is not sufficient, as we still need to know exactly which database artifact, we are looking for in the source system. To link our application to a remote schema or an external container, we use services. Services can be of two types, an existing service provided by the system, or an user-provided one. To point towards a specific database object, we use synonyms, which act as aliases.
 
-In this blog post, we will cover two cross-container data scenarios:
-1. Reading data from another HDI container.
-2. Reading data from an external remote schema/database.
+In this blog post, we will cover how to read data from another HDI container.
 
-## Basic Premise
+## Talking to another HDI container.
+### Basic Premise
 
 <img src="/assets/images/sap-hana-xsa-synonyms/01-project-view1.png">
 <div class="image-caption">
@@ -64,7 +62,7 @@ Some of the data, that the management application needs is stored in the departm
 
 Thus, the Department application is our source system and the management application is our target system.
 
-## How to connect to another HDI container?
+### How to connect to another HDI container?
 
 <img src="/assets/images/sap-hana-xsa-synonyms/02-cross-container-scenario.png" width="25%">
 <div class="image-caption">
