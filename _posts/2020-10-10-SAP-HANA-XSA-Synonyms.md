@@ -39,17 +39,17 @@ Our application may interact with a remote schema on an external database or ano
 
 In this transaction, our application which itself is also an HDI container, plays the part of the target system. The remote schema or external HDI container, where the data we want to bring over is stored, plays the part of the source system. We can also call our application HDI container the ego container.
 
-To get a better understanding of how provisioning happens for users based on their roles to schemas, you can refer to [this](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.05/en-US/a260b05631a24a759bba932aa6d81b64.html) document[<sup>1</sup>](#references).
+To get a better understanding of how provisioning happens for users based on their roles to schemas, you can refer to [this](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.05/en-US/a260b05631a24a759bba932aa6d81b64.html) document [<sup>1</sup>](#references).
 
-Within any container, there are two kind of technical users:
-1. **Object owner**: This user owns all the database objects within the various schemas of the container.
+Users that use our application are called as technical users. Within any container, there are two kind of technical users:
+1. **Object owner**: This user owns all the database objects within the various schemas of the container, this user has the power to grant roles to other users.
 2. **Application user**: This is the end user, who will query for different databse objects, through our application.
 
 Roles and privileges allow us to have a fine control over which users have access to which objects and what actions they can perfrom over those objects. Since, we cannot know before-hand which users might use our applications, these roles and priveleges can be granted to users dynamically during runtime, based on their metadata or credentials.
 
 To access external databse objects we need to link the remote schema or external container, to our application. However, just this is not sufficient, as we still need to know exactly which database artifact, we are looking for in the source system. To link our application to a remote schema or an external container, we use services. Services can be of two types, an existing service provided by the system, or an user-provided one. To point towards a specific database object, we use synonyms, which act as aliases.
 
-In this blog post, we will cover how to read data from another HDI container.
+In this blog post, we will cover how to read data from another HDI container, this is also called cross-container access.
 
 ## Basic Premise of our Demo
 
@@ -62,78 +62,77 @@ For example, we will consider a retail chain company. They sell different produc
 
 While, one department cannot see the sales and product offerings of another department, the higher management that drives the company's operations and growth, needs to be able to see everything from every department. 
 
-For the purposes of our demo, we will take a "Fresh Produce" department application, that contains data about the various fruits they have and the various items they have sold. We will have a "management" application, where the data from the "Fresh Produce" application, needs to be displayed.
+For the purposes of our demo, we will take a "department" application, of a department that handles Fresh Produce like fruits and vegetables, that contains data about the various fruits they have and the various items they have sold. We will also have a "management" application, where the data from the "department" application, needs to be displayed.
 
-Thus, the department application is our source system and the management application is our target system.
+Thus, the **Fresh Produce department application** is our **source** application and the **management application** is our **target** application.
 
 ## Talking to another HDI container.
-
-
-To enable cross container access we need to create **roles** that give us access to the data we need. This is done using a HANA database artifact of `.hdbrole` type.
 
 I have created a new HANA database module in our source system with the following folder structure. There is no hard and fast requirement over the folder structure, but being organised always pays off.
 
 <img src="/assets/images/sap-hana-xsa-synonyms/03-source-project-structure.png">
 <div class="image-caption">
-<b>Fig 3.</b> Source application/Department application structure and data model.
+<b>Fig 3.</b> The folder structure of the source application project and its data model.
 </div>
 
-We will be creating two `.hdbrole` artifacts<sup>[3](https://help.sap.com/viewer/3823b0f33420468ba5f1cf7f59bd6bd9/2.0.04/en-US/625d7733c30b4666b4a522d7fa68a550.html)</sup>. One for the schema owner and another for the application user:
-1. freshprod_sales_appuser.hdbrole <br>
-```json
-{
-	"role": {
-		"name": "freshprod_sales",
-		"object_privileges": [{
-			"name": "FRESHPRODUCE_SALES_FRUIT_DETAILS",
-			"type": "TABLE",
-			"privileges": ["SELECT"]
-		}, {
-			"name": "FRESHPRODUCE_SALES_FRUIT_SALES",
-			"type": "TABLE",
-			"privileges": ["SELECT"]
-		}]
-	}
-}
-```
-2. freshprod_sales_grantor.hdbrole <br>
-```json
-{
-	"role": {
-		"name": "freshprod_sales#",
-		"schema_roles": [{
-			"names": ["freshprod_sales"]
-		}]
-	}
-}
-```
+To enable cross-container access, the first thing we need to create are **roles** that encapsulate and give us access to the database objects we need. This is done using a HANA database artifact of the type `hdbrole`.
 
-A careful glance will show us that the role name in both the `hdbrole` artifacts are the same if not for the difference of # in the grantor role. SAP HANA XSA identifies grantor roles with the use of #, think of it as a standard notation.
+We will be creating two `hdbrole` artifacts.
 
-This is what our source project structure looks like after creating the roles:
+1. `freshprod_sales_appuser.hdbrole`: This role is for the application user.
+
+        {
+            "role": {
+                "name": "freshprod_sales",
+                "object_privileges": [{
+                    "name": "FRESHPRODUCE_SALES_FRUIT_DETAILS",
+                    "type": "TABLE",
+                    "privileges": ["SELECT"]
+                }, {
+                    "name": "FRESHPRODUCE_SALES_FRUIT_SALES",
+                    "type": "TABLE",
+                    "privileges": ["SELECT"]
+                }]
+            }
+        }
+
+2. `freshprod_sales_grantor.hdbrole`: This role is for the schema owner.
+
+        {
+            "role": {
+                "name": "freshprod_sales#",
+                "schema_roles": [{
+                    "names": ["freshprod_sales"]
+                }]
+            }
+        }
+
+A careful glance will show us that the role name in both the `hdbrole` artifacts is the same if not for the presence of `#` in the grantor role. SAP HANA XSA identifies grantor roles with the use of `#`, think of it as a standard notation. Another fact to notice, is that in the grantor role, instead of mentioning the specific database objects we have only mentioned the name of the application user role. More information about how to define roles, using objects and other roles can be found in [this](https://help.sap.com/viewer/3823b0f33420468ba5f1cf7f59bd6bd9/2.0.04/en-US/625d7733c30b4666b4a522d7fa68a550.html) document [<sup>2</sup>](#references).
 
 <img src="/assets/images/sap-hana-xsa-synonyms/04-roles-in-source-app.png">
 <div class="image-caption">
-<b>Fig 4.</b> The new roles are placed in <b>roles</b> folder under <b>src</b> folder.
+<b>Fig 4.</b> The new roles are placed in the <b>roles</b> folder under the <b>src</b> folder.
 </div>
 
-These are the only changes we have to make in the source application.
+**We only need to create role artifacts in the source application, no other changes are necessary.**
 
-The next step is to add the service to our target application. Since, we are connecting two HDI containers. The source HDI container itself serves as the data-provider service. SAP HANA XSA provides a wizard to add database services.
+The next step is to add the service to our target application. Since, we are connecting two HDI containers. The source application's HDI container itself serves as the data-provider service. Since, the HDI container is created by the system, it is "existing service".
+
+In the newer versions of Web IDE, we are provided with a wizard to add database services.
 
 <img src="/assets/images/sap-hana-xsa-synonyms/05-sap-hana-service-wizard.png">
 <div class="image-caption">
-<b>Fig 5.</b> We can add a service using the SAP HANA Service Connection wizard.
+<b>Fig 5.</b> The SAP HANA Service application, can be found by right-clicking on the database module.
 </div>
 
-We can find the HDI container and select and add it. The effects of this action can be found in `mta.yaml` file.
+This wizard allows us to either create new user provided services, which are used to access remote schemas in external databases or use already existing services. 
 
 <img src="/assets/images/sap-hana-xsa-synonyms/06-find-hdi-container.png">
 <div class="image-caption">
-<b>Fig 6.</b> The HDI container that serves as our data source.
+<b>Fig 6.</b> We can find the HDI container and add it as an existing service, using the wizard.
 </div>
 
-The wizard the HDI container as a new resource in our `mta.yaml` configuration.
+The effects of this action can be found in `mta.yaml` file. The wizard creates a new resource, for our service, and adds it as a requirement for the database module.
 
 <img src="/assets/images/sap-hana-xsa-synonyms/07-mta-yaml-after-adding-service.png">
 <div class="image-caption">
@@ -146,21 +145,23 @@ We will create `freshprod_cross_container.hdbgrants` in the `cfg` folder. Again,
 
 ```json
 {
-	"XXXXXXXXX-wg92pttrbvs7can7-FreshProduceDept-FreshProduceDept-hdi-container": {
-		"object_owner": {
-			"schema_roles": [{
-				"roles": ["freshprod_sales"]
-			}]
-		},
-
-		"application_user": {
-			"schema_roles": [{
-				"roles": ["freshprod_sales"]
-			}]
-		}
-	}
+    "FreshProduceDept-hdi-container": {
+        "object_owner": {
+            "schema_roles": [{
+                "roles": ["freshprod_sales"]
+            }]
+        },
+        "application_user": {
+            "schema_roles": [{
+                "roles": ["freshprod_sales"]
+            }]
+        }
+    }
 }
 ```
+
+I have shortened the name of the container, as the name of the original service was too long to fit here. Please, use whatever name your service has here. **In practical scenarios, we should not directly be using the service name**. Instead, we should assign it to some sort of variable in the `mta.yaml` file.
+
 <img src="/assets/images/sap-hana-xsa-synonyms/08-cross-container-hdbgrants.png">
 <div class="image-caption">
 <b>Fig 9.</b> The <b>hdbgrants</b> file is not a database artifact and is only a config file.
@@ -170,18 +171,17 @@ The next step is to create **synonyms**. While creating synonyms, we can split t
 
 We will create a new sub-folder under the `src` folder called `synonyms` to save our `hdbsynonym` artifacts. In these files, we will only mention the name of the synonym, i.e., the alias we want to use for the target database artifact.
 
-1. `freshproduce_sales.hdbsynonym`
-```json
-{
-  "FRESHPRODUCE_SALES_FRUIT_SALES": {}
-}
-```
-2. `freshproduce_details.hdbsynonym`
-```json
-{
-	"FRESHPRODUCE_SALES_FRUIT_DETAILS": {}
-}
-```
+1. `freshproduce_sales.hdbsynonym`: This synonym points to the Sales table.
+
+        {
+            "FRESHPRODUCE_SALES_FRUIT_SALES": {}
+        }
+
+2. `freshproduce_details.hdbsynonym`: This synonym points to the Item Details table.
+
+        {
+            "FRESHPRODUCE_SALES_FRUIT_DETAILS": {}
+        }
 
 Now, we can finally create a hdbsynonymconfig file in the `cfg` folder.
 <img src="/assets/images/sap-hana-xsa-synonyms/10-synonym-config-cross-container.png">
@@ -192,20 +192,20 @@ Now, we can finally create a hdbsynonymconfig file in the `cfg` folder.
 After adding all the tables the `freshproduce_dept.hdbsynonymconfig` file looks like this:
 ```json
 {
-  "FRESHPRODUCE_SALES_FRUIT_SALES": {
-    "target": {
-      "object": "FRESHPRODUCE_SALES_FRUIT_SALES",
-      "schema": "FRESHPRODUCEDEPT_FRESHPRODUCEDEPT_HDI_CONTAINER",
-      "database": "SYSTEMDB"
+    "FRESHPRODUCE_SALES_FRUIT_SALES": {
+        "target": {
+            "object": "FRESHPRODUCE_SALES_FRUIT_SALES",
+            "schema": "FRESHPRODUCEDEPT_FRESHPRODUCEDEPT_HDI_CONTAINER",
+            "database": "SYSTEMDB"
+        }
+    },
+    "FRESHPRODUCE_SALES_FRUIT_DETAILS": {
+        "target": {
+            "object": "FRESHPRODUCE_SALES_FRUIT_DETAILS",
+            "schema": "FRESHPRODUCEDEPT_FRESHPRODUCEDEPT_HDI_CONTAINER",
+            "database": "SYSTEMDB"
+        }
     }
-  },
-  "FRESHPRODUCE_SALES_FRUIT_DETAILS": {
-    "target": {
-      "object": "FRESHPRODUCE_SALES_FRUIT_DETAILS",
-      "schema": "FRESHPRODUCEDEPT_FRESHPRODUCEDEPT_HDI_CONTAINER",
-      "database": "SYSTEMDB"
-    }
-  }
 }
 ```
 
