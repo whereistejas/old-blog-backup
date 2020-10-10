@@ -22,10 +22,15 @@ This is a huge benefit, as this makes porting applications between SAP cloud and
 
 The SAP HANA XSA model provides the following benefits:
 1. This application model, takes full advantage of cloud technologies like **microservices and containers**. This adds a new layer of of control, security and ease of operations for the applications we develop. All applications in SAP HANA XSA are deployed as containers, that are built from scratch, each time. These containers are called HDI containers, which stands for, HANA Deployment Infrastructure.
-2. This model finally brings in the **BYOL (bring your own language) model** to SAP applications. Developers can finally use any language they wish to develop applications and leave ABAP behind. SAP by default, provides support for Java, Node.js and Python runtimes. We can even use R to write SQLScripts.
+2. With SAP HANA XSA, we see the **BYOL (bring your own language) model** coming to SAP applications. Developers can finally use any language they wish to develop applications and leave ABAP behind. SAP by default, provides support for Java, Node.js and Python runtimes. We can even use R to write SQLScripts.
 3. Security and access, take on a much more integrated approach in SAP HANA XSA, where **security objects like roles and priveleges become part of the database itself as HANA artifacts**.
 
 ## How does a HDI container interact?
+
+<img src="/assets/images/sap-hana-xsa-synonyms/02-cross-container-scenario.png" width="15%">
+<div class="image-caption">
+<b>Fig 1.</b> Process.
+</div>
 
 Our application may interact with a remote schema on an external database or another external HDI container. To do this, it will need the following:
 1. A mechanism that grants users access to database objects based on their roles. These database objects maybe within the application's own schema or they maybe stored in some external source.
@@ -46,28 +51,23 @@ To access external databse objects we need to link the remote schema or external
 
 In this blog post, we will cover how to read data from another HDI container.
 
-## Talking to another HDI container.
-### Basic Premise
+## Basic Premise of our Demo
 
 <img src="/assets/images/sap-hana-xsa-synonyms/01-project-view1.png">
 <div class="image-caption">
-<b>Fig 1.</b> Source and target applications.
+<b>Fig 2.</b> Source and target applications.
 </div>
 
-Let's take the example of a super-market chain. The supermarket company has different applications to analyse the sales of different categories of items. So, packed food gets its own application, fresh produce gets its own application. In our case, we have the application for the department that manages fresh produce, which covers all vegetables and fruits, we will call this the **department** application.
+For example, we will consider a retail chain company. They sell different products in their supermarkets. Each product category becomes a business vertical (or, a department as I call them in this blogpost). Each department has their own application to track and analyse their sales and product variety/inventory. 
 
-The management uses a different application, where data from the all the departments is gathered and showed, so as to give them a birds eye view. We will call this application the **management** application.
+While, one department cannot see the sales and product offerings of another department, the higher management that drives the company's operations and growth, needs to be able to see everything from every department. 
 
-Some of the data, that the management application needs is stored in the department application's container and some of it is stored in a remote ERP database.
+For the purposes of our demo, we will take a "Fresh Produce" department application, that contains data about the various fruits they have and the various items they have sold. We will have a "management" application, where the data from the "Fresh Produce" application, needs to be displayed.
 
-Thus, the Department application is our source system and the management application is our target system.
+Thus, the department application is our source system and the management application is our target system.
 
-### How to connect to another HDI container?
+## Talking to another HDI container.
 
-<img src="/assets/images/sap-hana-xsa-synonyms/02-cross-container-scenario.png" width="25%">
-<div class="image-caption">
-<b>Fig 2.</b> Process.
-</div>
 
 To enable cross container access we need to create **roles** that give us access to the data we need. This is done using a HANA database artifact of `.hdbrole` type.
 
