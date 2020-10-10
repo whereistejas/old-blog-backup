@@ -3,23 +3,27 @@ layout: post
 title: Breaking out of your container
 author: Tejas Sanap
 ---
-There are three ways of deploying applications in SAP HANA:
-1. **Integrated Application**: ABAP API + CDS + OData + Fiori
-2. **XS Classic**: This has been deprecated since HANA SPS 02
-3. **XS Advanced**: The latest and greatest, native HANA application
 
-The “integrated application” approach is one of the most convenient and simple ways of creating applications with SAP HANA. We can write backend APIs in ABAP that leverage CDS views to collect and process data. This data is, then, exposed as an OData service to a Fiori application that acts as UI. However, this approach as numerous drawbacks, as well:
-1. For firsts, these approach lacks the ability to use modern day application architectures that leverage **containers and microservices**, which form the foundation of any cloud-based application. “Cloud” is the future and it is inevitable that eventually all our applications will be running on some form of cloud platform.
-2. We may be relying on HANA for data collection and aggregation through CDS views, some form of business logic must be coded in, which always have to be in ABAP. This **language lock-in** has been a major drawback. Being able to develop an application using multiple languages is called polyglot application development.
-3. **Security and access** to various kinds of data, cannot be configured on a granular level in the “integrated application” approach.
+Making applications for SAP customers, has always been rooted in **proprietary tools and frameworks**. However, with the onset of the "cloud" movement, SAP is providing its customers, a completely **new services-oriented application model**, that leverages containers and the latest open source standards, for cloud-based applications.
 
-The ABAP runtime serves as a application server where business and procedural logic can be executed. However, the ABAP runtime is separate from the HANA database. Thus, SAP provided something called HANA XS. This was a small JavaScript runtime directly embedded in the HANA database, that allowed us to write business logic using JavaScript (Node.js). This is what SAP, now, calls XS Classic.
+Developers have been able to provide web-based SAP applications, through the use of WebDynpro for a long time. However, that came with its own set of drawbacks. Newer alternatives now use *Fiori-based UI*, with an *OData service*, that transports data back and forth. This approach provides us ample amount of flexibility on the UI side, but for the backend, we are still dependent on *ABAP and the NetWeaver application server*, to execute the business and processing logic for us and the *database server, will perform queries* and send data to the Netweaver AS. We also know this as the SAP R3 architecture, where we divide things into the presentation layer, application layer and the database layer.
 
-SAP HANA **XSA** stands for *XS Advanced* and though, it is the next iteration of XS Classic, significant changes have been made under the hood at the application server layer that introduce a new development model. All the above-mentioned drawbacks have been resolved in the SAP HANA XSA.
+All of this was fine, until the appearance of HANA database, which provided us with a performance that was an order of magnitude better than its competitors. All of a sudden, the **bottleneck** moved from the database-side to the **application-side**.
 
-One of the core concepts of HANA XSA, is that of an HDI container. HDI, stands for *HANA Deployment Infrastructure*. In HANA XSA, application are pushed from git repositories, by building them from source, and deploying them to the target platform, in the form of containers.
+With all the speed and power of HANA, it makes much more sense to **do as much processing as possible in the HANA database itself**, at the lowest level; before passing data to the application-side processing logic. *CDS views*, *AMDP* and *stored procedures*, allow us to move much of the processing logic from ABAP or the application-side to the HANA database.
 
-This article is about how to access database objects, that reside outside of your application-specific container, which I will call the ego container, here onwards.
+But, wouldn't it be even better, if we could build an application that was completely native to HANA, with no Netweaver AS? This is the exact idea behind the **SAP HANA XS application programming model, where a lightweight javascript runtime is embedded directly into the HANA database**.
+
+This provides us with the ability to **write our database and business logic on the HANA database**, itself. Not only does this provide us with a significant performance boost, but it also comes along with numerous other improvements, on the front of security and operations sides. The SAP HANA XSA application, is also called a MTA application.
+
+This newer model of making applications, is based on an open-source project called **Cloud Foundry**. Cloud Foundry sets an open standard for how applications aimed for cloud-platforms, should be developed and deployed.
+
+This is a huge benefit, as this makes porting applications between SAP cloud and other cloud providers, easy and convienient. SAP HANA XSA is a modded version of vanilla-Cloud Foundry, which comes with a lot of additions that tune it for HANA.
+
+The SAP HANA XSA model provides the following benefits:
+1. This application model, takes full advantage of cloud technologies like **microservices and containers**. This adds a new layer of of control, security and ease of operations for the applications we develop. All applications in SAP HANA XSA are deployed as containers, that are built from scratch, each time.
+2. This model finally brings in the **BYOL (bring your own language) model** to SAP applications. Developers can finally use any language they wish to develop applications and leave ABAP behind. SAP by default, provides support for Java, Node.js and Python runtimes. We can even use R to write SQLScripts.
+3. Security and access, take on a much more integrated approach in SAP HANA XSA, where **security objects like roles and priveleges become part of the database itself as HANA artifacts**.
 
 ## How does a container work?
 
