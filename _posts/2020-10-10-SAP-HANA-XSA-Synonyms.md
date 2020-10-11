@@ -12,13 +12,13 @@ All of this was fine, until the appearance of HANA database, which provided us w
 
 With all the speed and power of HANA, it makes much more sense to **do as much processing as possible in the HANA database itself**, at the lowest level; before passing data to the application-side processing logic. *CDS views*, *AMDP* and *stored procedures*, allow us to move much of the processing logic from ABAP or the application-side to the HANA database.
 
-But, wouldn't it be even better, if we could just build an application that was completely native to HANA, with no Netweaver AS? This is the exact idea behind the **SAP HANA XS application programming model, where a lightweight javascript runtime is embedded directly into the HANA database**. SAP HANA XSA is the lastest iteration of this concept. More conceptual information about SAP HANA XSA programming model can be found in [this](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.04/en-US/df19a03dc07e4ba19db4e0006c1da429.html) document [<sup>6</sup>](#references).
+But, wouldn't it be even better, if we could just build an application that was completely native to HANA, with no Netweaver AS? This is the exact idea behind the **SAP HANA XS application programming model, where a lightweight javascript runtime is embedded directly into the HANA database**. SAP HANA XSA is the latest iteration of this concept. More conceptual information about SAP HANA XSA programming model can be found in [this](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.04/en-US/df19a03dc07e4ba19db4e0006c1da429.html) document [<sup>6</sup>](#references).
 
 This provides us with the ability to **write our database and business logic on the HANA database**, itself. Not only does this provide us with a significant performance boost, but it also comes along with numerous other improvements, on the front of security and operations. The SAP HANA XSA application, is also called a MTA application, which stands for, multi-target application. The newer SAP CAP (Cloud Application Programming) model also uses MTA to deploy its applications.
 
 This newer model of making applications, is based on an open-source project called **Cloud Foundry**. Cloud Foundry sets an open standard for how applications aimed for cloud-platforms, should be developed and deployed.
 
-This is a huge benefit, as this makes porting applications between SAP cloud and other cloud providers, easy and convienient. SAP HANA XSA is a modded version of vanilla-Cloud Foundry, which comes with a lot of additions that tune it for HANA.
+This is a huge benefit, as this makes porting applications between SAP cloud and other cloud providers, easy and convenient. SAP HANA XSA is a modded version of vanilla-Cloud Foundry, which comes with a lot of additions that tune it for HANA.
 
 The SAP HANA XSA model provides the following benefits:
 1. This application model, takes full advantage of cloud technologies like **microservices** and **containers**. This adds a new layer of control, security and ease of operations for the applications we develop and deploy. All applications in SAP HANA XSA are deployed as containers, that are built from scratch, each time. These containers are called HDI containers, which stands for, HANA Deployment Infrastructure.
@@ -39,13 +39,13 @@ Our application may interact with a **remote schema on an external database** or
 
 In this transaction, our application which itself is also an HDI container, plays the part of the target application. The remote schema or external HDI container, where the data we want to bring over is stored, plays the part of the source application. We can also call our application HDI container, the ego container. More conceptual information about how provisioning happens for users based on their roles to schemas, can be found in [this](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.05/en-US/a260b05631a24a759bba932aa6d81b64.html) document [<sup>1</sup>](#references).
 
-Users that use our application are called as technical users. Within any container, there are two kind of technical users:
+Users that use our application are called technical users. Within any container, there are two kind of technical users:
 1. **Object owner**: This user owns all the database objects within the various schemas of the container, this user has the power to grant roles to other users.
-2. **Application user**: This is the end user, who will query for different databse objects, through our application.
+2. **Application user**: This is the end user, who will query for different database objects, through our application.
 
-**Roles and privileges** allow us to explicitly define which users have access to which objects and what actions they can perfrom over those objects. Thus, roles allow us to restrict and control user activity. Since, we cannot know before-hand which users might use our applications and what roles must be granted to them, these roles and priveleges can be granted to users dynamically during runtime, based on their metadata or credentials.
+**Roles and privileges** allow us to explicitly define which users have access to which objects and what actions they can over those objects. Thus, roles allow us to restrict and control user activity. Since, we cannot know before-hand which users might use our applications and what roles must be granted to them, these roles and privileges can be granted to users dynamically during runtime, based on their metadata or credentials.
 
-To access external databse objects we need to link the remote schema or external container, to our application. However, just this is not sufficient, as we still need to know exactly which database artifact, we are looking for in the source system. To link our application to a remote schema or an external container, we use **services**. Services can be of two types, an existing service provided by the system, or an user-provided one. To point towards a specific database object, we use **synonyms**, which act as aliases. Synonyms, are the de facto way of accessing external database objects in SAP HANA XSA. More conceptual information about synonyms can be found in [this](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.03/en-US/556452cac83f423597d3a38a6f225e4b.html) document [<sup>5</sup>](#references).
+To access external database objects we need to link the remote schema or external container, to our application. However, just this is not sufficient, as we still need to know exactly which database artifact, we are looking for in the source system. To link our application to a remote schema or an external container, we use **services**. Services can be of two types, an existing service provided by the system, or an user-provided one. To point towards a specific database object, we use **synonyms**, which act as aliases. Synonyms, are the de facto way of accessing external database objects in SAP HANA XSA. More conceptual information about synonyms can be found in [this](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.03/en-US/556452cac83f423597d3a38a6f225e4b.html) document [<sup>5</sup>](#references).
 
 In this blog post, we will cover how to read data from another HDI container, this is also called cross-container access.
 
@@ -139,7 +139,7 @@ The effects of this action can be found in `mta.yaml` file. The wizard creates a
 
 The next task is to assign the roles we have previously created to the users of our **management** application in the **department** application through the service we just created. This assignment is done through a configuration file of the type `hdbgrants`. This config file has a syntax that is very similar to the  `hdbrole` HANA database artifact. More information about syntax can be found in [this](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.04/en-US/f49c1f5c72ee453788bf79f113d83bf9.html) document [<sup>3</sup>](#references).
 
-We have already a created `cfg` folder to store our database configuration files. We will create `freshprod_cross_container.hdbgrants` in the `cfg` folder. You will find that there are two ways to mention to the role category, `schema_roles` and `container_roles`, the latter is older notation and is supported only for backward compatibility reasons. I will advise to only use `schema_roles`. There are two ways to mention roles in the `hdbgrants` file, we can either use the `roles` or `roles_with_admin_option` keys to define them. In the case the of cross-container scenario, only the `roles` keyword can be used.
+We have already created a `cfg` folder to store our database configuration files. We will create `freshprod_cross_container.hdbgrants` in the `cfg` folder. You will find that there are two ways to mention the role category, `schema_roles` and `container_roles`, the latter is older notation and is supported only for backward compatibility reasons. I will advise to only use `schema_roles`. There are two ways to mention roles in the `hdbgrants` file, we can either use the `roles` or `roles_with_admin_option` keys to define them. In the case of cross-container scenario, only the `roles` keyword can be used.
 
 ```json
 {
@@ -162,7 +162,7 @@ I have shortened the name of the container, as the name of the original service 
 
 <img src="/assets/images/sap-hana-xsa-synonyms/08-cross-container-hdbgrants.png">
 <div class="image-caption">
-<b>Fig 9.</b> The <b>hdbgrants</b> file is not a database artifact and is only a config file.
+<b>Fig 8.</b> The <b>hdbgrants</b> file is not a database artifact and is only a config file.
 </div>
 
 The next step is to create **synonyms**. In order to declare synonyms we need to use HANA database artifacts of the type `hdbsynonym`. We can seperate the configuration of the declared synonyms into a HANA database artifact of the type `hdbsynonymconfig`. This allows us to group different external database objects logically in seperate `hdbsynonym` files, but instead of configuring each of them separately, we configure them all at once in one single synonym configuration file. More details about the syntax for these two HANA database artifacts can be found in [this](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.03/en-US/aad1653a9b95422089fec53f48c2899e.html) document [<sup>4</sup>](#references).
@@ -184,7 +184,7 @@ We will create a new sub-folder under the `src` folder called `synonyms` to save
 Now, we can finally create a hdbsynonymconfig file in the `cfg` folder.
 <img src="/assets/images/sap-hana-xsa-synonyms/10-synonym-config-cross-container.png">
 <div class="image-caption">
-<b>Fig 10.</b> By clicking on the object name button <b>...</b> we can access a screen that lets us select the service and table.
+<b>Fig 9.</b> By clicking on the object name button <b>...</b> we can access a screen that lets us select the service and table.
 </div>
 
 After adding all the tables the `freshproduce_dept.hdbsynonymconfig` file looks like this:
@@ -211,7 +211,7 @@ Now we have made all the necessary changes in the target as well as the source a
 
 <img src="/assets/images/sap-hana-xsa-synonyms/11-container-final-database-explorer.png">
 <div class="image-caption">
-<b>Fig 11.</b> The synonym is visible in the database explorer.
+<b>Fig 10.</b> The synonym is visible in the database explorer.
 </div>
 
 These tables are not visible under the table menu in our schema catalog, but instead we have a seperate menu for synonyms.
