@@ -23,7 +23,7 @@ This is a huge benefit, as this makes porting applications between SAP cloud and
 The SAP HANA XSA model provides the following benefits:
 1. This application model, takes full advantage of cloud technologies like **microservices** and **containers**. This adds a new layer of control, security and ease of operations for the applications we develop and deploy. All applications in SAP HANA XSA are deployed as containers, that are built from scratch, each time. These containers are called HDI containers, which stands for, HANA Deployment Infrastructure.
 2. With SAP HANA XSA, we see the **BYOL (bring your own language) model** coming to SAP applications. Developers can finally use any language they wish to develop applications and leave ABAP behind. SAP by default, provides support for Java, Node.js and Python runtimes. We can even use R-script to write Stored Procedures.
-3. Security and access, take on a much more integrated approach in SAP HANA XSA, where **security objects like roles and priveleges become part of the database itself as HANA database artifacts**.
+3. Security and access, take on a much more integrated approach in SAP HANA XSA, where **security objects like roles and privileges become part of the database itself as HANA database artifacts**.
 
 ## How does a HDI container interact?
 
@@ -45,7 +45,7 @@ Users that use our application are called technical users. Within any container,
 
 **Roles and privileges** allow us to explicitly define which users have access to which objects and what actions they can over those objects. Thus, roles allow us to restrict and control user activity. Since, we cannot know before-hand which users might use our applications and what roles must be granted to them, these roles and privileges can be granted to users dynamically during runtime, based on their metadata or credentials.
 
-To access external database objects we need to link the remote schema or external container, to our application. However, just this is not sufficient, as we still need to know exactly which database artifact, we are looking for in the source system. To link our application to a remote schema or an external container, we use **services**. Services can be of two types, an existing service provided by the system, or an user-provided one. To point towards a specific database object, we use **synonyms**, which act as aliases. Synonyms, are the de facto way of accessing external database objects in SAP HANA XSA. More conceptual information about synonyms can be found in [this](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.03/en-US/556452cac83f423597d3a38a6f225e4b.html) document [<sup>5</sup>](#references).
+To access external database objects we need to link the remote schema or external container, to our application. However, just this is not sufficient, as we still need to know exactly which database artifact, we are looking for in the source system. To link our application to a remote schema or an external container, we use **services**. Services can be of two types, an existing service provided by the system, or an user-provided one. To point towards a specific database object, we use **synonyms**, which act as aliases. Synonyms are the de facto way of accessing external database objects in SAP HANA XSA. More conceptual information about synonyms can be found in [this](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.03/en-US/556452cac83f423597d3a38a6f225e4b.html) document [<sup>5</sup>](#references).
 
 In this blog post, we will cover how to read data from another HDI container, this is also called cross-container access.
 
@@ -114,7 +114,7 @@ A careful glance will show us that the role name in both the `hdbrole` artifacts
 
 **We only need to create role artifacts in the source application, no other changes are necessary.**
 
-The next step is to add the service to our target application. Since, we are connecting two HDI containers. The source application's HDI container itself serves as the data-provider service. Since, the HDI container is created by the system, it is "existing service".
+The next step is to add the service to our target application. Since, we are connecting two HDI containers. The source application's HDI container itself serves as the data-provider service. Since, the HDI container is created by the system, it is an "existing service".
 
 In the newer versions of Web IDE, we are provided with a wizard to add database services.
 
@@ -123,14 +123,14 @@ In the newer versions of Web IDE, we are provided with a wizard to add database 
 <b>Fig 5.</b> The SAP HANA Service application, can be found by right-clicking on the database module.
 </div>
 
-This wizard allows us to either create new user provided services, which are used to access remote schemas in external databases or use already existing services. 
+This wizard allows us to either create new user provided services, which are used to access remote schemas in external databases or use an already existing service.
 
 <img src="/assets/images/sap-hana-xsa-synonyms/06-find-hdi-container.png">
 <div class="image-caption">
 <b>Fig 6.</b> We can find the HDI container and add it as an existing service, using the wizard.
 </div>
 
-The effects of this action can be found in `mta.yaml` file. The wizard creates a new resource, for our service, and adds it as a requirement for the database module.
+The effects of this action can be found in the `mta.yaml` file. The wizard creates a new resource, for our service, and adds it as a requirement for the database module.
 
 <img src="/assets/images/sap-hana-xsa-synonyms/07-mta-yaml-after-adding-service.png">
 <div class="image-caption">
