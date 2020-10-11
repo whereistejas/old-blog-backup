@@ -4,26 +4,26 @@ title: Breaking out of your container
 author: Tejas Sanap
 ---
 
-Making applications for SAP, has always been rooted in **proprietary tools and frameworks**. However, with the onset of the "cloud" movement, SAP is providing its customers and developers, a completely **new services-oriented application model**, that leverages containers and the latest open source standards, for cloud-based applications.
+Making applications for SAP in the past, has always been rooted in **proprietary tools and frameworks**. However, with the onset of the "cloud" movement, SAP is providing its customers and developers, a completely **new services-oriented application model**, that leverages containers and the latest open source standards, for cloud-based applications.
 
-Developers have been able to provide web-based SAP applications, through the use of WebDynpro for a long time. However, that came with its own set of drawbacks. Newer alternatives now use *Fiori-based UI*, with an *OData service*, that transports data back and forth. This approach provides us ample amount of flexibility on the UI side, but for the backend, we are still dependent on *ABAP and the NetWeaver application server*, to execute the business and processing logic for us and the *database server to perform queries* and send data to the Netweaver AS. We also know this as the SAP R3 architecture, where we divide things into the presentation layer, application layer and the database layer.
+Developers have been able to provide web-based SAP applications, through the use of WebDynpro for a long time. However, that came with its own set of drawbacks. Newer alternatives now use *Fiori-based UI*, with an *OData service* from the backend, that transports data back and forth. This approach provides us with ample amount of flexibility on the UI side, but for the backend, we are still dependent on *ABAP and the NetWeaver application server*, to execute the business and processing logic for us and the *database server to perform queries* and send data to the Netweaver AS. We also know this as the SAP R3 architecture, where we divide things into the presentation layer, application layer and the database layer.
 
-All of this was fine, until the appearance of HANA database, which provided us with a performance that was an order of magnitude better than its competitors. All of a sudden, the **bottleneck** moved from the database-side to the **application-side**.
+All of this was fine, until the appearance of HANA database, which provided us with a performance that was an order of magnitude better than its competitors. All of a sudden, the **bottleneck** has moved from the database-side to the **application-side**.
 
 With all the speed and power of HANA, it makes much more sense to **do as much processing as possible in the HANA database itself**, at the lowest level; before passing data to the application-side processing logic. *CDS views*, *AMDP* and *stored procedures*, allow us to move much of the processing logic from ABAP or the application-side to the HANA database.
 
-But, wouldn't it be even better, if we could build an application that was completely native to HANA, with no Netweaver AS? This is the exact idea behind the **SAP HANA XS application programming model, where a lightweight javascript runtime is embedded directly into the HANA database**.
+But, wouldn't it be even better, if we could just build an application that was completely native to HANA, with no Netweaver AS? This is the exact idea behind the **SAP HANA XS application programming model, where a lightweight javascript runtime is embedded directly into the HANA database**. SAP HANA XSA is the lastest iteration of this concept. More conceptual information about SAP HANA XSA programming model can be found in [this](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.04/en-US/df19a03dc07e4ba19db4e0006c1da429.html) document [<sup>6</sup>](#references).
 
-This provides us with the ability to **write our database and business logic on the HANA database**, itself. Not only does this provide us with a significant performance boost, but it also comes along with numerous other improvements, on the front of security and operations sides. The SAP HANA XSA application, is also called a MTA application.
+This provides us with the ability to **write our database and business logic on the HANA database**, itself. Not only does this provide us with a significant performance boost, but it also comes along with numerous other improvements, on the front of security and operations. The SAP HANA XSA application, is also called a MTA application, which stands for, multi-target application. The newer SAP CAP (Cloud Application Programming) model also uses MTA to deploy its applications.
 
 This newer model of making applications, is based on an open-source project called **Cloud Foundry**. Cloud Foundry sets an open standard for how applications aimed for cloud-platforms, should be developed and deployed.
 
 This is a huge benefit, as this makes porting applications between SAP cloud and other cloud providers, easy and convienient. SAP HANA XSA is a modded version of vanilla-Cloud Foundry, which comes with a lot of additions that tune it for HANA.
 
 The SAP HANA XSA model provides the following benefits:
-1. This application model, takes full advantage of cloud technologies like **microservices and containers**. This adds a new layer of of control, security and ease of operations for the applications we develop. All applications in SAP HANA XSA are deployed as containers, that are built from scratch, each time. These containers are called HDI containers, which stands for, HANA Deployment Infrastructure.
-2. With SAP HANA XSA, we see the **BYOL (bring your own language) model** coming to SAP applications. Developers can finally use any language they wish to develop applications and leave ABAP behind. SAP by default, provides support for Java, Node.js and Python runtimes. We can even use R to write SQLScripts.
-3. Security and access, take on a much more integrated approach in SAP HANA XSA, where **security objects like roles and priveleges become part of the database itself as HANA artifacts**.
+1. This application model, takes full advantage of cloud technologies like **microservices** and **containers**. This adds a new layer of control, security and ease of operations for the applications we develop and deploy. All applications in SAP HANA XSA are deployed as containers, that are built from scratch, each time. These containers are called HDI containers, which stands for, HANA Deployment Infrastructure.
+2. With SAP HANA XSA, we see the **BYOL (bring your own language) model** coming to SAP applications. Developers can finally use any language they wish to develop applications and leave ABAP behind. SAP by default, provides support for Java, Node.js and Python runtimes. We can even use R-script to write Stored Procedures.
+3. Security and access, take on a much more integrated approach in SAP HANA XSA, where **security objects like roles and priveleges become part of the database itself as HANA database artifacts**.
 
 ## How does a HDI container interact?
 
@@ -32,23 +32,20 @@ The SAP HANA XSA model provides the following benefits:
 <b>Fig 1.</b> Process.
 </div>
 
-Our application may interact with a remote schema on an external database or another external HDI container. To do this, it will need the following:
+Our application may interact with a **remote schema on an external database** or another **external HDI container**. To do this, it will need the following:
 1. A mechanism that grants users access to database objects based on their roles. These database objects maybe within the application's own schema or they maybe stored in some external source.
 2. If the database objects are stored in a remote schema or an external HDI container, we need aliases pointing towards the appropriate database objects.
-3. Services that facilitate sending information back and forth, between our application and the remote schema or HDI container
+3. Services that facilitate sending information back and forth, between our application and the remote schema or HDI container.
 
-In this transaction, our application which itself is also an HDI container, plays the part of the target system. The remote schema or external HDI container, where the data we want to bring over is stored, plays the part of the source system. We can also call our application HDI container the ego container.
-
-To get a better understanding of how provisioning happens for users based on their roles to schemas, you can refer to [this](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.05/en-US/a260b05631a24a759bba932aa6d81b64.html) document [<sup>1</sup>](#references).
+In this transaction, our application which itself is also an HDI container, plays the part of the target application. The remote schema or external HDI container, where the data we want to bring over is stored, plays the part of the source application. We can also call our application HDI container, the ego container. More conceptual information about how provisioning happens for users based on their roles to schemas, can be found in [this](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.05/en-US/a260b05631a24a759bba932aa6d81b64.html) document [<sup>1</sup>](#references).
 
 Users that use our application are called as technical users. Within any container, there are two kind of technical users:
 1. **Object owner**: This user owns all the database objects within the various schemas of the container, this user has the power to grant roles to other users.
 2. **Application user**: This is the end user, who will query for different databse objects, through our application.
 
-Roles and privileges allow us to have a fine control over which users have access to which objects and what actions they can perfrom over those objects. Since, we cannot know before-hand which users might use our applications, these roles and priveleges can be granted to users dynamically during runtime, based on their metadata or credentials.
+**Roles and privileges** allow us to explicitly define which users have access to which objects and what actions they can perfrom over those objects. Thus, roles allow us to restrict and control user activity. Since, we cannot know before-hand which users might use our applications and what roles must be granted to them, these roles and priveleges can be granted to users dynamically during runtime, based on their metadata or credentials.
 
-To access external databse objects we need to link the remote schema or external container, to our application. However, just this is not sufficient, as we still need to know exactly which database artifact, we are looking for in the source system. To link our application to a remote schema or an external container, we use services. Services can be of two types, an existing service provided by the system, or an user-provided one. To point towards a specific database object, we use synonyms, which act as aliases. Synonyms, are the de facto way of accessing external database objects in SAP HANA XSA. More conceptual information about synonyms can be found in [this](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.03/en-US/556452cac83f423597d3a38a6f225e4b.html) document [<sup>5</sup>](#references).
-
+To access external databse objects we need to link the remote schema or external container, to our application. However, just this is not sufficient, as we still need to know exactly which database artifact, we are looking for in the source system. To link our application to a remote schema or an external container, we use **services**. Services can be of two types, an existing service provided by the system, or an user-provided one. To point towards a specific database object, we use **synonyms**, which act as aliases. Synonyms, are the de facto way of accessing external database objects in SAP HANA XSA. More conceptual information about synonyms can be found in [this](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.03/en-US/556452cac83f423597d3a38a6f225e4b.html) document [<sup>5</sup>](#references).
 
 In this blog post, we will cover how to read data from another HDI container, this is also called cross-container access.
 
@@ -69,7 +66,7 @@ Thus, the **Fresh Produce department application** is our **source** application
 
 ## Talking to another HDI container.
 
-I have created a new HANA database module in our source system with the following folder structure. There is no hard and fast requirement over the folder structure, but being organised always pays off.
+I have created a new HANA database module in our source application with the following folder structure. There is no hard and fast requirement over the folder structure, but being organised always pays off.
 
 <img src="/assets/images/sap-hana-xsa-synonyms/03-source-project-structure.png">
 <div class="image-caption">
@@ -225,3 +222,4 @@ These tables are not visible under the table menu in our schema catalog, but ins
 3. [hdbgrants: Syntax](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.04/en-US/f49c1f5c72ee453788bf79f113d83bf9.html)
 4. [hdbsynonym and hdbsynonymconfig: Syntax](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.03/en-US/aad1653a9b95422089fec53f48c2899e.html)
 5. [Database Synonyms in XS Advanced](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.03/en-US/556452cac83f423597d3a38a6f225e4b.html).
+6. [SAP XSA Programming model](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.04/en-US/df19a03dc07e4ba19db4e0006c1da429.html).
