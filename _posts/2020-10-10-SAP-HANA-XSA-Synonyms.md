@@ -47,7 +47,8 @@ Users that use our application are called as technical users. Within any contain
 
 Roles and privileges allow us to have a fine control over which users have access to which objects and what actions they can perfrom over those objects. Since, we cannot know before-hand which users might use our applications, these roles and priveleges can be granted to users dynamically during runtime, based on their metadata or credentials.
 
-To access external databse objects we need to link the remote schema or external container, to our application. However, just this is not sufficient, as we still need to know exactly which database artifact, we are looking for in the source system. To link our application to a remote schema or an external container, we use services. Services can be of two types, an existing service provided by the system, or an user-provided one. To point towards a specific database object, we use synonyms, which act as aliases.
+To access external databse objects we need to link the remote schema or external container, to our application. However, just this is not sufficient, as we still need to know exactly which database artifact, we are looking for in the source system. To link our application to a remote schema or an external container, we use services. Services can be of two types, an existing service provided by the system, or an user-provided one. To point towards a specific database object, we use synonyms, which act as aliases. Synonyms, are the de facto way of accessing external database objects in SAP HANA XSA. More conceptual information about synonyms can be found in [this](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.03/en-US/556452cac83f423597d3a38a6f225e4b.html) document [<sup>5</sup>](#references).
+
 
 In this blog post, we will cover how to read data from another HDI container, this is also called cross-container access.
 
@@ -139,9 +140,9 @@ The effects of this action can be found in `mta.yaml` file. The wizard creates a
 <b>Fig 7.</b> The HDI container service as a resource in <b>mta.yaml</b>.
 </div>
 
-The next task is to assign the roles we have previously created to the users of our **management** application in the **department** application through the service we just created. This assignment is done through a configuration file named `.hdbgrants`<sup>[4](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.04/en-US/f49c1f5c72ee453788bf79f113d83bf9.html)</sup>. We have already a created `cfg` folder to store our database configuration files.
+The next task is to assign the roles we have previously created to the users of our **management** application in the **department** application through the service we just created. This assignment is done through a configuration file of the type `hdbgrants`. This config file has a syntax that is very similar to the  `hdbrole` HANA database artifact. More information about syntax can be found in [this](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.04/en-US/f49c1f5c72ee453788bf79f113d83bf9.html) document [<sup>3</sup>](#references).
 
-We will create `freshprod_cross_container.hdbgrants` in the `cfg` folder. Again, creating files under this specific folder structure is not mandatory but, staying organised always pays off. You will find that there are two ways to mention to the role category, `schema_roles` and `container_roles`, the latter is older notation and is supported only for backward compatibility reasons. I will advise to only use `schema_roles`. There are two ways to mention roles in the `hdbgrants` file, we can either use the `roles` or `roles_with_admin_option` keys to define them. In the case the of cross-container scenario, only the `roles` keyword can be used.
+We have already a created `cfg` folder to store our database configuration files. We will create `freshprod_cross_container.hdbgrants` in the `cfg` folder. You will find that there are two ways to mention to the role category, `schema_roles` and `container_roles`, the latter is older notation and is supported only for backward compatibility reasons. I will advise to only use `schema_roles`. There are two ways to mention roles in the `hdbgrants` file, we can either use the `roles` or `roles_with_admin_option` keys to define them. In the case the of cross-container scenario, only the `roles` keyword can be used.
 
 ```json
 {
@@ -167,9 +168,9 @@ I have shortened the name of the container, as the name of the original service 
 <b>Fig 9.</b> The <b>hdbgrants</b> file is not a database artifact and is only a config file.
 </div>
 
-The next step is to create **synonyms**. While creating synonyms, we can split the synonyms into a `.hdbsynonym` and `.hdbsynonymconfig` file. The idea is use to different synonym files, to group different synonyms or target tables, but instead of configuring each of them separately, we configure them all at in one synonym config file.
+The next step is to create **synonyms**. In order to declare synonyms we need to use HANA database artifacts of the type `hdbsynonym`. We can seperate the configuration of the declared synonyms into a HANA database artifact of the type `hdbsynonymconfig`. This allows us to group different external database objects logically in seperate `hdbsynonym` files, but instead of configuring each of them separately, we configure them all at once in one single synonym configuration file. More details about the syntax for these two HANA database artifacts can be found in [this](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.03/en-US/aad1653a9b95422089fec53f48c2899e.html) document [<sup>4</sup>](#references).
 
-We will create a new sub-folder under the `src` folder called `synonyms` to save our `hdbsynonym` artifacts. In these files, we will only mention the name of the synonym, i.e., the alias we want to use for the target database artifact.
+We will create a new sub-folder under the `src` folder called `synonyms` to save our `hdbsynonym` artifacts. In these files, we will only mention the name of the synonym, i.e., the alias we want to use for the external database objects.
 
 1. `freshproduce_sales.hdbsynonym`: This synonym points to the Sales table.
 
@@ -216,8 +217,11 @@ Now we have made all the necessary changes in the target as well as the source a
 <b>Fig 11.</b> The synonym is visible in the database explorer.
 </div>
 
+These tables are not visible under the table menu in our schema catalog, but instead we have a seperate menu for synonyms.
+
 ## References
-1. [Users, Privileges, and Schemas](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.05/en-US/a260b05631a24a759bba932aa6d81b64.html)
-2. [Configure a Grantor for the HDI Container](https://help.sap.com/viewer/7952ef28a6914997abc01745fef1b607/2.0_SPS04/en-US/df2d69fe55e34406b1f8d54c43e6aee5.html)
-3. [.hdbrole: Syntax](https://help.sap.com/viewer/3823b0f33420468ba5f1cf7f59bd6bd9/2.0.04/en-US/625d7733c30b4666b4a522d7fa68a550.html)
-4. [.hdbgrants: Syntax](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.04/en-US/f49c1f5c72ee453788bf79f113d83bf9.html)
+1. [Users, Privileges, and Schemas.](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.05/en-US/a260b05631a24a759bba932aa6d81b64.html)
+2. [hdbrole: Syntax](https://help.sap.com/viewer/3823b0f33420468ba5f1cf7f59bd6bd9/2.0.04/en-US/625d7733c30b4666b4a522d7fa68a550.html)
+3. [hdbgrants: Syntax](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.04/en-US/f49c1f5c72ee453788bf79f113d83bf9.html)
+4. [hdbsynonym and hdbsynonymconfig: Syntax](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.03/en-US/aad1653a9b95422089fec53f48c2899e.html)
+5. [Database Synonyms in XS Advanced](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.03/en-US/556452cac83f423597d3a38a6f225e4b.html).
