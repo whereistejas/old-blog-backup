@@ -7,4 +7,6 @@ My name is Tejas. I code, read and write. I never paint, dance or sing. I, mostl
 
 Special Mention: I use vim. Here are my [dotfiles]().
 
+I usually takes notes about everything and I have decided to share all of them on Github. [Here](https://github.com/whereistejas/notes) is that repository. 
+
 You can find me on IRC (Freenode) by the nick `whereistejas`.
