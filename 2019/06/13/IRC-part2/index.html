@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>How to do IRC the right way (Part 2) | whereistejas</title>
+<meta name="generator" content="Jekyll v3.7.4" />
+<meta property="og:title" content="How to do IRC the right way (Part 2)" />
+<meta name="author" content="Tejas Sanap" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="What’s the problem? One of the most annoying things about IRC is how it is not persistent. There are two halves of this persistence thing: IRC doesn’t save the messages we have receive, the chats in which we are mentioned, etc., when we are offline. IRC doesn’t save our messages, logs and chats, when we go offline." />
+<meta property="og:description" content="What’s the problem? One of the most annoying things about IRC is how it is not persistent. There are two halves of this persistence thing: IRC doesn’t save the messages we have receive, the chats in which we are mentioned, etc., when we are offline. IRC doesn’t save our messages, logs and chats, when we go offline." />
+<link rel="canonical" href="http://localhost:4000/2019/06/13/IRC-part2/" />
+<meta property="og:url" content="http://localhost:4000/2019/06/13/IRC-part2/" />
+<meta property="og:site_name" content="whereistejas" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-06-13T00:00:00+05:30" />
+<script type="application/ld+json">
+{"description":"What’s the problem? One of the most annoying things about IRC is how it is not persistent. There are two halves of this persistence thing: IRC doesn’t save the messages we have receive, the chats in which we are mentioned, etc., when we are offline. IRC doesn’t save our messages, logs and chats, when we go offline.","headline":"How to do IRC the right way (Part 2)","dateModified":"2019-06-13T00:00:00+05:30","datePublished":"2019-06-13T00:00:00+05:30","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2019/06/13/IRC-part2/"},"url":"http://localhost:4000/2019/06/13/IRC-part2/","author":{"@type":"Person","name":"Tejas Sanap"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"> <link rel="shortcut icon" type="image/png" href="/favicon.png"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="whereistejas" /><script type="text/x-mathjax-config">
+  	MathJax.Hub.Config({
+            tex2jax: {
+	        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            	inlineMath: [['$','$']]
+		}
+      	});
+  </script>
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script> 
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/"><img src="/favicon.png" class="logo">whereistejas</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+        <div class="trigger"><a class="page-link" href="/:title:/">About</a><a class="page-link" href="/books.html">Books</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">How to do IRC the right way (Part 2)</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2019-06-13T00:00:00+05:30" itemprop="datePublished">Jun 13, 2019
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="whats-the-problem">What’s the problem?</h2>
+<p>One of the most annoying things about IRC is how it is not <strong>persistent</strong>. There are two halves of this <strong>persistence</strong> thing:</p>
+<ol>
+  <li>IRC doesn’t save the messages we have receive, the chats in which we are mentioned, etc., when <em>we are offline</em>.</li>
+  <li>IRC doesn’t save our messages, logs and chats, when <em>we go offline</em>.</li>
+</ol>
+
+<p>That’s the problem we are going to solve in this article.</p>
+
+<h2 id="what-solutions-are-available">What solutions are available?</h2>
+<h3 id="the-easy-but-incomplete-solution---tmux-and-a-server">The easy but incomplete solution - <code class="highlighter-rouge">tmux</code> and a server</h3>
+<p>The most simple solution to this problem is to connect to IRC using a machine that is always running and connected to the internet. Yes, that means a server. And, then whenever we want to check what’s going on our favourite channels, we simply SSH/connect to the server. From this point onwards, we will be using the term <code class="highlighter-rouge">server</code> to denote the machine that we have logged into to stay connected to IRC all the time. This is a practical solution, that a large number of people use. However, this solution comes with a few caveats:</p>
+<ol>
+  <li>The most obvious one is that we need access to a terminal. In order to ensure that the IRC-client is always running on the server most people will use <code class="highlighter-rouge">tmux</code> or <code class="highlighter-rouge">screen</code>, which they will attach-to or detach-to to use IRC. We may not always have access to a terminal or the right SSH credentials on the computer to SSH into our server.</li>
+  <li>Thus, we run into a major problem of this approach, which is it’s <em>lack of ability</em> to connect with other IRC clients on seperate machines.</li>
+  <li>Most people don’t have access to a computer all the time. So, a large section of IRC users, actually use their phones to chat on IRC. Having to use SSH on our phones to connect to an TUI-based IRC client, may not be very difficult, but it definitely isn’t pleasant. An IRC user like me, who uses a phone 80% of the time to chat on IRC, needs to have a proper IRC client made to be used on phones. Having a clean UI on a small screen can make a ton of difference. This, I think, should be one of the main reasons why people should avoid this approach.</li>
+</ol>
+<p float="center">
+  <img src="/assets/images/irc-setup-part2/revolution-irc1.png" width="200" />
+  <img src="/assets/images/irc-setup-part2/revolution-irc2.png" width="200" />
+  <img src="/assets/images/irc-setup-part2/revolution-irc3.png" width="200" />
+</p>
+
+<ol>
+  <li>This method doesn’t allow us to maintain seperate buffers for seperate clients. Not having this may not be a deal breaker, but it’s definitely makes things easier. It also, doesn’t allow us to maintain a seperate list of channels on different clients/devices.</li>
+</ol>
+
+<h3 id="the-average-but-incomplete-solution---weechat">The average but incomplete solution - <code class="highlighter-rouge">weechat</code></h3>
+<p>I am, probably, going to get a lot of hate for this. Unlike the <code class="highlighter-rouge">tmux</code>+server approach, <code class="highlighter-rouge">weechat</code> will provide us with seperate UI’s for seperate devices. But, all of those clients are still <code class="highlighter-rouge">weechat</code>, meaning we become tied to it’s ecosystem. It still provides a great number of features, that a lot of people love. This solution has the following caveats:</p>
+<ol>
+  <li>Lack of portability meaning if we decide to shift to another IRC-client, we can’t easily transfer all of our channel-lists, preferences and chat logs</li>
+  <li>We connect to the same instance of <code class="highlighter-rouge">weechat</code>, so it doesn’t allow us to provide different configurations for different devices.</li>
+</ol>
+
+<h3 id="the-difficult-but-complete-solution---znc">The difficult but complete solution - <code class="highlighter-rouge">ZNC</code></h3>
+<p><code class="highlighter-rouge">ZNC</code> isn’t an IRC client. Both of the solutions mentioned above used one particular client or one particular session. <code class="highlighter-rouge">ZNC</code> is an IRC bouncer. In very simple terms, it keeps us connected to the network from a remote machine and acts as a bridge between the IRC network and us. <code class="highlighter-rouge">ZNC</code> is capable of properly logging all the chats, maintaining different channel-lists for different clients and much more. The functionality of <code class="highlighter-rouge">ZNC</code> can be extended with the help of modules. Most importantly, ZNC gives us the freedom to use as many clients and as many different types of clients as we want. In addition it gives us fine control over what is sent to which client, and how much of it can be synced between two or more clients.</p>
+
+<h2 id="now-what">Now, what?</h2>
+<p>IMHO, ZNC is the right way to do IRC. In the next article, we will discuss how to set up ZNC and connect to IRC.</p>
+
+<h2 id="future-additions">Future Additions</h2>
+
+<ol>
+  <li><strong>05/26/2020</strong> - If anyone is wondering what client I’m using for my phone, it’s called <a href="https://github.com/MCMrARM/revolution-irc">Revolution IRC</a></li>
+</ol>
+
+  </div><a class="u-url" href="/2019/06/13/IRC-part2/" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col one-half">
+      <h2 class="footer-heading">whereistejas</h2>
+        <ul class="contact-list">
+          <li class="p-name">Tejas Sanap</li><li><a class="u-email" href="mailto:sanap.tejas@gmail.com">sanap.tejas@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col one-half">
+        <p>All good things take time.
+</p>
+      </div>
+
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/whereistejas" title="whereistejas"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a href="https://www.instagram.com/whereistejas" title="whereistejas"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#instagram"></use></svg></a></li><li><a href="https://twitter.com/whereistejas" title="whereistejas"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,1006 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-10-11T16:27:20+05:30</updated><id>http://localhost:4000/feed.xml</id><title type="html">whereistejas</title><subtitle>All good things take time.
+</subtitle><author><name>Tejas Sanap</name></author><entry><title type="html">Breaking out of your container</title><link href="http://localhost:4000/2020/10/10/SAP-HANA-XSA-Synonyms.html" rel="alternate" type="text/html" title="Breaking out of your container" /><published>2020-10-10T00:00:00+05:30</published><updated>2020-10-10T00:00:00+05:30</updated><id>http://localhost:4000/2020/10/10/SAP-HANA-XSA-Synonyms</id><content type="html" xml:base="http://localhost:4000/2020/10/10/SAP-HANA-XSA-Synonyms.html">&lt;p&gt;Making applications for SAP in the past, has always been rooted in &lt;strong&gt;proprietary tools and frameworks&lt;/strong&gt;. However, with the onset of the “cloud” movement, SAP is providing its customers and developers, a completely &lt;strong&gt;new services-oriented application model&lt;/strong&gt;, that leverages containers and the latest open source standards, for cloud-based applications.&lt;/p&gt;
+
+&lt;p&gt;Developers have been able to provide web-based SAP applications, through the use of WebDynpro for a long time. However, that came with its own set of drawbacks. Newer alternatives now use &lt;em&gt;Fiori-based UI&lt;/em&gt;, with an &lt;em&gt;OData service&lt;/em&gt; from the backend, that transports data back and forth. This approach provides us with ample amount of flexibility on the UI side, but for the backend, we are still dependent on &lt;em&gt;ABAP and the NetWeaver application server&lt;/em&gt;, to execute the business and processing logic for us and the &lt;em&gt;database server to perform queries&lt;/em&gt; and send data to the Netweaver AS. We also know this as the SAP R3 architecture, where we divide things into the presentation layer, application layer and the database layer.&lt;/p&gt;
+
+&lt;p&gt;All of this was fine, until the appearance of HANA database, which provided us with a performance that was an order of magnitude better than its competitors. All of a sudden, the &lt;strong&gt;bottleneck&lt;/strong&gt; has moved from the database-side to the &lt;strong&gt;application-side&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;With all the speed and power of HANA, it makes much more sense to &lt;strong&gt;do most of the processing in the HANA database itself&lt;/strong&gt;, at the lowest level; before passing data to the application-side processing logic. &lt;em&gt;CDS views&lt;/em&gt;, &lt;em&gt;AMDP&lt;/em&gt; and &lt;em&gt;stored procedures&lt;/em&gt;, allow us to move much of the processing logic from ABAP or the application-side to the HANA database.&lt;/p&gt;
+
+&lt;p&gt;But, wouldn’t it be even better, if we could build an application that was completely native to HANA, with no Netweaver AS? This is the exact idea behind &lt;strong&gt;SAP HANA XS, where a lightweight javascript runtime is embedded directly into the HANA database&lt;/strong&gt;. SAP HANA XSA is the latest iteration of this concept. More conceptual information about SAP HANA XSA programming model can be found in &lt;a href=&quot;https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.04/en-US/df19a03dc07e4ba19db4e0006c1da429.html&quot;&gt;this&lt;/a&gt; document &lt;a href=&quot;#references&quot;&gt;&lt;sup&gt;6&lt;/sup&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;This provides us with the ability to &lt;strong&gt;write our database and business logic on the HANA database, itself&lt;/strong&gt;. Not only does this provide us with a significant performance boost, but it also comes along with numerous other improvements, on the front of security and operations. The SAP HANA XSA application, is also called a MTA application, which stands for, multi-target application. The newer SAP CAP (Cloud Application Programming) model also uses MTA to deploy its applications.&lt;/p&gt;
+
+&lt;p&gt;This newer model of making applications, is based on an open-source project called &lt;strong&gt;Cloud Foundry&lt;/strong&gt;. Cloud Foundry sets an open standard for how applications aimed for cloud-platforms, should be developed and deployed.&lt;/p&gt;
+
+&lt;p&gt;This is a huge benefit, as it makes porting applications between SAP cloud and other cloud providers, easy and convenient. SAP HANA XSA is a modded version of vanilla-Cloud Foundry, which comes with a lot of additions that tune it for HANA.&lt;/p&gt;
+
+&lt;p&gt;The SAP HANA XSA model provides the following benefits:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;This application model, takes full advantage of cloud technologies like &lt;strong&gt;microservices&lt;/strong&gt; and &lt;strong&gt;containers&lt;/strong&gt;. This adds a new layer of control, security and ease of operations for the applications we develop and deploy. All applications in SAP HANA XSA are deployed as containers, that are built from scratch, each time. These containers are called HDI containers, which stands for, HANA Deployment Infrastructure.&lt;/li&gt;
+  &lt;li&gt;With SAP HANA XSA, we see &lt;strong&gt;BYOL (bring your own language) model&lt;/strong&gt; coming to SAP applications. Developers can finally use any language they wish to develop applications and leave ABAP behind. SAP by default, provides support for Java, Node.js and Python runtimes. We can even use R-script to write Stored Procedures.&lt;/li&gt;
+  &lt;li&gt;Security and access, take on a much more integrated approach in SAP HANA XSA, where &lt;strong&gt;security objects like roles and privileges become part of the database itself as HANA database artifacts&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;how-does-a-hdi-container-interact&quot;&gt;How does a HDI container interact?&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sap-hana-xsa-synonyms/02-cross-container-scenario.png&quot; width=&quot;15%&quot; /&gt;&lt;/p&gt;
+&lt;div class=&quot;image-caption&quot;&gt;
+&lt;b&gt;Fig 1.&lt;/b&gt; Overview of tasks required to enable interaction.
+&lt;/div&gt;
+
+&lt;p&gt;Our application may interact with a &lt;strong&gt;remote schema on an external database&lt;/strong&gt; or another &lt;strong&gt;external HDI container&lt;/strong&gt;. To do this, it will need the following:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;A mechanism that grants users access to database objects based on their roles. These database objects maybe within the application’s own schema or they maybe stored in some external source.&lt;/li&gt;
+  &lt;li&gt;If the database objects are stored in a remote schema or an external HDI container, we need aliases pointing towards the appropriate database objects.&lt;/li&gt;
+  &lt;li&gt;Services that facilitate sending information back and forth, between our application and the remote schema or external HDI container.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;In this transaction, our application which itself is also an HDI container, plays the part of the target application. The remote schema or external HDI container, where the data we want to bring over is stored, plays the part of the source application. More conceptual information about how provisioning happens for users based on their roles to schemas, can be found in &lt;a href=&quot;https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.05/en-US/a260b05631a24a759bba932aa6d81b64.html&quot;&gt;this&lt;/a&gt; document &lt;a href=&quot;#references&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Within any container, there are two kinds of technical users:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;Object owner&lt;/strong&gt;: This user owns all the database objects within the various schemas of the container, this user has the power to grant roles to other users.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Application user&lt;/strong&gt;: This is the end user, who will query for different database objects, through our application.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;Roles and privileges&lt;/strong&gt; allow us to explicitly define which users have access to which objects and what actions they can over those objects. Thus, roles allow us to restrict and control user activity. Since, we cannot know before-hand which users might use our applications and what roles must be granted to them, these roles and privileges can be granted to users dynamically during runtime, based on their metadata or credentials.&lt;/p&gt;
+
+&lt;p&gt;To access external database objects we need to link the remote schema or external container, to our application. However, only this is not sufficient, as we still need to know exactly which database artifact, we are looking for, in the source system. To link our application to a remote schema or an external container, we use &lt;strong&gt;services&lt;/strong&gt;. Services can be of two types, an existing service provided by the system, or an user-provided one. To point towards a specific database object, we use &lt;strong&gt;synonyms&lt;/strong&gt;, which act as aliases. Synonyms are the de facto way of accessing external database objects in SAP HANA XSA. More conceptual information about synonyms can be found in &lt;a href=&quot;https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.03/en-US/556452cac83f423597d3a38a6f225e4b.html&quot;&gt;this&lt;/a&gt; document &lt;a href=&quot;#references&quot;&gt;&lt;sup&gt;5&lt;/sup&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;In this blog post, we will cover how to read data from another HDI container, this is also called cross-container access.&lt;/p&gt;
+
+&lt;h2 id=&quot;basic-premise-of-our-demo&quot;&gt;Basic Premise of our Demo&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sap-hana-xsa-synonyms/01-project-view1.png&quot; /&gt;&lt;/p&gt;
+&lt;div class=&quot;image-caption&quot;&gt;
+&lt;b&gt;Fig 2.&lt;/b&gt; Source and target applications.
+&lt;/div&gt;
+
+&lt;p&gt;For example, we will consider a retail chain company. They sell different products in their supermarkets. Each product category becomes a business vertical (or, a department as I call them in this blogpost). Each department has their own application to track and analyse their sales and product variety/inventory.&lt;/p&gt;
+
+&lt;p&gt;While, one department cannot see the sales and product offerings of another department, the higher management that drives the company’s operations and growth, needs to be able to see everything from every department.&lt;/p&gt;
+
+&lt;p&gt;For the purposes of our demo, we will take a “department” application, of a particular department that handles Fresh Produce like fruits and vegetables, that contains data about the various fruits they have and the various items they have sold. We will also have a “management” application, where the data from the “department” application, needs to be displayed.&lt;/p&gt;
+
+&lt;p&gt;Thus, the &lt;strong&gt;Fresh Produce department application&lt;/strong&gt; is our &lt;strong&gt;source&lt;/strong&gt; application and the &lt;strong&gt;management application&lt;/strong&gt; is our &lt;strong&gt;target&lt;/strong&gt; application.&lt;/p&gt;
+
+&lt;h2 id=&quot;talking-to-another-hdi-container&quot;&gt;Talking to another HDI container.&lt;/h2&gt;
+
+&lt;p&gt;I have created a new HANA database module in our source application with the following folder structure. There is no hard and fast requirement over the folder structure, but being organised always pays off.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sap-hana-xsa-synonyms/03-source-project-structure.png&quot; /&gt;&lt;/p&gt;
+&lt;div class=&quot;image-caption&quot;&gt;
+&lt;b&gt;Fig 3.&lt;/b&gt; The folder structure of the source application project and its data model.
+&lt;/div&gt;
+
+&lt;p&gt;To enable cross-container access, the first thing we need to create are &lt;strong&gt;roles&lt;/strong&gt; that encapsulate and give us access to the database objects we need. This is done using a HANA database artifact of the type &lt;code class=&quot;highlighter-rouge&quot;&gt;hdbrole&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;We will be creating two &lt;code class=&quot;highlighter-rouge&quot;&gt;hdbrole&lt;/code&gt; artifacts.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;freshprod_sales_appuser.hdbrole&lt;/code&gt;: This role is for the application user.&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; {
+     &quot;role&quot;: {
+         &quot;name&quot;: &quot;freshprod_sales&quot;,
+         &quot;object_privileges&quot;: [{
+             &quot;name&quot;: &quot;FRESHPRODUCE_SALES_FRUIT_DETAILS&quot;,
+             &quot;type&quot;: &quot;TABLE&quot;,
+             &quot;privileges&quot;: [&quot;SELECT&quot;]
+         }, {
+             &quot;name&quot;: &quot;FRESHPRODUCE_SALES_FRUIT_SALES&quot;,
+             &quot;type&quot;: &quot;TABLE&quot;,
+             &quot;privileges&quot;: [&quot;SELECT&quot;]
+         }]
+     }
+ }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;freshprod_sales_grantor.hdbrole&lt;/code&gt;: This role is for the schema owner.&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; {
+     &quot;role&quot;: {
+         &quot;name&quot;: &quot;freshprod_sales#&quot;,
+         &quot;schema_roles&quot;: [{
+             &quot;names&quot;: [&quot;freshprod_sales&quot;]
+         }]
+     }
+ }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;A careful glance will show us that the role name in both the &lt;code class=&quot;highlighter-rouge&quot;&gt;hdbrole&lt;/code&gt; artifacts is the same if not for the presence of &lt;code class=&quot;highlighter-rouge&quot;&gt;#&lt;/code&gt; in the grantor role. SAP HANA XSA identifies grantor roles with the use of &lt;code class=&quot;highlighter-rouge&quot;&gt;#&lt;/code&gt;, think of it as a standard notation. Another fact to notice, is that in the grantor role, instead of mentioning the specific database objects we have only mentioned the name of the application user role. More information about how to define roles, using objects and other roles can be found in &lt;a href=&quot;https://help.sap.com/viewer/3823b0f33420468ba5f1cf7f59bd6bd9/2.0.04/en-US/625d7733c30b4666b4a522d7fa68a550.html&quot;&gt;this&lt;/a&gt; document &lt;a href=&quot;#references&quot;&gt;&lt;sup&gt;2&lt;/sup&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sap-hana-xsa-synonyms/04-roles-in-source-app.png&quot; /&gt;&lt;/p&gt;
+&lt;div class=&quot;image-caption&quot;&gt;
+&lt;b&gt;Fig 4.&lt;/b&gt; The new roles are placed in the &lt;b&gt;roles&lt;/b&gt; folder under the &lt;b&gt;src&lt;/b&gt; folder.
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;We only need to create role artifacts in the source application, no other changes are necessary.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The next step is to add the service to our target application. Since, we are connecting two HDI containers. The source application’s HDI container itself serves as the data-provider service. Since, the HDI container is created by the system, it is an “existing service”.&lt;/p&gt;
+
+&lt;p&gt;In the newer versions of Web IDE, we are provided with a wizard to add database services.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sap-hana-xsa-synonyms/05-sap-hana-service-wizard.png&quot; /&gt;&lt;/p&gt;
+&lt;div class=&quot;image-caption&quot;&gt;
+&lt;b&gt;Fig 5.&lt;/b&gt; The SAP HANA Service application, can be found by right-clicking on the database module.
+&lt;/div&gt;
+
+&lt;p&gt;This wizard allows us to either create new user provided services, which are used to access remote schemas in external databases or use an already existing service.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sap-hana-xsa-synonyms/06-find-hdi-container.png&quot; /&gt;&lt;/p&gt;
+&lt;div class=&quot;image-caption&quot;&gt;
+&lt;b&gt;Fig 6.&lt;/b&gt; We can find the HDI container and add it as an existing service, using the wizard.
+&lt;/div&gt;
+
+&lt;p&gt;The effects of this action can be found in the &lt;code class=&quot;highlighter-rouge&quot;&gt;mta.yaml&lt;/code&gt; file. The wizard creates a new resource, for our service, and adds it as a requirement for the database module.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sap-hana-xsa-synonyms/07-mta-yaml-after-adding-service.png&quot; /&gt;&lt;/p&gt;
+&lt;div class=&quot;image-caption&quot;&gt;
+&lt;b&gt;Fig 7.&lt;/b&gt; The HDI container service as a resource in &lt;b&gt;mta.yaml&lt;/b&gt;.
+&lt;/div&gt;
+
+&lt;p&gt;The next task is to assign the roles we have previously created to the users of our &lt;strong&gt;management&lt;/strong&gt; application in the &lt;strong&gt;department&lt;/strong&gt; application through the service we just created. This assignment is done through a configuration file of the type &lt;code class=&quot;highlighter-rouge&quot;&gt;hdbgrants&lt;/code&gt;. This config file has a syntax that is very similar to the  &lt;code class=&quot;highlighter-rouge&quot;&gt;hdbrole&lt;/code&gt; HANA database artifact. More information about syntax can be found in &lt;a href=&quot;https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.04/en-US/f49c1f5c72ee453788bf79f113d83bf9.html&quot;&gt;this&lt;/a&gt; document &lt;a href=&quot;#references&quot;&gt;&lt;sup&gt;3&lt;/sup&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;We have already created a &lt;code class=&quot;highlighter-rouge&quot;&gt;cfg&lt;/code&gt; folder to store our database configuration files. We will create &lt;code class=&quot;highlighter-rouge&quot;&gt;freshprod_cross_container.hdbgrants&lt;/code&gt; in the &lt;code class=&quot;highlighter-rouge&quot;&gt;cfg&lt;/code&gt; folder. You will find that there are two ways to mention the role category, &lt;code class=&quot;highlighter-rouge&quot;&gt;schema_roles&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;container_roles&lt;/code&gt;, the latter is older notation and is supported only for backward compatibility reasons. I will advise to only use &lt;code class=&quot;highlighter-rouge&quot;&gt;schema_roles&lt;/code&gt;. There are two ways to mention roles in the &lt;code class=&quot;highlighter-rouge&quot;&gt;hdbgrants&lt;/code&gt; file, we can either use the &lt;code class=&quot;highlighter-rouge&quot;&gt;roles&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;roles_with_admin_option&lt;/code&gt; keys to define them. In the case of cross-container scenario, only the &lt;code class=&quot;highlighter-rouge&quot;&gt;roles&lt;/code&gt; keyword can be used.&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;FreshProduceDept-hdi-container&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;object_owner&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;schema_roles&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;roles&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;freshprod_sales&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;application_user&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;schema_roles&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;roles&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;freshprod_sales&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;I have shortened the name of the container, as the name of the original service was too long to fit here. Please, use whatever name your service has here. &lt;strong&gt;In practical scenarios, we should not directly be using the service name&lt;/strong&gt;. Instead, we should assign it to some sort of variable in the &lt;code class=&quot;highlighter-rouge&quot;&gt;mta.yaml&lt;/code&gt; file.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sap-hana-xsa-synonyms/08-cross-container-hdbgrants.png&quot; /&gt;&lt;/p&gt;
+&lt;div class=&quot;image-caption&quot;&gt;
+&lt;b&gt;Fig 8.&lt;/b&gt; The &lt;b&gt;hdbgrants&lt;/b&gt; file is not a database artifact and is only a config file.
+&lt;/div&gt;
+
+&lt;p&gt;The next step is to create &lt;strong&gt;synonyms&lt;/strong&gt;. In order to declare synonyms we need to use HANA database artifacts of the type &lt;code class=&quot;highlighter-rouge&quot;&gt;hdbsynonym&lt;/code&gt;. We can seperate the configuration of the declared synonyms into a HANA database artifact of the type &lt;code class=&quot;highlighter-rouge&quot;&gt;hdbsynonymconfig&lt;/code&gt;. This allows us to group different external database objects logically in seperate &lt;code class=&quot;highlighter-rouge&quot;&gt;hdbsynonym&lt;/code&gt; files, but instead of configuring each of them separately, we configure them all at once in one single synonym configuration file. More details about the syntax for these two HANA database artifacts can be found in &lt;a href=&quot;https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.03/en-US/aad1653a9b95422089fec53f48c2899e.html&quot;&gt;this&lt;/a&gt; document &lt;a href=&quot;#references&quot;&gt;&lt;sup&gt;4&lt;/sup&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;We will create a new sub-folder under the &lt;code class=&quot;highlighter-rouge&quot;&gt;src&lt;/code&gt; folder called &lt;code class=&quot;highlighter-rouge&quot;&gt;synonyms&lt;/code&gt; to save our &lt;code class=&quot;highlighter-rouge&quot;&gt;hdbsynonym&lt;/code&gt; artifacts. In these files, we will only mention the name of the synonym, i.e., the alias we want to use for the external database objects.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;freshproduce_sales.hdbsynonym&lt;/code&gt;: This synonym points to the Sales table.&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; {
+     &quot;FRESHPRODUCE_SALES_FRUIT_SALES&quot;: {}
+ }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;freshproduce_details.hdbsynonym&lt;/code&gt;: This synonym points to the Item Details table.&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; {
+     &quot;FRESHPRODUCE_SALES_FRUIT_DETAILS&quot;: {}
+ }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Now, we can finally create a hdbsynonymconfig file in the &lt;code class=&quot;highlighter-rouge&quot;&gt;cfg&lt;/code&gt; folder.
+&lt;img src=&quot;/assets/images/sap-hana-xsa-synonyms/10-synonym-config-cross-container.png&quot; /&gt;&lt;/p&gt;
+&lt;div class=&quot;image-caption&quot;&gt;
+&lt;b&gt;Fig 9.&lt;/b&gt; By clicking on the object name button &lt;b&gt;...&lt;/b&gt; we can access a screen that lets us select the service and table.
+&lt;/div&gt;
+
+&lt;p&gt;After adding all the tables the &lt;code class=&quot;highlighter-rouge&quot;&gt;freshproduce_dept.hdbsynonymconfig&lt;/code&gt; file looks like this:&lt;/p&gt;
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;FRESHPRODUCE_SALES_FRUIT_SALES&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;target&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;object&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;FRESHPRODUCE_SALES_FRUIT_SALES&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;schema&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;FRESHPRODUCEDEPT_FRESHPRODUCEDEPT_HDI_CONTAINER&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;database&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;SYSTEMDB&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;FRESHPRODUCE_SALES_FRUIT_DETAILS&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;target&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;object&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;FRESHPRODUCE_SALES_FRUIT_DETAILS&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;schema&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;FRESHPRODUCEDEPT_FRESHPRODUCEDEPT_HDI_CONTAINER&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;database&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;SYSTEMDB&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now we have made all the necessary changes in the target as well as the source application. We can finally build our database module and see the results.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sap-hana-xsa-synonyms/11-container-final-database-explorer.png&quot; /&gt;&lt;/p&gt;
+&lt;div class=&quot;image-caption&quot;&gt;
+&lt;b&gt;Fig 10.&lt;/b&gt; The synonym is visible in the database explorer.
+&lt;/div&gt;
+
+&lt;p&gt;These tables are not visible under the table menu in our schema catalog, but instead we have a seperate menu for synonyms.&lt;/p&gt;
+
+&lt;h2 id=&quot;references&quot;&gt;References&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.05/en-US/a260b05631a24a759bba932aa6d81b64.html&quot;&gt;Users, Privileges, and Schemas.&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://help.sap.com/viewer/3823b0f33420468ba5f1cf7f59bd6bd9/2.0.04/en-US/625d7733c30b4666b4a522d7fa68a550.html&quot;&gt;hdbrole: Syntax&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.04/en-US/f49c1f5c72ee453788bf79f113d83bf9.html&quot;&gt;hdbgrants: Syntax&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.03/en-US/aad1653a9b95422089fec53f48c2899e.html&quot;&gt;hdbsynonym and hdbsynonymconfig: Syntax&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.03/en-US/556452cac83f423597d3a38a6f225e4b.html&quot;&gt;Database Synonyms in XS Advanced&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.04/en-US/df19a03dc07e4ba19db4e0006c1da429.html&quot;&gt;SAP XSA Programming model&lt;/a&gt;.&lt;/li&gt;
+&lt;/ol&gt;</content><author><name>Tejas Sanap</name></author><summary type="html">Making applications for SAP in the past, has always been rooted in proprietary tools and frameworks. However, with the onset of the “cloud” movement, SAP is providing its customers and developers, a completely new services-oriented application model, that leverages containers and the latest open source standards, for cloud-based applications.</summary></entry><entry><title type="html">Double Pendulums (Part 2)</title><link href="http://localhost:4000/2020/05/27/Double-Pendulum-part-2.html" rel="alternate" type="text/html" title="Double Pendulums (Part 2)" /><published>2020-05-27T00:00:00+05:30</published><updated>2020-05-27T00:00:00+05:30</updated><id>http://localhost:4000/2020/05/27/Double-Pendulum-part-2</id><content type="html" xml:base="http://localhost:4000/2020/05/27/Double-Pendulum-part-2.html">In the previous, post we learned about how to make some basic plots in `matplotlib`. In this blog post, we will talk about double pendulums. The topics that we will be covering are:
+
+1. The mathematics behind simulating a double pendulum
+2. How can we solve those equations
+3. Requirements of the animation functions
+
+## draw the double pendulum
+We will first draw a double pendulum (obviously, using `matplotlib`) to get a sense of what we are trying to simulate. The full source code of the figure you can see below, can be found [here]().
+
+I will just cover the some nuances about the python code I wrote to make this plot.
+
+![png](/assets/images/double-pendulum-part2/double-pendulum-drawing.png)
+&lt;div class=&quot;image-caption&quot;&gt;
+&lt;b&gt;Fig. 1.1&lt;/b&gt; The structure of a double pendulum.
+&lt;/div&gt;
+
+
+The first part we had to get done, was make sure that the origin of our plot was in the centre of the figure. The `plt.axis('scaled')` method does exactly, that. This method has two ways of equalizing scales, the first is by resizing the plot dimensions (`scaled`) and the second is by changing the axis limits (`equal`). Since we want to control the limits of our axes, we went with the `scaled` option.
+
+```python
+plt.axis('scaled')
+plt.xlim(-total_length,total_length)
+plt.ylim(-total_length,total_length)
+plt.grid(True)
+```
+
+The part where I would like to focus is the manner in which I have sliced the numpy arrays, to get the co-ordinates I want. The `x` and `y` have 3 elements and therefore, an index ranging from `0` to `2`.
+
+```python
+plt.plot(x[0:2],y[0:2],'g-') #what a lot of beginners fail to understand is how to slice mumpy arrays 
+plt.plot(x[1:],y[1:],'b-')
+```
+
+To get the first two elements, I will slice it like `x[0:2]` which will return all the elements with an index smaller than 2.
+
+## generate the data
+Let's talk about some of the math behind the double pendulum.
+
+## references
+
+1. [discussion on scaling the algorithim](https://in.mathworks.com/matlabcentral/answers/346738-how-to-run-the-animation-of-double-pendulum-chaotic-nature#answer_272478)
+2. [github repo with code](https://github.com/dassencio/double-pendulum)</content><author><name>Tejas Sanap</name></author><summary type="html">In the previous, post we learned about how to make some basic plots in matplotlib. In this blog post, we will talk about double pendulums. The topics that we will be covering are:</summary></entry><entry><title type="html">Double Pendulums (Part 1)</title><link href="http://localhost:4000/2020/05/26/Double-Pendulum-Part-1.html" rel="alternate" type="text/html" title="Double Pendulums (Part 1)" /><published>2020-05-26T00:00:00+05:30</published><updated>2020-05-26T00:00:00+05:30</updated><id>http://localhost:4000/2020/05/26/Double-Pendulum-Part-1</id><content type="html" xml:base="http://localhost:4000/2020/05/26/Double-Pendulum-Part-1.html">This series is basically going to be about how to animate stuff using python's `matplotlib` library. `matplotlib` has an excellent [documentation](https://matplotlib.org/3.2.1/contents.html) where you can find a detailed documentation on each of the methods I have used in this blog post. Also, I will be publishing each part of this series in the form of a jupyter notebook, which can be found [here](https://github.com/whereistejas/whereistejas.github.io/blob/master/assets/jupyter-nb/Part-1-basics-of-plotting.ipynb).
+
+The series will have three posts which will cover:
+1. Part 1 - How to make plots using `matplotlib`.
+2. Part 2 - Basic animation using `FuncAnimation`.
+3. Part 3 - Optimizations to make animations faster (blitting).
+
+I would like to say a few words about the methodology of these series:
+1. Each part, will have a list of references at the end of the post, mostly leading to appropriate pages of the documentation and helpful blogs written by other people. **THIS IS THE MOST IMPORTANT PART**. The sooner you get used to reading the documentation, the better.
+2. The code written here, is meant to show you how you can piece everything together. I will try my best to describe the nuances of my implementations and the tiny lessons I learned.
+
+## Generating the data points
+
+To get acquainted with the basics of plotting with `matplotlib`, let's try plotting how much distance an object under free-fall travels with respect to time and also, it's velocity at each time step.
+
+If, you have ever studied physics, you can tell that is a classic case of Newton's equations of motion, where...
+
+$$ v = a \times t $$
+
+$$ S = 0.5 \times a \times t^{2} $$
+
+We will assume an initial velocity of zero.
+
+```python
+import numpy as np
+
+time = np.arange(0., 10., 0.2)
+velocity = np.zeros_like(time, dtype=float)
+distance = np.zeros_like(time, dtype=float)
+```
+
+We know that under free-fall, all objects move with the constant acceleration of 9.8 m/s&lt;sup&gt;2&lt;/sup&gt;.
+
+```python
+g = 9.8 	# m/s^2
+
+velocity = g * time
+distance = 0.5 * g * np.power(time, 2)
+```
+
+The above code gives us two `numpy` arrays populated with the distance and velocity data points. 
+
+## Pyplot vs. Object-Oriented interface
+
+When using `matplotlib` we have two approaches:
+1. `pyplot` interface / functional interface.
+2. Object-Oriented interface (OO).
+
+### Pyplot Interface
+
+`matplotlib` on the surface is made to imitate MATLAB's method of generating plots, which is called `pyplot`. All the `pyplot` commands make changes and modify the same figure. This is a state-based interface, where the state (i.e., the figure) is preserved through various function calls (i.e., the methods that modify the figure). This interface allows us to quickly and easily generate plots. The state-based nature of the interface allows us to add elements and/or modify the plot as we need, when we need it.
+
+This interface shares a lot of similarities in syntax and methodology with MATLAB. For example, if we want to plot a blue line where each data point is marked with a circle, we can use the string `'bo-'`.
+
+```python
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(9,7), dpi=100)
+plt.plot(distance,'bo-')
+plt.xlabel(&quot;Time&quot;)
+plt.ylabel(&quot;Distance&quot;)
+plt.legend([&quot;Distance&quot;])
+plt.grid(True)
+```
+
+The plot shows how much distance was covered by the free-falling object with each passing second.
+
+![png](/assets/images/double-pendulum/section-1-basics-of-plotting/just-distance.png)
+&lt;div class=&quot;image-caption&quot;&gt;
+&lt;b&gt;Fig. 1.1&lt;/b&gt; The amount of distance travelled in each second is increasing, which is a direct result of increasing velocity due to the gravitational acceleration.
+&lt;/div&gt;
+
+```python
+plt.figure(figsize=(9,7), dpi=100)
+plt.plot(velocity,'go-')
+plt.xlabel(&quot;Time&quot;)
+plt.ylabel(&quot;Velocity&quot;)
+plt.legend([&quot;Velocity&quot;])
+plt.grid(True)
+```
+
+The plot below shows us how the velocity is increasing.
+
+![png](/assets/images/double-pendulum/section-1-basics-of-plotting/just-velocity.png)
+&lt;div class=&quot;image-caption&quot;&gt;
+&lt;b&gt;Fig. 1.2&lt;/b&gt; Velocity is increasing in fixed steps, due to a &quot;constant&quot; acceleration.
+&lt;/div&gt;
+
+Let's try to see, what kind of plot we get when we plot both distance and velocity in the same plot.
+
+```python
+plt.figure(figsize=(9,7), dpi=100)
+plt.plot(velocity,'g-')
+plt.plot(distance,'b-')
+plt.ylabel(&quot;Distance and Velocity&quot;)
+plt.xlabel(&quot;Time&quot;)
+plt.legend([&quot;Distance&quot;, &quot;Velocity&quot;])
+plt.grid(True)
+```
+
+![png](/assets/images/double-pendulum/section-1-basics-of-plotting/distance-and-velocity-same-axes.png)
+&lt;div class=&quot;image-caption&quot;&gt;
+&lt;b&gt;Fig. 1.3&lt;/b&gt; Distance and Velocity are plotted against the same geometrical axis.
+&lt;/div&gt;
+
+Here, we run into some obvious and serious issues. We can see that since both the quantities share the same axis, but have very different magnitudes, the graph looks disproportionate. What we need to do is separate the two quantities on two different axes. This is where the second approach to making plot comes into play.
+
+Also, the `pyplot` approach doesn't really scale when we are required to make multiple plots or when we have to make intricate plots that require a lot of customisation. However, internally `matplotlib` has an Object-Oriented interface that can be accessed just as easily, which allows to reuse objects.
+
+### Object-Oriented Interface
+
+When using the OO interface, it helps to know how the `matplotlib` structures it's plots. The final plot that we see as the output is a 'Figure' object. The `Figure` object is the top level container for all the other elements that make up the graphic image. These &quot;other&quot; elements are called `Artists`. The `Figure` object can be thought of as a canvas, upon which different artists act to create the final graphic image. This `Figure` can contain any number of various artists.
+
+![png](/assets/images/double-pendulum/section-1-basics-of-plotting/anatomy-of-a-figure.png)
+&lt;div class=&quot;image-caption&quot;&gt;
+Courtesy of &lt;a href=&quot;https://matplotlib.org/3.2.1/gallery/showcase/anatomy.html&quot;&gt;matplotlib&lt;/a&gt;.
+&lt;/div&gt;
+
+Things to note about the anatomy of a figure are:
+1. All of the items labelled in &quot;blue&quot; are `Artists`. `Artists` are basically all the elements that are rendered onto the figure. This can include text, patches (like arrows and shapes), etc. Thus, all the following `Figure`, `Axes` and `Axis` objects are also Artists.
+2. Each plot that we see in a figure, is an `Axes` object. The `Axes` object holds the actual data that we are going to display. It will also contain X- and Y-axis labels, a title. Each `Axes` object will contain two or more `Axis` objects.
+3. The `Axis` objects set the data limits. It also contains the ticks and ticks labels. `ticks` are the marks that we see on a axis.
+
+Understanding this hierarchy of `Figure`, `Artist`, `Axes` and `Axis` is immensely important, because it plays a crucial role in how me make an animation in `matplotlib`.
+
+Now, that we understand how plots are generated, we can easily solve the problem we faced, earlier. To make Velocity and Distance plot to make more sense, we need to plot each data item against a seperate axis, with a different scale. Thus, we will need one parent `Figure` object and two `Axes` objects.
+
+```python
+fig, ax1 = plt.subplots()
+
+ax1.set_ylabel(&quot;distance (m)&quot;)
+ax1.set_xlabel(&quot;time&quot;)
+ax1.plot(time, distance, &quot;blue&quot;)
+
+ax2 = ax1.twinx() # create another y-axis sharing a common x-axis
+
+ax2.set_ylabel(&quot;velocity (m/s)&quot;)
+ax2.set_xlabel(&quot;time&quot;)
+ax2.plot(time, velocity, &quot;green&quot;)
+
+fig.set_size_inches(7,5)
+fig.set_dpi(100)
+
+plt.show()
+```
+
+![png](/assets/images/double-pendulum/section-1-basics-of-plotting/distance-and-velocity-different-axes-unfinished.png)
+
+This plot as it is, is still not very intutitive. We should add a grid and a legend. Perhaps, we can also change the color of the axis labels and tick labels to the color of the lines.
+
+But, something very weird happens when we try to turn on the grid, which you can see [here](https://github.com/whereistejas/whereistejas.github.io/blob/master/assets/jupyter-nb/double-pendulum-part-1-basics-of-plotting.ipynb) at In Cell 8. The grid lines don't align with the tick labels on the both the Y-axes. We can see that tick values `matplotlib` is calculating on its own are not suitable to our needs, and thus, we will have to calculate them, ourselves.
+
+```python
+fig, ax1 = plt.subplots()
+
+ax1.set_ylabel(&quot;distance (m)&quot;, color=&quot;blue&quot;)
+ax1.set_xlabel(&quot;time&quot;)
+ax1.plot(time, distance, &quot;blue&quot;)
+ax1.set_yticks(np.linspace(*ax1.get_ybound(), 10))
+ax1.tick_params(axis=&quot;y&quot;, labelcolor=&quot;blue&quot;)
+ax1.xaxis.grid()
+ax1.yaxis.grid()
+
+ax2 = ax1.twinx() # create another y-axis sharing a common x-axis
+
+ax2.set_ylabel(&quot;velocity (m/s)&quot;, color=&quot;green&quot;)
+ax2.set_xlabel(&quot;time&quot;)
+
+ax2.tick_params(axis=&quot;y&quot;, labelcolor=&quot;green&quot;)
+ax2.plot(time, velocity, &quot;green&quot;)
+ax2.set_yticks(np.linspace(*ax2.get_ybound(), 10))
+
+fig.set_size_inches(7,5)
+fig.set_dpi(100)
+fig.legend([&quot;Distance&quot;, &quot;Velocity&quot;])
+plt.show()
+```
+
+The command `ax1.set_yticks(np.linspace(*ax1.get_ybound(), 10))` calculates the tick values for us. Let's break this down to see what is happening:
+1. The `np.linspace` command will create a set of `n` no. of partitions between a specified upper and lower limit.
+2. The method `ax1.get_ybound()` returns a list which contains the maximum and minimum limits for that particular axis (which in our case is the Y-axis). 
+3. In python, the operator `*` acts as an unpacking operator when prepended before a `list` or `tuple`. Thus, it will convert a list `[1, 2, 3, 4]` into seperate values `1, 2, 3, 4`. This is an immensely powerful feature.
+4. Thus, we are asking the `np.linspace` method to divide the interval between the maximum and minimum tick values into 10 equal parts.
+5. We provide this array to the `set_yticks` method.
+
+The same process is repeated for second axis.
+
+![png](/assets/images/double-pendulum/section-1-basics-of-plotting/distance-and-velocity-different-axes-finished.png)
+
+## Conclusion
+
+In this part, we covered some basics of `matplotlib` plotting, covering the basic two approaches of how to make plots. In the next part, we will cover how to make simple animations. If you like the content of this blog post, if you have any suggestions or comments, drop me an email or tweet at me or ping me on IRC. Nowadays, you will find me hanging arounfd #matplotlib on Freenode. Thanks! 
+
+## References
+
+1. [Python Generators (YouTube)](https://youtu.be/bD05uGo_sVI)
+1. [Matplotlib: An Introduction to its Object-Oriented Interface](https://medium.com/@kapil.mathur1987/matplotlib-an-introduction-to-its-object-oriented-interface-a318b1530aed)
+2. [Lifecycle of a Plot](https://matplotlib.org/3.2.1/tutorials/introductory/lifecycle.html)
+3. [Basic Concepts](https://matplotlib.org/faq/usage_faq.html)</content><author><name>Tejas Sanap</name></author><summary type="html">This series is basically going to be about how to animate stuff using python’s matplotlib library. matplotlib has an excellent documentation where you can find a detailed documentation on each of the methods I have used in this blog post. Also, I will be publishing each part of this series in the form of a jupyter notebook, which can be found here.</summary></entry><entry><title type="html">Double Pendulums (Part 1)</title><link href="http://localhost:4000/2020/05/17/Double-Pendulum.html" rel="alternate" type="text/html" title="Double Pendulums (Part 1)" /><published>2020-05-17T00:00:00+05:30</published><updated>2020-05-17T00:00:00+05:30</updated><id>http://localhost:4000/2020/05/17/Double-Pendulum</id><content type="html" xml:base="http://localhost:4000/2020/05/17/Double-Pendulum.html">This series is basically going to be about how to animate stuff using python's `matplotlib` library. `matplotlib` has an excellent [documentation](https://matplotlib.org/3.2.1/contents.html) where you can find a detailed documentation on each of the methods I have used in this blog post. Also, I will be publishing each part of this series in the form of a jupyter notebook, which can be found [here]().
+
+I would like to say a few words about the methodology of these series:
+1. Each part, will have a list of references at the end of the post, mostly leading to appropriate pages of the documentation and helpful blogs written by other people. **THIS IS THE MOST IMPORTANT PART**. The sooner you get used to reading the documentation, the better.
+2. The code written here, is meant to show you how you can piece everything together. I will try my best to describe the nuances of my implementations and the tiny lessons I learned.
+
+## Generating the data points
+
+To get acquainted with the basics of plotting with `matplotlib`, let's try plotting how much distance an object under free-fall travels with respect to time and also, it's velocity at each time step.
+
+If, you have ever studied physics, you can tell that is a classic case of Newton's equations of motion, where...
+
+$$ v = a \times t $$
+
+$$ S = 0.5 \times a \times t^{2} $$
+
+```python
+import numpy as np
+
+time = np.arange(0., 10., 0.2)
+velocity = np.zeros_like(time, dtype=float)
+distance = np.zeros_like(time, dtype=float)
+```
+
+We know that under free-fall, all objects move with the constant acceleration of 9.8 m/s&lt;sup&gt;2&lt;/sup&gt;.
+
+```python
+g = 9.8 	# m/s^2
+
+for index, vel in enumerate(velocity):
+    # velocity = acceleration (g) * time
+    velocity[index] = g * time[index] 
+
+for index, dis in enumerate(distance):
+    # distance = 0.5 * acceleration (g) * time^2
+    distance[index] = 0.5 * g * time[index]**2 
+```
+
+The above code gives us two `numpy` arrays populated with the distance and velocity data points. You will notice that when looping over the arrays, I have used the `enumerate` method. We can often see people using the `list.index()` method or using the `len()` to generate the index. Both of these approaches, are wasteful. Using the `enumerate` method offers two advantages:
+
+1. The `enumerate` method is internally implemented as a python generator. This means that the index and values are generated on the fly and just in time. This can prove immensely helpful when you are iterating over an array with a 100,000 floating data points. This makes our code faster and prevents unnecessary memory consumption.
+2. It makes the code more *pythonic*.
+
+## Pyplot vs. Object-Oriented interface
+
+When using `matplotlib` we have two approaches:
+1. `pyplot` interface / functional interface.
+2. Object-Oriented interface (OO).
+
+### Pyplot Interface
+
+`matplotlib` on the surface is made to imitate MATLAB's method of generating plots, which is called `pyplot`. All the `pyplot` commands make changes and modify the same figure. This is a state-based interface, where the state (i.e., the figure) is preserved through various function calls (i.e., the methods that modify the figure). This interface allows us to quickly and easily generate plots. The state-based nature of the interface allows us to add elements and/or modify the plot as we need, when we need it.
+
+This interface shares a lot of similarities in syntax and methodology with MATLAB. For example, if we want to plot a blue line where each data point is marked with a circle, we can use the string `'bo-'`.
+
+```python
+plt.figure(figsize=(9,7), dpi=100)
+plt.plot(distance,'bo-')
+plt.xlabel(&quot;Time&quot;)
+plt.ylabel(&quot;Distance&quot;)
+plt.legend([&quot;Distance&quot;])
+plt.grid(True)
+```
+
+The plot shows how much distance was covered by the free-falling object with each passing second.
+
+![png](/assets/images/double-pendulum/section-1-basics-of-plotting/just-distance.png)
+&lt;div class=&quot;image-caption&quot;&gt;
+&lt;b&gt;Fig. 1.1&lt;/b&gt; The amount of distance travelled in each second is increasing, which is a direct result of increasing velocity due to the gravitational acceleration.
+&lt;/div&gt;
+
+```python
+plt.figure(figsize=(9,7), dpi=100)
+plt.plot(velocity,'go-')
+plt.xlabel(&quot;Time&quot;)
+plt.ylabel(&quot;Velocity&quot;)
+plt.legend([&quot;Velocity&quot;])
+plt.grid(True)
+```
+
+The plot below shows us how the velocity is increasing.
+
+![png](/assets/images/double-pendulum/section-1-basics-of-plotting/just-velocity.png)
+&lt;div class=&quot;image-caption&quot;&gt;
+&lt;b&gt;Fig. 1.2&lt;/b&gt; Velocity is increasing in fixed steps, due to a &quot;constant&quot; acceleration.
+&lt;/div&gt;
+
+Let's try to see, what kind of plot we get when we plot both distance and velocity in the same plot.
+
+```python
+plt.figure(figsize=(9,7), dpi=100)
+plt.plot(velocity,'g-')
+plt.plot(distance,'b-')
+plt.ylabel(&quot;Distance and Velocity&quot;)
+plt.xlabel(&quot;Time&quot;)
+plt.legend([&quot;Distance&quot;, &quot;Velocity&quot;])
+plt.grid(True)
+```
+
+![png](/assets/images/double-pendulum/section-1-basics-of-plotting/distance-and-velocity-same-axes.png)
+&lt;div class=&quot;image-caption&quot;&gt;
+&lt;b&gt;Fig. 1.3&lt;/b&gt; Distance and Velocity are plotted against the same geometrical axis.
+&lt;/div&gt;
+
+Here, we run into some obvious and serious issues. We can see that since both the quantities share the same axis, but have very different magnitudes, the graph looks disproportionate. What we need to do is separate the two quantities on two different axes. This is where the second approach to making plot comes into play.
+
+Also, the `pyplot` approach doesn't really scale when we are required to make multiple plots or when we have to make intricate plots that require a lot of customisation. However, internally `matplotlib` has an Object-Oriented interface that can be accessed just as easily, which allows to reuse objects.
+
+### Object-Oriented Interface
+
+When using the OO interface, it helps to know how the `matplotlib` structures it's plots. The final plot that we see as the output is a 'Figure' object. The `Figure` object is the top level container for all the other elements that make up the graphic image. These &quot;other&quot; elements called `artists`. The `Figure` object can be thought of as a canvas, upon which different artists act to create the final graphic image. This `Figure` can contain any number of various artists.
+
+![png](/assets/images/double-pendulum/section-1-basics-of-plotting/anatomy-of-a-figure.png)
+&lt;div class=&quot;image-caption&quot;&gt;
+Courtesy of &lt;a href=&quot;https://matplotlib.org/3.2.1/gallery/showcase/anatomy.html&quot;&gt;matplotlib&lt;/a&gt;.
+&lt;/div&gt;
+
+Things to note about the anatomy of a figure are:
+1. All of the items labelled in &quot;blue&quot; are `Artists`. `Artists` are basically all the elements that are rendered onto the figure. This can include text, patches (like arrows and shapes), etc. Thus, all the following `Figure`, `Axes` and `Axis` objects are also Artists.
+2. Each plot that we see in a figure, is an `Axes` object. The `Axes` object holds the actual data that we are going to display. It will also contain X- and Y-axis labels, a title. Each `Axes` object will contain two or more `Axis` objects.
+3. The `Axis` objects set the data limits. It also contains the ticks and ticks labels. `ticks` are the marks that we see on a axis.
+
+Understanding this hierarchy of `Figure`, `Artist`, `Axes` and `Axis` is immensely important, because it plays a crucial role in how me make an animation in `matplotlib`.
+
+Now, that we understand how plots are generated, we can easily solve the problem we faced, earlier. To make Velocity and Distance plot to make more sense, we need to plot each data item against a seperate axis, with a different scale. Thus, we will need one parent `Figure` object and two `Axes` objects.
+
+```python
+fig, ax1 = plt.subplots()
+
+ax1.set_ylabel(&quot;distance (m)&quot;)
+ax1.set_xlabel(&quot;time&quot;)
+ax1.plot(time, distance, &quot;blue&quot;)
+
+ax2 = ax1.twinx() # create another y-axis sharing a common x-axis
+
+ax2.set_ylabel(&quot;velocity (m/s)&quot;)
+ax2.set_xlabel(&quot;time&quot;)
+ax2.plot(time, velocity, &quot;green&quot;)
+
+fig.set_size_inches(7,5)
+fig.set_dpi(100)
+
+plt.show()
+```
+
+![png](/assets/images/double-pendulum/section-1-basics-of-plotting/distance-and-velocity-different-axes-unfinished.png)
+
+However, we can still add some finishing touches to the plot we have created. This is where we start seeing the power that can be derived from the flexibility of the Object Oriented Approach.
+
+```python
+fig, ax1 = plt.subplots()
+
+ax1.set_ylabel(&quot;distance (m)&quot;, color=&quot;blue&quot;)
+ax1.set_xlabel(&quot;time&quot;)
+ax1.plot(time, distance, &quot;blue&quot;)
+ax1.set_yticks(np.linspace(*ax1.get_ybound(), 10))
+ax1.tick_params(axis=&quot;y&quot;, labelcolor=&quot;blue&quot;)
+ax1.xaxis.grid()
+ax1.yaxis.grid()
+
+ax2 = ax1.twinx() # create another y-axis sharing a common x-axis
+
+ax2.set_ylabel(&quot;velocity (m/s)&quot;, color=&quot;green&quot;)
+ax2.set_xlabel(&quot;time&quot;)
+
+ax2.tick_params(axis=&quot;y&quot;, labelcolor=&quot;green&quot;)
+ax2.plot(time, velocity, &quot;green&quot;)
+ax2.set_yticks(np.linspace(*ax2.get_ybound(), 10))
+
+fig.set_size_inches(7,5)
+fig.set_dpi(100)
+fig.legend([&quot;Distance&quot;, &quot;Velocity&quot;])
+plt.show()
+```
+
+![png](/assets/images/double-pendulum/section-1-basics-of-plotting/distance-and-velocity-different-axes-finished.png)
+
+## Conclusion
+
+In this part, we covered some basics of `matplotlib` plotting, covering the basic two approaches of how to make plots. In the next part, we will cover how to make simple animations.
+
+## References
+
+1. [Python Generators (YouTube)](https://youtu.be/bD05uGo_sVI)
+1. [Matplotlib: An Introduction to its Object-Oriented Interface](https://medium.com/@kapil.mathur1987/matplotlib-an-introduction-to-its-object-oriented-interface-a318b1530aed)
+2. [Lifecycle of a Plot](https://matplotlib.org/3.2.1/tutorials/introductory/lifecycle.html)
+3. [Basic Concepts](https://matplotlib.org/faq/usage_faq.html)</content><author><name>Tejas Sanap</name></author><summary type="html">This series is basically going to be about how to animate stuff using python’s matplotlib library. matplotlib has an excellent documentation where you can find a detailed documentation on each of the methods I have used in this blog post. Also, I will be publishing each part of this series in the form of a jupyter notebook, which can be found here.</summary></entry><entry><title type="html">How to do IRC the right way (Part 3)</title><link href="http://localhost:4000/2019/07/04/IRC.part3/" rel="alternate" type="text/html" title="How to do IRC the right way (Part 3)" /><published>2019-07-04T00:00:00+05:30</published><updated>2019-07-04T00:00:00+05:30</updated><id>http://localhost:4000/2019/07/04/IRC.part3</id><content type="html" xml:base="http://localhost:4000/2019/07/04/IRC.part3/">## What is ZNC (and, BNC)?
+ZNC, is an advanced IRC bouncer that is left connected so an IRC client can disconnect/reconnect without losing the chat session. A BNC (short for Bounced Network Connection) is a piece of software that is used to relay traffic and connections in computer networks, much like a proxy. Basically, ZNC will act as a bridge between a client and the IRC server.
+
+[![](/assets/images/irc-setup-part3/ZNC-network1.png)](https://wiki.znc.in/ZNC)
+&lt;div class=&quot;image-caption&quot;&gt;
+This is how ZNC works.
+&lt;/div&gt;
+
+ZNC offers some strong features, listed below:
+1. **Modules** - Modules are used to extend and modify the way ZNC functions. Modules can be `perl`, `C++` or `python` scripts. They can be added on global, per-network or per-user basis.
+2. **Multiple Users, Networks and Clients** - That's pretty self-explanatory. Interestingly, an `admin` can limit the max no. of networks that an user can connects with.
+3. **Playback Buffers** - When a client attaches to ZNC, ZNC playbacks all the conversations that took place while the client was detached. It also remembers which channels the user joined and left, all of this is also reflected in other clients.
+4. **SSL Support** - Always needed.
+
+## How do we setup ZNC?
+This needs to occur in four steps:
+1. Install `znc` on a server. The word 'server' is very important here. ZNC needs to be installed on a machine that is always running and always connected to the internet. Once the ZNC service has started, no changes should be made in `znc.conf`, manually.
+2. Generate an initial config file using `znc --makeconf` and configure it.
+3. Configure which networks and channels to connect to using the `znc webadmin`.
+4. Configure the IRC client to connect to ZNC.
+
+## Step 1: Install ZNC on your server.
+In my own setup, I use a VM (Compute Engine) running on Google Cloud Platform. Free credits can be obtained by applying for the [GitHub Student Developer Pack](https://education.github.com/pack). They provide AWS credits, Digital Ocean credits and much more.
+
+ZNC should be operated on a seperate port. A new firewall rule has to be created to enable that port.
+
+![](/assets/images/irc-setup-part3/GCP-firewall-1.png)
+&lt;div class=&quot;image-caption&quot;&gt;
+You can find the firewall settings in the VCP Networks submenu.
+&lt;/div&gt;
+
+![](/assets/images/irc-setup-part3/GCP-firewall-2.png)
+&lt;div class=&quot;image-caption&quot;&gt;
+In my setup, I use port 5999.
+&lt;/div&gt;
+
+To do so in GCP you will need to create a new firewall rule. Also, you will need to enable both `HTTP` and `HTTPS` protocols on your VM. After, enabling the port, we will have to install `znc` and `znc-dev`. We need `znc-dev` in order to install and build modules.
+
+```
+sudo add-apt-repository ppa:teward/znc
+sudo apt-get update
+sudo apt-get install znc znc-dev
+```
+
+## Step 2: Setup the initial ZNC config.
+ZNC can be configured in two ways, using the `znc.conf` or using the `webadmin` interface. However, to perform the initial configuration ZNC has the `--makeconf` option. It will ask you to create a ZNC username and password, which will enable you to access the `webadmin` interface. The initial configuration process generates global, user, network and channel settings.
+```bash
+ ~ &gt; znc --makeconf
+ [ .. ] Checking for list of available modules...
+ [ » ] ok
+ [ ** ]
+ [ ** ] -- Global settings --
+ [ ** ]
+ [ ?? ] Listen on port (1025 to 65534): 5999
+ [ ?? ] Listen using SSL (yes/no) [no]: yes
+ [ ?? ] Listen using both IPv4 and IPv6 (yes/no) [yes]: yes
+ [ .. ] Verifying the listener...
+ [ » ] ok
+ [ ** ] Unable to locate pem file: [/home/xxxxx/.znc/znc.pem], creating it
+ [ .. ] Writing Pem file [/home/xxxxx/.znc/znc.pem]...
+ [ » ] ok
+ [ ** ] Enabled global modules [webadmin]
+ [ ** ]
+ [ ** ] -- Admin user settings --
+ [ ** ]
+ [ ?? ] Username (alphanumeric): tejas
+ [ ?? ] Enter password:
+ [ ?? ] Confirm password:
+ [ ?? ] Nick [whereistejas]:
+ [ ?? ] Alternate nick [whereistejas_]:
+ [ ?? ] Ident [tejassanap]:
+ [ ?? ] Real name [Got ZNC?]: Tejas Sanap
+ [ ?? ] Bind host (optional):
+ [ ** ] Enabled user modules [chansaver, controlpanel]
+ [ ** ]
+```
+Next, you will be asked to set up an IRC network. You don't have to say *yes* since, this can also be done through the `webadmin` interface.
+```bash
+ [ ?? ] Set up a network? (yes/no) [yes]: yes
+ [ ** ]
+ [ ** ] -- Network settings --
+ [ ** ]
+ [ ?? ] Name [freenode]:
+ [ ?? ] Server host [chat.freenode.net]:
+ [ ?? ] Server uses SSL? (yes/no) [yes]: yes
+ [ ?? ] Server port (1 to 65535) [6697]:
+ [ ?? ] Server password (probably empty):
+ [ ?? ] Initial channels: #freenode
+ [ ** ] Enabled network modules [simple_away]
+ [ ** ]
+ [ .. ] Writing config [/home/xxxxx/.znc/configs/znc.conf]...
+ [ » ] ok
+ [ ** ]
+ [ ** ] To connect to this ZNC you need to connect to it as your IRC server
+ [ ** ] using the port that you supplied.  You have to supply your login info
+ [ ** ] as the IRC server password like this: user/network:pass.
+ [ ** ]
+ [ ** ] Try something like this in your IRC client...
+ [ ** ] /server &lt;znc_server_ip&gt; +5099 tejassanap:&lt;pass&gt;
+ [ ** ]
+ [ ** ] To manage settings, users and networks, point your web browser to
+ [ ** ] https://&lt;znc_server_ip&gt;:5099/
+ [ ** ]
+ [ ?? ] Launch ZNC now? (yes/no) [yes]: yes
+ [ .. ] Opening config [/home/xxxxx/.znc/configs/znc.conf]...
+ [ » ] ok
+ [ .. ] Loading global module [webadmin]...
+ [ » ] [/usr/lib/znc/webadmin.so]
+ [ .. ] Binding to port [+5099]...
+ [ » ] ok
+ [ ** ] Loading user [tejassanap]
+ [ ** ] Loading network [freenode]
+ [ .. ] Loading network module [simple_away]...
+ [ » ] [/usr/lib/znc/simple_away.so]
+ [ .. ] Adding server [chat.freenode.net +6697 ]...
+ [ » ] ok
+ [ .. ] Loading user module [chansaver]...
+ [ » ] ok
+ [ .. ] Loading user module [controlpanel]...
+ [ » ] ok
+ [ .. ] Forking into the background...
+ [ » ] [pid: 27630]
+ [ ** ] ZNC 1.6.6+deb1ubuntu0.2 - http://znc.in
+```
+After this process, we have a running ZNC process. To confirm that the process is running you can run `znc` command in the terminal. It should produce the following output
+```bash
+ ~ &gt; znc
+ [ .. ] Checking for list of available modules...
+ [ » ] ok
+ [ .. ] Opening config [/home/xxxxx/.znc/configs/znc.conf]...
+ [ !! ] ZNC is already running on this config.
+ [ ** ] Unrecoverable config error.
+ ```
+## Step 3: Configure your ZNC setup using the webadmin UI.
+With a running ZNC process, the best way to make changes is through the `webadmin` UI. To open the `webadmin` UI, open up an internet browser and type in `https://&lt;server-IP-address&gt;:&lt;port&gt;`. In my case it is, `https://35.244.43.39:5999/`. This opens up the login screen.
+
+![](/assets/images/irc-setup-part3/ZNC-webadmin-login-page.png)
+&lt;div class=&quot;image-caption&quot;&gt;
+We need to use username and password created in the previous step.
+&lt;/div&gt;
+
+This brings us to the landing page. ZNC configuration is divided into two sections:
+1. **Global Module settings** - These settings are **only visible** to users with admin privileges.
+2. **User Module settings** - These are user-specific settings. In a multi-user setting, an admin would see different settings for different users.
+
+This particular article will focus on a very simple setup. We will connect to the Freenode network on the `chat.freenode.net` server and join `#freenode` channel. Click on the *Your settings* option under *User Modules*.
+
+![](/assets/images/irc-setup-part3/ZNC-webadmin-landing-page.png)
+&lt;div class=&quot;image-caption&quot;&gt;
+The landing page contains links to various global and user settings.
+&lt;/div&gt;
+
+On the *Your Settings* page we can see that the first three sections are the same as the first three sections in `znc --makeconf`.
+
+![](/assets/images/irc-setup-part3/ZNC-webadmin-user-settings.png)
+&lt;div class=&quot;image-caption&quot;&gt;
+The user settings page.
+&lt;/div&gt;
+
+All the important changes are listed below (match the color of the *box* with the color of the *bullet*) :
+&lt;ul class=&quot;ul-circles&quot;&gt;
+	&lt;li style=&quot;color: #00a300;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Add network&lt;/b&gt; - Look in the next section.&lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: #ff0097;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Buffer size&lt;/b&gt; - Any arbitrary number is fine. &lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: #2d89ef;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Auto Clear Chan Buffer&lt;/b&gt; - This checks if channel buffers are automatically cleared after playback. When disabled, messages are buffered even while clients are attached, and already seen messages may be repeated each time clients connect. This is important when multiple clients are connected.&lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: #7e3878;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Auto Clear Query Buffer&lt;/b&gt; -This checks if query buffers are automatically cleared after playback. When disabled, messages are buffered even while clients are attached, and already seen messages may be repeated each time clients connect. This is important when multiple clients are connected.&lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: #ffc40d;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Timezone&lt;/b&gt; - Set the appropriate timezone. &lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: #ee1111;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Client Encoding&lt;/b&gt; - Try to use UTF-8 encoding, wherever possible. &lt;/span&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+### Add network and channel
+In this section of the `webadmin` UI, we see the third type of modules, *network* modules. One of the many attractive features of ZNC is the network-wise configuration, it allows us to do.
+
+![](/assets/images/irc-setup-part3/ZNC-webadmin-network-settings.png)
+&lt;div class=&quot;image-caption&quot;&gt;
+The network settings page.
+&lt;/div&gt;
+
+&lt;ul class=&quot;ul-circles&quot;&gt;
+	&lt;li style=&quot;color: #00a300;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Enable flood protection&lt;/b&gt; - Flooding is when a lot of messages are sent in quick succession. Normally, bots and servers are configured to kick users that spam a channel.&lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: #ff0097;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Flood protection rate&lt;/b&gt; - The number seconds per line before the flood rate kick in.&lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: #7e3878;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Flood protection burst&lt;/b&gt; - The number of lines that can be sent instantly.&lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: #2d89ef;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;Add channel&lt;/b&gt; - Look in the next paragraph.&lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: #ffc40d;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;&lt;i&gt;route_replies&lt;/i&gt; module&lt;/b&gt; - When using multiple clients, connecting to ZNC can sometimes send a lot of &lt;span class=&quot;pre&quot;&gt;/who&lt;/span&gt;'s. This module prevents that from happening.&lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: #ee1111;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;&lt;i&gt;sasl&lt;/i&gt; module&lt;/b&gt; - Enable SASL authentication instead of using the &lt;i&gt;nickserv&lt;/i&gt; module.&lt;/span&gt;&lt;/li&gt;
+	&lt;li style=&quot;color: #000000;&quot;&gt;&lt;span style=&quot;color: #000;&quot;&gt;&lt;b&gt;&lt;i&gt;simple_away&lt;/i&gt; module&lt;/b&gt; - Turns you &quot;away&quot; when you are disconnected from the IRC.&lt;/span&gt;&lt;/li&gt;
+&lt;/ul&gt;
+The only puzzling part of network settings is where to put in the password for `nickserv`. This needs to be done using the *nickserv* module. On networks supporting SASL, ZNC can also use SASL. The process of enabling SASL requires us to configure the client first. **Thus, use the following only after you have connected the client to ZNC**:
+
+```
+/msg *sasl Mechanism PLAIN
+/msg *sasl RequireAuth yes
+/msg *sasl Set &lt;username&gt; [&lt;password&gt;]
+```
+
+![](/assets/images/irc-setup-part3/ZNC-webadmin-add-channel.png)
+&lt;div class=&quot;image-caption&quot;&gt;
+The channel settings page.
+&lt;/div&gt;
+
+Then we insert the name of the channel and save the configuration. We are finished with configuring ZNC.
+
+## Connecting the client with ZNC.
+The `irssi` client can be connected to znc using the following commands:
+```
+/network add freenode-znc
+/server add -net freenode-znc -auto -ssl 35.244.43.39 5999 tejas/freenode:password
+/save
+/connect freenode-znc
+```
+
+![](/assets/images/irc-setup-part3/irssi-freenode.png)
+&lt;div class=&quot;image-caption&quot;&gt;
+The irssi statusbar shows that I have connected to my ZNC server.
+&lt;/div&gt;
+
+# Conclusion
+There are still a lot of empty spaces. Knowing how to how to install third-party modules, is important. We will cover that in the next post. In the making of this blog, I heavily relied on `#znc` on Freenode and [ZNC](https://wiki.znc.in/ZNC). I highly recommend both the resources to anyone who uses ZNC.</content><author><name>Tejas Sanap</name></author><summary type="html">What is ZNC (and, BNC)? ZNC, is an advanced IRC bouncer that is left connected so an IRC client can disconnect/reconnect without losing the chat session. A BNC (short for Bounced Network Connection) is a piece of software that is used to relay traffic and connections in computer networks, much like a proxy. Basically, ZNC will act as a bridge between a client and the IRC server.</summary></entry><entry><title type="html">How to do IRC the right way (Part 2)</title><link href="http://localhost:4000/2019/06/13/IRC-part2/" rel="alternate" type="text/html" title="How to do IRC the right way (Part 2)" /><published>2019-06-13T00:00:00+05:30</published><updated>2019-06-13T00:00:00+05:30</updated><id>http://localhost:4000/2019/06/13/IRC-part2</id><content type="html" xml:base="http://localhost:4000/2019/06/13/IRC-part2/">## What's the problem?
+One of the most annoying things about IRC is how it is not **persistent**. There are two halves of this **persistence** thing: 
+1. IRC doesn't save the messages we have receive, the chats in which we are mentioned, etc., when *we are offline*.
+2. IRC doesn't save our messages, logs and chats, when *we go offline*.
+
+That's the problem we are going to solve in this article.
+
+## What solutions are available?
+### The easy but incomplete solution - `tmux` and a server
+The most simple solution to this problem is to connect to IRC using a machine that is always running and connected to the internet. Yes, that means a server. And, then whenever we want to check what's going on our favourite channels, we simply SSH/connect to the server. From this point onwards, we will be using the term `server` to denote the machine that we have logged into to stay connected to IRC all the time. This is a practical solution, that a large number of people use. However, this solution comes with a few caveats:
+1. The most obvious one is that we need access to a terminal. In order to ensure that the IRC-client is always running on the server most people will use `tmux` or `screen`, which they will attach-to or detach-to to use IRC. We may not always have access to a terminal or the right SSH credentials on the computer to SSH into our server.
+3. Thus, we run into a major problem of this approach, which is it's *lack of ability* to connect with other IRC clients on seperate machines.
+2. Most people don't have access to a computer all the time. So, a large section of IRC users, actually use their phones to chat on IRC. Having to use SSH on our phones to connect to an TUI-based IRC client, may not be very difficult, but it definitely isn't pleasant. An IRC user like me, who uses a phone 80% of the time to chat on IRC, needs to have a proper IRC client made to be used on phones. Having a clean UI on a small screen can make a ton of difference. This, I think, should be one of the main reasons why people should avoid this approach.
+&lt;p float=&quot;center&quot;&gt;
+  &lt;img src=&quot;/assets/images/irc-setup-part2/revolution-irc1.png&quot; width=&quot;200&quot; /&gt;
+  &lt;img src=&quot;/assets/images/irc-setup-part2/revolution-irc2.png&quot; width=&quot;200&quot; /&gt;
+  &lt;img src=&quot;/assets/images/irc-setup-part2/revolution-irc3.png&quot; width=&quot;200&quot; /&gt;
+&lt;/p&gt;
+
+4. This method doesn't allow us to maintain seperate buffers for seperate clients. Not having this may not be a deal breaker, but it's definitely makes things easier. It also, doesn't allow us to maintain a seperate list of channels on different clients/devices.
+
+### The average but incomplete solution - `weechat`
+I am, probably, going to get a lot of hate for this. Unlike the `tmux`+server approach, `weechat` will provide us with seperate UI's for seperate devices. But, all of those clients are still `weechat`, meaning we become tied to it's ecosystem. It still provides a great number of features, that a lot of people love. This solution has the following caveats:
+1. Lack of portability meaning if we decide to shift to another IRC-client, we can't easily transfer all of our channel-lists, preferences and chat logs
+2. We connect to the same instance of `weechat`, so it doesn't allow us to provide different configurations for different devices.
+
+### The difficult but complete solution - `ZNC`
+`ZNC` isn't an IRC client. Both of the solutions mentioned above used one particular client or one particular session. `ZNC` is an IRC bouncer. In very simple terms, it keeps us connected to the network from a remote machine and acts as a bridge between the IRC network and us. `ZNC` is capable of properly logging all the chats, maintaining different channel-lists for different clients and much more. The functionality of `ZNC` can be extended with the help of modules. Most importantly, ZNC gives us the freedom to use as many clients and as many different types of clients as we want. In addition it gives us fine control over what is sent to which client, and how much of it can be synced between two or more clients.
+
+## Now, what?
+IMHO, ZNC is the right way to do IRC. In the next article, we will discuss how to set up ZNC and connect to IRC.
+
+## Future Additions
+
+1. **05/26/2020** - If anyone is wondering what client I'm using for my phone, it's called [Revolution IRC](https://github.com/MCMrARM/revolution-irc)</content><author><name>Tejas Sanap</name></author><summary type="html">What’s the problem? One of the most annoying things about IRC is how it is not persistent. There are two halves of this persistence thing: IRC doesn’t save the messages we have receive, the chats in which we are mentioned, etc., when we are offline. IRC doesn’t save our messages, logs and chats, when we go offline.</summary></entry><entry><title type="html">How to do IRC the right way (Part 1)</title><link href="http://localhost:4000/2019/06/12/IRC-part1/" rel="alternate" type="text/html" title="How to do IRC the right way (Part 1)" /><published>2019-06-12T00:00:00+05:30</published><updated>2019-06-12T00:00:00+05:30</updated><id>http://localhost:4000/2019/06/12/IRC-part1</id><content type="html" xml:base="http://localhost:4000/2019/06/12/IRC-part1/">IRC which stands for Internet Relay Chat is one of the oldest methods of chatting across the internet. This piece of technology is as old as the internet, itself. Like, all great things about the internet it started with a Swede writing a program.
+
+## What is IRC and why should you bother with it?
+
+IRC is a text-based communication protocol. In very simple terms, it allows users to create #channels (or as we call them, chat rooms) where a group of people can chat together. It also offers numerous features like file transfers and SSL encryption. 
+
+IRC networks are a great learning place. Numerous FOSS projects have their own IRC channels, where newbie users can go for help. One such channel is `#irssi`. It is also a great place to meet new people, with tons of experience.
+
+IRC is an old-school technology. It is dying. In it's hayday IRC was the next dominant form of communication over the internet after email. Thus, it can be said, that using IRC is a way of saving a cultural symbol, from turning to ruin.
+
+IRC is free and open. Contrary to what many may have you believe, it has a very simplistic design. However, it is not new-user friendly. For all it's ease, it has a few major issues.
+
+## How does IRC work?
+
+Like any communication protocol, it involves a client and server. The server, an IRC server, may be public or private.
+
+One IRC network will have numerous IRC servers under it's wings. To connect to the IRC, you need both the network and server address.
+
+There are numerous IRC clients just as we have numerous email clients. While, the choice of a client is very subjective, for the purpose of demonstration we will be using `irssi`. While, the choice of a client is very subjective, for the purpose of demonstration we will be using `irssi`. Every Linux distribution offers `irssi` as a binary in it's package repos. You can install it on Fedora like this: `sudo dnf install irssi -y`.
+
+![](/assets/images/irc-setup-part1/irssi-ui.png)
+
+## Let's get started.
+
+1. Launch `irssi` in your terminal. You will be greeted by a weird-looking TUI. At the bottom, you will find a prompt. It will have the word `status` on it's left corner. This is like a window indicator. Currently you are in the `status` window which shows you all the information you are receiving from the network and server.
+
+2. Type `/network` and press `&lt;Enter&gt;`. `irssi` will show you a list of networks that are stored in `irssi` by default. We wish to connect to the `Freenode` network.
+![](/assets/images/irc-setup-part1/irssi-network-list.png)
+
+3. Type `/connect Freenode` and press `&lt;Enter&gt;`. You will notice that you have connected to the `Freenode` network. Your `nick` is the name of the `$USER` you are logged in as. Your `nick` is like your User ID. Most people will reserve an unique `nick`, in order to prevent other people from impersonating them. `&lt;Pg-Up&gt;` and `&lt;Pg-Down&gt;` will help you scroll in the window. You will see a bunch of other stuff saying that you are not registered. For the purpose of this demonstration, you can safely ignore it.
+![](/assets/images/irc-setup-part1/irssi-connect.png)
+
+4. The next task is to join a channel. Type `/join #tejas` and press `&lt;Enter&gt;`. You will probably see a new window pop up and notice that the prompt title has changed from `status` to `#tejas`.
+![](/assets/images/irc-setup-part1/irssi-join.png)
+
+5. Say Hi!
+
+6. Type `/msg whereistejas Hey! I made it here!` and press `&lt;Enter&gt;`. This will send a personal message to me. If, I'm online, we can have a nice chat. (P.S. I'm always online).
+
+7. Let's try joining another channel called `#irssi`. To switch between different channels in `irssi` use `&lt;Alt&gt; + &lt;No. Key&gt;`. For example, `&lt;Alt&gt;+2` will take you back to the `#tejas` channel.
+
+8. In case you need help, type `/help`.
+
+9. Figure out how to quit on your own.
+
+That wasn't difficult at all, was it?
+
+## Conclusion
+
+Now that you know how to connect to an IRC network and join a channel, you are ready to meet tons of new people. This is also the point, where we can start talking about the drawbacks of IRC:
+
+1. There is no way to save or log messages that are sent to you when you are offline, i.e., not connected to an IRC network.
+
+2. There is no way of recovering messages from a previous session in the current session, i.e., you lose everything once you `/quit`.
+
+3. You can connect only one client to a network with one `nick`, i.e., you can only connect from one place at a time.
+
+However, there are ways of overcoming the above mentioned issues, which will be part of the next article. We can see at once, how the above metioned issues are connected with one another.</content><author><name>Tejas Sanap</name></author><summary type="html">IRC which stands for Internet Relay Chat is one of the oldest methods of chatting across the internet. This piece of technology is as old as the internet, itself. Like, all great things about the internet it started with a Swede writing a program.</summary></entry><entry><title type="html">Let’s talk about double pendulums.</title><link href="http://localhost:4000/2019/03/18/EOQ.html" rel="alternate" type="text/html" title="Let’s talk about double pendulums." /><published>2019-03-18T00:00:00+05:30</published><updated>2019-03-18T00:00:00+05:30</updated><id>http://localhost:4000/2019/03/18/EOQ</id><content type="html" xml:base="http://localhost:4000/2019/03/18/EOQ.html">## Hell O!</content><author><name>[&quot;Tejas Sanap&quot;]</name></author><summary type="html">Hell O!</summary></entry><entry><title type="html">Linear Programming</title><link href="http://localhost:4000/2018/11/02/OR-LP/" rel="alternate" type="text/html" title="Linear Programming" /><published>2018-11-02T00:00:00+05:30</published><updated>2018-11-02T00:00:00+05:30</updated><id>http://localhost:4000/2018/11/02/OR-LP</id><content type="html" xml:base="http://localhost:4000/2018/11/02/OR-LP/">LP deals with the optimization of a function of variables known as *objective function/ cost function*, subject to a set of linear equations and/or inequalities called *constraints*.
+
+#### Assumptions in LP
+
+1. Proportionality: some sort of proportionality exists between the objective function and constraints.
+2. Additivity: 
+3. Continuity: decision variables can take any non-negative value that satisfies the constraints. However, some problems need integer values.
+4. Certainty: all LP problems are assumed to be *deterministic*.
+5. Finite Choices: a limited number of choices are available to the decision maker.
+
+#### Formulation of LP problem.
+
+**Step 1**: find the *key-decision* to be made by looking for variables.
+
+**Step 2**: assume symbols for the variables and find the *extents* of variation.
+
+**Step 3**: find *feasible alternatives* mathematically in terms of variables.
+
+**Step 4**: mention the objective function *quantitavely*, as a linear function. Prepare a **cost function**.
+
+**Step 5**: represent the *influencing factors* or **constraints** in mathematical terms.
+
+#### Advantages of LP
+1. attain optimum use of productive factors
+2. improve quality of decisions
+3. can handle multiple constraints
+4. highlights the bottlenecks
+
+#### Disadvantages of LP
+1. for large problems there are too many limitations and constraints, this makes the problem too difficult to solve even with computers
+2. the problems have to linearly approximated thus, the obtained results may be far from reality
+3. only *static* situations can be dealt with
+4. assume all values are known a priori with full certainty
+5. sometimes, the objective function and constraints cant be expressed in linear form
+6. multi-objective tasks cant be dealt with</content><author><name>Tejas Sanap</name></author><summary type="html">LP deals with the optimization of a function of variables known as objective function/ cost function, subject to a set of linear equations and/or inequalities called constraints.</summary></entry></feed>

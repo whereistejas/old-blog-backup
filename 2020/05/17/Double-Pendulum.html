@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Double Pendulums (Part 1) | whereistejas</title>
+<meta name="generator" content="Jekyll v3.7.4" />
+<meta property="og:title" content="Double Pendulums (Part 1)" />
+<meta name="author" content="Tejas Sanap" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="This series is basically going to be about how to animate stuff using python’s matplotlib library. matplotlib has an excellent documentation where you can find a detailed documentation on each of the methods I have used in this blog post. Also, I will be publishing each part of this series in the form of a jupyter notebook, which can be found here." />
+<meta property="og:description" content="This series is basically going to be about how to animate stuff using python’s matplotlib library. matplotlib has an excellent documentation where you can find a detailed documentation on each of the methods I have used in this blog post. Also, I will be publishing each part of this series in the form of a jupyter notebook, which can be found here." />
+<link rel="canonical" href="http://localhost:4000/2020/05/17/Double-Pendulum.html" />
+<meta property="og:url" content="http://localhost:4000/2020/05/17/Double-Pendulum.html" />
+<meta property="og:site_name" content="whereistejas" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-05-17T00:00:00+05:30" />
+<script type="application/ld+json">
+{"description":"This series is basically going to be about how to animate stuff using python’s matplotlib library. matplotlib has an excellent documentation where you can find a detailed documentation on each of the methods I have used in this blog post. Also, I will be publishing each part of this series in the form of a jupyter notebook, which can be found here.","headline":"Double Pendulums (Part 1)","dateModified":"2020-05-17T00:00:00+05:30","datePublished":"2020-05-17T00:00:00+05:30","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020/05/17/Double-Pendulum.html"},"url":"http://localhost:4000/2020/05/17/Double-Pendulum.html","author":{"@type":"Person","name":"Tejas Sanap"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"> <link rel="shortcut icon" type="image/png" href="/favicon.png"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="whereistejas" /><script type="text/x-mathjax-config">
+  	MathJax.Hub.Config({
+            tex2jax: {
+	        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            	inlineMath: [['$','$']]
+		}
+      	});
+  </script>
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script> 
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/"><img src="/favicon.png" class="logo">whereistejas</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+        <div class="trigger"><a class="page-link" href="/:title:/">About</a><a class="page-link" href="/books.html">Books</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Double Pendulums (Part 1)</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2020-05-17T00:00:00+05:30" itemprop="datePublished">May 17, 2020
+      </time>• <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">Tejas Sanap</span></span></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>This series is basically going to be about how to animate stuff using python’s <code class="highlighter-rouge">matplotlib</code> library. <code class="highlighter-rouge">matplotlib</code> has an excellent <a href="https://matplotlib.org/3.2.1/contents.html">documentation</a> where you can find a detailed documentation on each of the methods I have used in this blog post. Also, I will be publishing each part of this series in the form of a jupyter notebook, which can be found <a href="">here</a>.</p>
+
+<p>I would like to say a few words about the methodology of these series:</p>
+<ol>
+  <li>Each part, will have a list of references at the end of the post, mostly leading to appropriate pages of the documentation and helpful blogs written by other people. <strong>THIS IS THE MOST IMPORTANT PART</strong>. The sooner you get used to reading the documentation, the better.</li>
+  <li>The code written here, is meant to show you how you can piece everything together. I will try my best to describe the nuances of my implementations and the tiny lessons I learned.</li>
+</ol>
+
+<h2 id="generating-the-data-points">Generating the data points</h2>
+
+<p>To get acquainted with the basics of plotting with <code class="highlighter-rouge">matplotlib</code>, let’s try plotting how much distance an object under free-fall travels with respect to time and also, it’s velocity at each time step.</p>
+
+<p>If, you have ever studied physics, you can tell that is a classic case of Newton’s equations of motion, where…</p>
+
+<script type="math/tex; mode=display">v = a \times t</script>
+
+<script type="math/tex; mode=display">S = 0.5 \times a \times t^{2}</script>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">)</span>
+<span class="n">velocity</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">distance</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>We know that under free-fall, all objects move with the constant acceleration of 9.8 m/s<sup>2</sup>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">g</span> <span class="o">=</span> <span class="mf">9.8</span> 	<span class="c1"># m/s^2
+</span>
+<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">vel</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">velocity</span><span class="p">):</span>
+    <span class="c1"># velocity = acceleration (g) * time
+</span>    <span class="n">velocity</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">g</span> <span class="o">*</span> <span class="n">time</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> 
+
+<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">dis</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">distance</span><span class="p">):</span>
+    <span class="c1"># distance = 0.5 * acceleration (g) * time^2
+</span>    <span class="n">distance</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">g</span> <span class="o">*</span> <span class="n">time</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> 
+</code></pre></div></div>
+
+<p>The above code gives us two <code class="highlighter-rouge">numpy</code> arrays populated with the distance and velocity data points. You will notice that when looping over the arrays, I have used the <code class="highlighter-rouge">enumerate</code> method. We can often see people using the <code class="highlighter-rouge">list.index()</code> method or using the <code class="highlighter-rouge">len()</code> to generate the index. Both of these approaches, are wasteful. Using the <code class="highlighter-rouge">enumerate</code> method offers two advantages:</p>
+
+<ol>
+  <li>The <code class="highlighter-rouge">enumerate</code> method is internally implemented as a python generator. This means that the index and values are generated on the fly and just in time. This can prove immensely helpful when you are iterating over an array with a 100,000 floating data points. This makes our code faster and prevents unnecessary memory consumption.</li>
+  <li>It makes the code more <em>pythonic</em>.</li>
+</ol>
+
+<h2 id="pyplot-vs-object-oriented-interface">Pyplot vs. Object-Oriented interface</h2>
+
+<p>When using <code class="highlighter-rouge">matplotlib</code> we have two approaches:</p>
+<ol>
+  <li><code class="highlighter-rouge">pyplot</code> interface / functional interface.</li>
+  <li>Object-Oriented interface (OO).</li>
+</ol>
+
+<h3 id="pyplot-interface">Pyplot Interface</h3>
+
+<p><code class="highlighter-rouge">matplotlib</code> on the surface is made to imitate MATLAB’s method of generating plots, which is called <code class="highlighter-rouge">pyplot</code>. All the <code class="highlighter-rouge">pyplot</code> commands make changes and modify the same figure. This is a state-based interface, where the state (i.e., the figure) is preserved through various function calls (i.e., the methods that modify the figure). This interface allows us to quickly and easily generate plots. The state-based nature of the interface allows us to add elements and/or modify the plot as we need, when we need it.</p>
+
+<p>This interface shares a lot of similarities in syntax and methodology with MATLAB. For example, if we want to plot a blue line where each data point is marked with a circle, we can use the string <code class="highlighter-rouge">'bo-'</code>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">7</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">distance</span><span class="p">,</span><span class="s">'bo-'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Time"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Distance"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">([</span><span class="s">"Distance"</span><span class="p">])</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The plot shows how much distance was covered by the free-falling object with each passing second.</p>
+
+<p><img src="/assets/images/double-pendulum/section-1-basics-of-plotting/just-distance.png" alt="png" /></p>
+<div class="image-caption">
+<b>Fig. 1.1</b> The amount of distance travelled in each second is increasing, which is a direct result of increasing velocity due to the gravitational acceleration.
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">7</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">velocity</span><span class="p">,</span><span class="s">'go-'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Time"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Velocity"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">([</span><span class="s">"Velocity"</span><span class="p">])</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The plot below shows us how the velocity is increasing.</p>
+
+<p><img src="/assets/images/double-pendulum/section-1-basics-of-plotting/just-velocity.png" alt="png" /></p>
+<div class="image-caption">
+<b>Fig. 1.2</b> Velocity is increasing in fixed steps, due to a "constant" acceleration.
+</div>
+
+<p>Let’s try to see, what kind of plot we get when we plot both distance and velocity in the same plot.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">7</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">velocity</span><span class="p">,</span><span class="s">'g-'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">distance</span><span class="p">,</span><span class="s">'b-'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Distance and Velocity"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Time"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">([</span><span class="s">"Distance"</span><span class="p">,</span> <span class="s">"Velocity"</span><span class="p">])</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/double-pendulum/section-1-basics-of-plotting/distance-and-velocity-same-axes.png" alt="png" /></p>
+<div class="image-caption">
+<b>Fig. 1.3</b> Distance and Velocity are plotted against the same geometrical axis.
+</div>
+
+<p>Here, we run into some obvious and serious issues. We can see that since both the quantities share the same axis, but have very different magnitudes, the graph looks disproportionate. What we need to do is separate the two quantities on two different axes. This is where the second approach to making plot comes into play.</p>
+
+<p>Also, the <code class="highlighter-rouge">pyplot</code> approach doesn’t really scale when we are required to make multiple plots or when we have to make intricate plots that require a lot of customisation. However, internally <code class="highlighter-rouge">matplotlib</code> has an Object-Oriented interface that can be accessed just as easily, which allows to reuse objects.</p>
+
+<h3 id="object-oriented-interface">Object-Oriented Interface</h3>
+
+<p>When using the OO interface, it helps to know how the <code class="highlighter-rouge">matplotlib</code> structures it’s plots. The final plot that we see as the output is a ‘Figure’ object. The <code class="highlighter-rouge">Figure</code> object is the top level container for all the other elements that make up the graphic image. These “other” elements called <code class="highlighter-rouge">artists</code>. The <code class="highlighter-rouge">Figure</code> object can be thought of as a canvas, upon which different artists act to create the final graphic image. This <code class="highlighter-rouge">Figure</code> can contain any number of various artists.</p>
+
+<p><img src="/assets/images/double-pendulum/section-1-basics-of-plotting/anatomy-of-a-figure.png" alt="png" /></p>
+<div class="image-caption">
+Courtesy of <a href="https://matplotlib.org/3.2.1/gallery/showcase/anatomy.html">matplotlib</a>.
+</div>
+
+<p>Things to note about the anatomy of a figure are:</p>
+<ol>
+  <li>All of the items labelled in “blue” are <code class="highlighter-rouge">Artists</code>. <code class="highlighter-rouge">Artists</code> are basically all the elements that are rendered onto the figure. This can include text, patches (like arrows and shapes), etc. Thus, all the following <code class="highlighter-rouge">Figure</code>, <code class="highlighter-rouge">Axes</code> and <code class="highlighter-rouge">Axis</code> objects are also Artists.</li>
+  <li>Each plot that we see in a figure, is an <code class="highlighter-rouge">Axes</code> object. The <code class="highlighter-rouge">Axes</code> object holds the actual data that we are going to display. It will also contain X- and Y-axis labels, a title. Each <code class="highlighter-rouge">Axes</code> object will contain two or more <code class="highlighter-rouge">Axis</code> objects.</li>
+  <li>The <code class="highlighter-rouge">Axis</code> objects set the data limits. It also contains the ticks and ticks labels. <code class="highlighter-rouge">ticks</code> are the marks that we see on a axis.</li>
+</ol>
+
+<p>Understanding this hierarchy of <code class="highlighter-rouge">Figure</code>, <code class="highlighter-rouge">Artist</code>, <code class="highlighter-rouge">Axes</code> and <code class="highlighter-rouge">Axis</code> is immensely important, because it plays a crucial role in how me make an animation in <code class="highlighter-rouge">matplotlib</code>.</p>
+
+<p>Now, that we understand how plots are generated, we can easily solve the problem we faced, earlier. To make Velocity and Distance plot to make more sense, we need to plot each data item against a seperate axis, with a different scale. Thus, we will need one parent <code class="highlighter-rouge">Figure</code> object and two <code class="highlighter-rouge">Axes</code> objects.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="n">ax1</span><span class="p">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">"distance (m)"</span><span class="p">)</span>
+<span class="n">ax1</span><span class="p">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">"time"</span><span class="p">)</span>
+<span class="n">ax1</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="s">"blue"</span><span class="p">)</span>
+
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">.</span><span class="n">twinx</span><span class="p">()</span> <span class="c1"># create another y-axis sharing a common x-axis
+</span>
+<span class="n">ax2</span><span class="p">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">"velocity (m/s)"</span><span class="p">)</span>
+<span class="n">ax2</span><span class="p">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">"time"</span><span class="p">)</span>
+<span class="n">ax2</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">velocity</span><span class="p">,</span> <span class="s">"green"</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">set_dpi</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/double-pendulum/section-1-basics-of-plotting/distance-and-velocity-different-axes-unfinished.png" alt="png" /></p>
+
+<p>However, we can still add some finishing touches to the plot we have created. This is where we start seeing the power that can be derived from the flexibility of the Object Oriented Approach.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="n">ax1</span><span class="p">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">"distance (m)"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"blue"</span><span class="p">)</span>
+<span class="n">ax1</span><span class="p">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">"time"</span><span class="p">)</span>
+<span class="n">ax1</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="s">"blue"</span><span class="p">)</span>
+<span class="n">ax1</span><span class="p">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">*</span><span class="n">ax1</span><span class="p">.</span><span class="n">get_ybound</span><span class="p">(),</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">ax1</span><span class="p">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s">"y"</span><span class="p">,</span> <span class="n">labelcolor</span><span class="o">=</span><span class="s">"blue"</span><span class="p">)</span>
+<span class="n">ax1</span><span class="p">.</span><span class="n">xaxis</span><span class="p">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">ax1</span><span class="p">.</span><span class="n">yaxis</span><span class="p">.</span><span class="n">grid</span><span class="p">()</span>
+
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">.</span><span class="n">twinx</span><span class="p">()</span> <span class="c1"># create another y-axis sharing a common x-axis
+</span>
+<span class="n">ax2</span><span class="p">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">"velocity (m/s)"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"green"</span><span class="p">)</span>
+<span class="n">ax2</span><span class="p">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">"time"</span><span class="p">)</span>
+
+<span class="n">ax2</span><span class="p">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s">"y"</span><span class="p">,</span> <span class="n">labelcolor</span><span class="o">=</span><span class="s">"green"</span><span class="p">)</span>
+<span class="n">ax2</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">velocity</span><span class="p">,</span> <span class="s">"green"</span><span class="p">)</span>
+<span class="n">ax2</span><span class="p">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">*</span><span class="n">ax2</span><span class="p">.</span><span class="n">get_ybound</span><span class="p">(),</span> <span class="mi">10</span><span class="p">))</span>
+
+<span class="n">fig</span><span class="p">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">set_dpi</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">legend</span><span class="p">([</span><span class="s">"Distance"</span><span class="p">,</span> <span class="s">"Velocity"</span><span class="p">])</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/double-pendulum/section-1-basics-of-plotting/distance-and-velocity-different-axes-finished.png" alt="png" /></p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>In this part, we covered some basics of <code class="highlighter-rouge">matplotlib</code> plotting, covering the basic two approaches of how to make plots. In the next part, we will cover how to make simple animations.</p>
+
+<h2 id="references">References</h2>
+
+<ol>
+  <li><a href="https://youtu.be/bD05uGo_sVI">Python Generators (YouTube)</a></li>
+  <li><a href="https://medium.com/@kapil.mathur1987/matplotlib-an-introduction-to-its-object-oriented-interface-a318b1530aed">Matplotlib: An Introduction to its Object-Oriented Interface</a></li>
+  <li><a href="https://matplotlib.org/3.2.1/tutorials/introductory/lifecycle.html">Lifecycle of a Plot</a></li>
+  <li><a href="https://matplotlib.org/faq/usage_faq.html">Basic Concepts</a></li>
+</ol>
+
+  </div><a class="u-url" href="/2020/05/17/Double-Pendulum.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col one-half">
+      <h2 class="footer-heading">whereistejas</h2>
+        <ul class="contact-list">
+          <li class="p-name">Tejas Sanap</li><li><a class="u-email" href="mailto:sanap.tejas@gmail.com">sanap.tejas@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col one-half">
+        <p>All good things take time.
+</p>
+      </div>
+
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/whereistejas" title="whereistejas"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a href="https://www.instagram.com/whereistejas" title="whereistejas"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#instagram"></use></svg></a></li><li><a href="https://twitter.com/whereistejas" title="whereistejas"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
